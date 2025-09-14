@@ -67,7 +67,7 @@ Function: description
 * Transform to Lower-Case: Make every word is lower-case.
 * Transform Each Sentence into a Vector: Using SentenceBERT, we can generate a vector from each sentence.
 * Upload Document for Checking: Document is uploaded for checking.
-* Preprocess Document for Checking: Document is parsed, split, tokenized into n-grams.
+* Preprocess Document for Checking: Document is parsed, split, tokenized.
 * Checking for Plagiarized Content: The tokens are checked against existing documents. If a token is found in other documents, they are registered, according to threshold, if a document keeps the streak, then it might be plagiarized.
 * Generating Report: If matches are found, they are shown alongside with what percentage they kept the streak. If none are found, the research is either in another language or totally original. 
 * Storing in Repo: The document is stored in the repository if the uploader gives the permission.
@@ -233,7 +233,7 @@ The Plagiarism Detection system will work on the web browser.
 
 #### F#23: Preprocess Document for Checking
 
-* Description: Document is parsed, split, tokenized into n-grams.
+* Description: Document is parsed, split, tokenized.
 * Input: The document file.
 * Output: Array of four-word sequential tokens.
 

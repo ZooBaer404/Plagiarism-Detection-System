@@ -13,41 +13,43 @@ This document outlines the structure of the system's primary data storage — ak
 
 ## Table Overview
 
-| Table Name                                | Purpose                                                                                          |
-|-------------------------------------------|--------------------------------------------------------------------------------------------------|
-| `admin`                                   | Stores essential infomation about the 'superuser' of the system.                                 |
-| `university`                              | Stores information about registering university.                                                 |
-| `university_approval`                     | Stores whether university's registration is approved by admin or not.                            |
-| `university_login`                        | Stores university's login session.                                                               |
-| `instructor`                              | Stores information about instructor registering for university.                                  |
-| `instructor_approval`                     | Stores whether instructor's registration is approved by university or not.                       |
-| `instructor_login`                        | Stores instructor's login session.                                                               |
-| `research_repository_upload`              | Stores the documents uploaded as repository.                                                     |
-| `research_document`                       | Stores basic information about the uploaded document.                                            |
-| `research_repository_upload_error`        | Stores any errors that occur while uploading research document.                                  |
-| `research_document_parse_text`            | Stores the parsed content from the research document.                                            |
-| `research_document_references`            | Stores the references contained in the research document.                                        |
-| `research_document_parse_error`           | Stores any errors that occurred while parsing the research document.                             |
-| `research_document_section_tokens`        | Stores tokenized sections from parsed research documents.                                        |
-| `research_document_basic_stats`           | Stores basic statistics collected from research documents.                                       |
-| `research_document_enhanced_text`         | Stores parsed, no-punctuation, lower-cased, sentence-and-paragraph-start-and-end-marked.         |
-| `research_document_text_vector`           | Stores the vector generated from text using SentenceBERT.                                        |
-| `upload_checking_document_upload`         | Stores the documents uploaded as repository.                                                     |
-| `upload_checking_document`                | Stores the data related to documents upload for checking.                                        |
-| `upload_checking_document_upload_error`   | Stores any errors that occur while uploading checking document.                                  |
-| `upload_checking_document_parse_text`     | Stores the parsed content from the research document.                                            |
-| `upload_checking_document_references`     | Stores the references contained in the research document.                                        |
-| `upload_checking_document_parse_error`    | Stores any errors that occurred while parsing the checking document.                             |
-| `upload_checking_document_section_tokens` | Stores tokenized sections from parsed checking documents.                                        |
-| `upload_checking_document_basic_stats`    | Stores basic statistics collected from checking documents.                                       |
-| `upload_checking_document_enhanced_text`  | Stores parsed, no-punctuation, lower-cased, sentence-and-paragraph-start-and-end-marked.         |
-| `upload_checking_document_text_vector`    | Stores the vector generated from text using SentenceBERT.                                        |
-| `upload_checking_document_report`         | Stores the report generated while processing document for plagiarized content.                   |
-| `university_logout`                       | Stores university's logout session information.                                                  |
-| `instructor_logout`                       | Stores instructor's logout session information.                                                  |
-| `university_delete_account`               | Stores university's delete account information.                                                  |
-| `instructor_delete_account`               | Stores instructor's delete account information.                                                  |
-|----------------------------------------------------------------------------------------------------------------------------------------------|
+| Table Name                         | Purpose                                                                                  |
+| ---------------------------------- | ---------------------------------------------------------------------------------------- |
+| `admin`                            | Stores essential infomation about the 'superuser' of the system.                         |
+| `university`                       | Stores information about registering university.                                         |
+| `university_approval`              | Stores whether university's registration is approved by admin or not.                    |
+| `university_login`                 | Stores university's login session.                                                       |
+| `instructor`                       | Stores information about instructor registering for university.                          |
+| `instructor_approval`              | Stores whether instructor's registration is approved by university or not.               |
+| `instructor_login`                 | Stores instructor's login session.                                                       |
+| `university_logout`                | Stores university's logout session information.                                          |
+| `instructor_logout`                | Stores instructor's logout session information.                                          |
+| `university_delete_account`        | Stores university's delete account information.                                          |
+| `instructor_delete_account`        | Stores instructor's delete account information.                                          |
+| `research_repository`              | Stores basic information about the research repository.                                  |
+| `research_document_upload`         | Stores the documents uploaded as repository.                                             |
+| `research_document`                | Stores basic information about the uploaded document.                                    |
+| `research_document_upload_error`   | Stores any errors that occur while uploading research document.                          |
+| `research_document_parse_text`     | Stores the parsed content from the research document.                                    |
+| `research_document_references`     | Stores the references contained in the research document.                                |
+| `research_document_parse_error`    | Stores any errors that occurred while parsing the research document.                     |
+| `research_document_section_tokens` | Stores tokenized sections from parsed research documents.                                |
+| `research_document_basic_stats`    | Stores basic statistics collected from research documents.                               |
+| `research_document_images`         | Stores images extracted from research documents.                                         |
+| `research_document_enhanced_text`  | Stores parsed, no-punctuation, lower-cased, sentence-and-paragraph-start-and-end-marked. |
+| `research_document_text_vector`    | Stores the vector generated from text using SentenceBERT.                                |
+| `checking_document_upload`         | Stores the documents uploaded as repository.                                             |
+| `checking_document`                | Stores the data related to documents upload for checking.                                |
+| `checking_document_upload_error`   | Stores any errors that occur while uploading checking document.                          |
+| `checking_document_parse_text`     | Stores the parsed content from the research document.                                    |
+| `checking_document_references`     | Stores the references contained in the research document.                                |
+| `checking_document_parse_error`    | Stores any errors that occurred while parsing the checking document.                     |
+| `checking_document_section_tokens` | Stores tokenized sections from parsed checking documents.                                |
+| `checking_document_basic_stats`    | Stores basic statistics collected from checking documents.                               |
+| `checking_document_enhanced_text`  | Stores parsed, no-punctuation, lower-cased, sentence-and-paragraph-start-and-end-marked. |
+| `checking_document_text_vector`    | Stores the vector generated from text using SentenceBERT.                                |
+| `checking_document_check_process`  | Stores the plagiarized content found in other research documents.                        |
+| `checking_document_report`         | Stores the report generated while processing document for plagiarized content.           |
 
 ---
 
@@ -55,24 +57,31 @@ This document outlines the structure of the system's primary data storage — ak
 
 ### `admin`
 
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
+| Column       | Type         | Constraints               | Description                  |
+| ------------ | ------------ | ------------------------- | ---------------------------- |
+| `id`         | UUID         | PK                        | Unique identifier            |
+| `username`   | VARCHAR(255) | NOT NULL                  | User name of the admin       |
+| `password`   | VARCHAR(255) | NOT NULL                  | Admin's password             |
+| `created_at` | TIMESTAMP    | DEFAULT CURRENT_TIMESTAMP | When the account was created |
 
 ---
 
 ### `university`
 
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
+| Column                   | Type         | Constraints               | Description                               |
+| ------------------------ | ------------ | ------------------------- | ----------------------------------------- |
+| `id`                     | UUID         | PK                        | Unique identifier                         |
+| `university_name`        | VARCHAR(255) | NOT NULL                  | University's name                         |
+| `password`               | VARCHAR(255) | NOT NULL                  | University account's password             |
+| `university_certificate` | VARCHAR()    | NOT NULL                  | University's certificate for verification |
+| `created_at`             | TIMESTAMP    | DEFAULT CURRENT_TIMESTAMP | When university's account was created     |
 
 ---
 
 ### `instructor`
 
 | Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
+| --------------- | ------------ | ------------------------- | ------------------------------------ |
 | `id`            | UUID         | PK                        | Unique identifier                    |
 | `first_name`    | VARCHAR()    | NOT NULL                  | Instructor's first name              |
 | `last_name`     | VARCHAR()    | NOT NULL                  | Instructor's last name               |
@@ -85,243 +94,400 @@ This document outlines the structure of the system's primary data storage — ak
 
 ### `university_approval`
 
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
+| Column                 | Type      | Constraints              | Description                              |
+| ---------------------- | --------- | ------------------------ | ---------------------------------------- |
+| `id`                   | UUID      | PK                       | Unique identifier                        |
+| `approved_by_admin_id` | UUID      | FK to admin(id)          | ID of admin who approved this university |
+| `is_approved`          | BOOLEAN   | DEFAULT FALSE            | Is university approved by the admin      |
+| `message`              | VARCHAR() |                          | Admin's message after review             |
+| `created_at`           | TIMSTAMP  | DEFAULT CURRENT_TIMSTAMP | Timestamp of university approval         |
+
 
 ---
 
 ### `university_login`
 
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
+| Column       | Type      | Constraints               | Description                        |
+| ------------ | --------- | ------------------------- | ---------------------------------- |
+| `id`         | UUID      | PK                        | Unique identifier                  |
+| `ip_address` | VARCHAR() |                           | University's computer's IP address |
+| `created_at` | TIMSTAMP  | DEFAULT CURRENT_TIMESTAMP | When the university logged in      |
 
 ---
 
 ### `instructor`
 
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
+| Column        | Type      | Constraints               | Description                               |
+| ------------- | --------- | ------------------------- | ----------------------------------------- |
+| `id`          | UUID      | PK                        | Unique identifier                         |
+| `first_name`  | VARCHAR() | NOT NULL                  | Instructor's first name                   |
+| `last_name`   | VARCHAR() | NOT NULL                  | Instructor's last name                    |
+| `certificate` | VARCHAR() |                           | Instructor's certificate path             |
+| `field`       | VARCHAR() | NOT NULL                  | Instructor's field of study               |
+| `created_at`  | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | When the instructor created their account |
 
 ---
 
 ### `instructor_approval`
 
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
+| Column                      | Type      | Constraints              | Description                                   |
+| --------------------------- | --------- | ------------------------ | --------------------------------------------- |
+| `id`                        | UUID      | PK                       | Unique identifier                             |
+| `approved_by_university_id` | UUID      | FK to university(id)     | ID of university who approved this instructor |
+| `is_approved`               | BOOLEAN   | DEFAULT FALSE            | Is instructor approved by the university      |
+| `message`                   | VARCHAR() |                          | university's message after review             |
+| `created_at`                | TIMSTAMP  | DEFAULT CURRENT_TIMSTAMP | Timestamp of instructor approval              |
 
 ---
 
 ### `instructor_login`
 
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
+| Column       | Type      | Constraints               | Description                        |
+| ------------ | --------- | ------------------------- | ---------------------------------- |
+| `id`         | UUID      | PK                        | Unique identifier                  |
+| `ip_address` | VARCHAR() |                           | Instructor's computer's IP address |
+| `created_at` | TIMSTAMP  | DEFAULT CURRENT_TIMESTAMP | When the instructor logged in      |
 
 ---
 
-### `research_repository_upload`
-
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
-
----
-
-### `research_document`
-
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
-
----
-
-### `research_repository_upload_error`
-
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
-
----
-
-### `research_repository_parse_text`
-
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
-
----
-
-### `research_document_references`
-
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
-
----
-
-### `research_document_parse_error`
-
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
-
----
-
-### `research_document_section_tokens`
-
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
-
----
-
-### `research_document_basic_stats`
-
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
-
----
-
-### `research_document_enhanced_text`
-
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
-
----
-
-### `research_document_text_vector`
-
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
-
----
-
-### `upload_checking_document_upload`
-
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
-
----
-
-### `upload_checking_document`
-
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
-
----
-
-### `upload_checking_document_upload_error`
-
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
-
----
-
-### `upload_checking_document_parse_text`
-
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
-
----
-
-### `upload_checking_document_references`
-
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
-
----
-
-### `upload_checking_document_parse_error`
-
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
-
----
-
-### `upload_checking_document_section_tokens`
-
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
-
----
-
-### `upload_checking_document_basic_stats`
-
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
-
----
-
-### `upload_checking_document_enhanced_text`
-
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
-
----
-
-### `upload_checking_document_text_vector`
-
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
-
----
-
-### `upload_checking_document_report`
-
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
-
----
 
 ### `university_logout`
 
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
+| Column       | Type     | Constraints               | Description                    |
+| ------------ | -------- | ------------------------- | ------------------------------ |
+| `id`         | UUID     | PK                        | Unique identifier              |
+| `created_at` | TIMSTAMP | DEFAULT CURRENT_TIMESTAMP | When the university logged out |
 
 ---
 
 ### `instructor_logout`
 
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
+| Column       | Type     | Constraints               | Description                    |
+| ------------ | -------- | ------------------------- | ------------------------------ |
+| `id`         | UUID     | PK                        | Unique identifier              |
+| `created_at` | TIMSTAMP | DEFAULT CURRENT_TIMESTAMP | When the instructor logged out |
 
 ---
 
 ### `university_delete_account`
 
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
+| Column       | Type      | Constraints               | Description                               |
+| ------------ | --------- | ------------------------- | ----------------------------------------- |
+| `id`         | UUID      | PK                        | Unique identifier                         |
+| `created_at` | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | When the university's account was deleted |
 
 ---
 
 ### `instructor_delete_account`
 
-| Column          | Type         | Constraints               | Description                          |
-|-----------------|--------------|---------------------------|--------------------------------------|
-| `id`            | UUID         | PK                        | Unique identifier                    |
+| Column       | Type      | Constraints               | Description                               |
+| ------------ | --------- | ------------------------- | ----------------------------------------- |
+| `id`         | UUID      | PK                        | Unique identifier                         |
+| `created_at` | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | When the instructor's account was deleted |
 
 ---
+
+### `research_repository`
+
+| Column          | Type      | Constraints               | Description                      |
+| --------------- | --------- | ------------------------- | -------------------------------- |
+| `id`            | UUID      | PK                        | Unique identifier                |
+| `repo_name`     | VARCHAR() | NOT NULL                  | Respository's name after upload  |
+| `university_id` | UUID      | FK to university(id)      | ID of the uploader university    |
+| `created_at`    | TIMSTAMP  | DEFAULT CURRENT_TIMESTAMP | When the repository was uploaded |
+
+---
+
+### `research_document_upload`
+
+| Column                   | Type      | Constraints                   | Description                                          |
+| ------------------------ | --------- | ----------------------------- | ---------------------------------------------------- |
+| `id`                     | UUID      | PK                            | Unique identifier                                    |
+| `research_repository_id` | UUID      | FK to research_repository(id) | Respository's ID which the uploaded too place to.    |
+| `research_document_name` | VARCHAR() | NOT NULL                      | Document's name which was uploaded to the repository |
+| `research_document_path` | VARCHAR() | NOT NULL                      | Document's location for access by the preprocessor   |
+| `is_upload_complete`     | BOOLEAN   | DEFAULT FALSE                 | Whether the uploaded is completed or not             |
+| `created_at`             | TIMSTAMP  | DEFAULT CURRENT_TIMESTAMP     | When the repository was uploaded                     |
+
+
+---
+
+### `research_document`
+
+| Column                        | Type      | Constraints                        | Description                                               |
+| ----------------------------- | --------- | ---------------------------------- | --------------------------------------------------------- |
+| `id`                          | UUID      | PK                                 | Unique identifier                                         |
+| `research_document_name`      | VARCHAR() |                                    | Document's name after upload                              |
+| `research_document_path`      | VARCHAR() | NOT NULLL                          | The path of the research document                         |
+| `university_id`               | UUID      | FK to university(id)               | University's ID whom uploaded the document                |
+| `research_repository_id`      | UUID      | FK to research_repository(id)      | Research repository to which the document was uploaded to |
+| `research_document_upload_id` | UUID      | FK to research_document_upload(id) | Research document which was uploaded to the repository    |
+| `created_at`                  | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP          | When the document was proprocessed                        |
+
+---
+
+### `research_document_upload_error`
+
+| Column                        | Type      | Constraints                        | Description                                    |
+| ----------------------------- | --------- | ---------------------------------- | ---------------------------------------------- |
+| `id`                          | UUID      | PK                                 | Unique identifier                              |
+| `research_document_upload_id` | UUID      | FK to research_document_upload(id) | ID of the uploaded document to the repository  |
+| `error_message`               | VARCHAR() | NOT NULL                           | Stating what happened while uploading the file |
+| `created_at`                  | TIMSTAMP  | DEFAULT CURRENT_TIMSTAMP           | When the error was recorded                    |
+
+---
+
+### `research_repository_parse_text`
+
+| Column                 | Type      | Constraints                 | Description                       |
+| ---------------------- | --------- | --------------------------- | --------------------------------- |
+| `id`                   | UUID      | PK                          | Unique identifier                 |
+| `research_document_id` | UUID      | FK to research_document(id) | ID of the research document       |
+| `parse_text`           | VARCHAR() |                             | Content of the parsed text        |
+| `created_at`           | TIMSTAMP  | DEFAULT CURRENT_TIMESTAMP   | When the parsed text was recorded |
+
+---
+
+### `research_document_references`
+
+| Column                 | Type      | Constraints                 | Description                                  |
+| ---------------------- | --------- | --------------------------- | -------------------------------------------- |
+| `id`                   | UUID      | PK                          | Unique identifier                            |
+| `research_document_id` | UUID      | FK to research_document(id) | ID of the research document                  |
+| `index`                | int       | DEFAULT -1                  | In which index the reference was encountered |
+| `reference_text`       | VARCHAR() |                             | Text of the reference encountered            |
+| `created_at`           | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP   | When the reference was recorded              |
+
+---
+
+### `research_document_parse_error`
+
+| Column                 | Type      | Constraints                 | Description                                     |
+| ---------------------- | --------- | --------------------------- | ----------------------------------------------- |
+| `id`                   | UUID      | PK                          | Unique identifier                               |
+| `research_document_id` | UUID      | FK to research_document(id) | The ID of the research document                 |
+| `error_message`        | VARHCAR() | NOT NULL                    | Stating the error that occurred while uploading |
+| `created_at`           | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP   | When the error was recorded                     |
+
+---
+
+### `research_document_section_tokens`
+
+| Column                 | Type      | Constraints                   | Description                       |
+| ---------------------- | --------- | ----------------------------- | --------------------------------- |
+| `id`                   | UUID      | PK                            | Unique identifier                 |
+| `research_document_id` | UUID      | FK to research_repository(id) | The ID of the research document   |
+| `section_index`        | INT       | NOT NULL                      | In which order it was encountered |
+| `section_title`        | VARCHAR() | NOT NULL                      | Section title encountered         |
+| `section_description`  | VARCHAR() | NOT NULL                      | Text of the section               |
+| `created_at`           | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP     | When section tokens were recorded |
+
+---
+
+### `research_document_basic_stats`
+
+| Column                 | Type      | Constraints                 | Description                                       |
+| ---------------------- | --------- | --------------------------- | ------------------------------------------------- |
+| `id`                   | UUID      | PK                          | Unique identifier                                 |
+| `research_document_id` | UUID      | FK to research_document(id) | The ID of the research document                   |
+| `no_of_references`     | INT       |                             | The number of references found in the document    |
+| `no_of_sentences`      | INT       |                             | The number of sentences detected in the document  |
+| `no_of_characters`     | INT       |                             | The number of characters detected in the document |
+| `no_of_words`          | INT       |                             | The number of words detected in the document      |
+| `size_of_document`     | INT       |                             | The size of the document in bytes                 |
+| `no_of_images`         | INT       | DEFAULT 0                   | The number of images detected in the document     |
+| `created_at`           | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP   | When the basic statistics were saved              |
+
+---
+
+### `research_document_images`
+
+| Column                 | Type      | Constraints                 | Description                       |
+| ---------------------- | --------- | --------------------------- | --------------------------------- |
+| `id`                   | UUID      | PK                          | Unique identifier                 |
+| `research_document_id` | UUID      | FK to research_document(id) | The ID of the research document   |
+| `image_path`           | VARCHAR() | NOT NULL                    | Relative path of the image stores |
+| `created_at`           | TIMESTAMP | DEFAULT TIMESTAMP           | When the image were recorded      |
+
+---
+
+### `research_document_enhanced_text`
+
+| Column                   | Type      | Constraints                 | Description                                  |
+| ------------------------ | --------- | --------------------------- | -------------------------------------------- |
+| `id`                     | UUID      | PK                          | Unique identifier                            |
+| `research_document_id`   | UUID      | FK to research_document(id) | The ID of the research document              |
+| `sentence_index`         | INT       | Index of the sentence       |                                              |
+| `sentence_enhanced_text` | VARCHAR() | NOT NULL                    | The enhanced text                            |
+| `created_at`             | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP   | When the enhanced sentence text was recorded |
+
+---
+
+### `research_document_text_vector`
+
+| Column                               | Type      | Constraints                               | Description                                                         |
+| ------------------------------------ | --------- | ----------------------------------------- | ------------------------------------------------------------------- |
+| `id`                                 | UUID      | PK                                        | Unique identifier                                                   |
+| `research_document_id`               | UUID      | FK to research_document(id)               | The ID of the research document                                     |
+| `research_document_enhanced_text_id` | UUID      | FK to research_document_enhanced_text(id) | The ID of the sentence stored in the database                       |
+| `text_vector`                        | INTEGER[] | NOT NULL                                  | The extracted text vector of each sentence in the research document |
+| `created_at`                         | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP                 | When the sentence text vector was recorded.                         |
+
+---
+
+### `checking_document_upload`
+
+| Column                   | Type      | Constraints               | Description                                          |
+| ------------------------ | --------- | ------------------------- | ---------------------------------------------------- |
+| `id`                     | UUID      | PK                        | Unique identifier                                    |
+| `checking_document_name` | VARCHAR() | NOT NULL                  | Document's name which was uploaded to the repository |
+| `checking_document_path` | VARCHAR() |                           | Document's location for access by the preprocessor   |
+| `is_upload_complete`     | BOOLEAN   | DEFAULT FALSE             | Whether the uploaded is completed or not             |
+| `created_at`             | TIMSTAMP  | DEFAULT CURRENT_TIMESTAMP | When the repository was uploaded                     |
+
+---
+
+### `checking_document`
+
+| Column                        | Type      | Constraints                        | Description                                                 |
+| ----------------------------- | --------- | ---------------------------------- | ----------------------------------------------------------- |
+| `id`                          | UUID      | PK                                 | Unique identifier                                           |
+| `checking_document_name`      | VARCHAR() |                                    | Document's name after upload                                |
+| `checking_document_path`      | VARCHAR() | NOT NULL                           | The path of the checking document                           |
+| `instructor_id`               | UUID      | FK to instructor(id)               | Instructor's ID whom uploaded the document                  |
+| `checking_document_upload_id` | UUID      | FK to checking_document_upload(id) | Checking document's ID which was uploaded to the repository |
+| `created_at`                  | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP          | When the document was proprocessed                          |
+
+---
+
+### `checking_document_upload_error`
+
+| Column                        | Type      | Constraints                        | Description                                        |
+| ----------------------------- | --------- | ---------------------------------- | -------------------------------------------------- |
+| `id`                          | UUID      | PK                                 | Unique identifier                                  |
+| `checking_document_upload_id` | UUID      | FK to checking_document_upload(id) | ID of the uploaded document for checking           |
+| `error_message`               | VARCHAR() | NOT NULL                           | Stating what happened while uploading the document |
+| `created_at`                  | TIMSTAMP  | DEFAULT CURRENT_TIMSTAMP           | When the error was recorded                        |
+
+---
+
+### `checking_document_parse_text`
+
+| Column                 | Type      | Constraints                 | Description                       |
+| ---------------------- | --------- | --------------------------- | --------------------------------- |
+| `id`                   | UUID      | PK                          | Unique identifier                 |
+| `checking_document_id` | UUID      | FK to checking_document(id) | ID of the checking document       |
+| `parse_text`           | VARCHAR() |                             | Content of the parsed text        |
+| `created_at`           | TIMSTAMP  | DEFAULT CURRENT_TIMESTAMP   | When the parsed text was recorded |
+
+
+---
+
+### `checking_document_references`
+
+| Column                 | Type      | Constraints                 | Description                                  |
+| ---------------------- | --------- | --------------------------- | -------------------------------------------- |
+| `id`                   | UUID      | PK                          | Unique identifier                            |
+| `checking_document_id` | UUID      | FK to checking_document(id) | ID of the checking document                  |
+| `index`                | int       | DEFAULT -1                  | In which index the reference was encountered |
+| `reference_text`       | VARCHAR() |                             | Text of the reference encountered            |
+| `created_at`           | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP   | When the reference was recorded              |
+
+
+---
+
+### `checking_document_parse_error`
+
+| Column                 | Type      | Constraints                 | Description                       |
+| ---------------------- | --------- | --------------------------- | --------------------------------- |
+| `id`                   | UUID      | PK                          | Unique identifier                 |
+| `checking_document_id` | UUID      | FK to checking_document(id) | ID of the checking document       |
+| `parse_text`           | VARCHAR() |                             | Content of the parsed text        |
+| `created_at`           | TIMSTAMP  | DEFAULT CURRENT_TIMESTAMP   | When the parsed text was recorded |
+
+
+---
+
+### `checking_document_section_tokens`
+
+| Column                 | Type      | Constraints                   | Description                       |
+| ---------------------- | --------- | ----------------------------- | --------------------------------- |
+| `id`                   | UUID      | PK                            | Unique identifier                 |
+| `checking_document_id` | UUID      | FK to checking_repository(id) | The ID of the checking document   |
+| `section_index`        | INT       | NOT NULL                      | In which order it was encountered |
+| `section_title`        | VARCHAR() | NOT NULL                      | Section title encountered         |
+| `section_description`  | VARCHAR() | NOT NULL                      | Text of the section               |
+| `created_at`           | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP     | When section tokens were recorded |
+
+
+---
+
+### `checking_document_basic_stats`
+
+| Column                 | Type      | Constraints                 | Description                                       |
+| ---------------------- | --------- | --------------------------- | ------------------------------------------------- |
+| `id`                   | UUID      | PK                          | Unique identifier                                 |
+| `checking_document_id` | UUID      | FK to checking_document(id) | The ID of the checking document                   |
+| `no_of_references`     | INT       |                             | The number of references found in the document    |
+| `no_of_sentences`      | INT       |                             | The number of sentences detected in the document  |
+| `no_of_characters`     | INT       |                             | The number of characters detected in the document |
+| `no_of_words`          | INT       |                             | The number of words detected in the document      |
+| `size_of_document`     | INT       |                             | The size of the document in bytes                 |
+| `no_of_images`         | INT       | DEFAULT 0                   | The number of images detected in the document     |
+| `created_at`           | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP   | When the basic statistics were saved              |
+
+---
+
+### `checking_document_enhanced_text`
+
+| Column                   | Type      | Constraints                 | Description                                  |
+| ------------------------ | --------- | --------------------------- | -------------------------------------------- |
+| `id`                     | UUID      | PK                          | Unique identifier                            |
+| `checking_document_id`   | UUID      | FK to checking_document(id) | The ID of the checking document              |
+| `sentence_index`         | INT       | Index of the sentence       |                                              |
+| `sentence_enhanced_text` | VARCHAR() | NOT NULL                    | The enhanced text                            |
+| `created_at`             | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP   | When the enhanced sentence text was recorded |
+
+
+---
+
+### `checking_document_text_vector`
+
+| Column                               | Type      | Constraints                               | Description                                                         |
+| ------------------------------------ | --------- | ----------------------------------------- | ------------------------------------------------------------------- |
+| `id`                                 | UUID      | PK                                        | Unique identifier                                                   |
+| `checking_document_id`               | UUID      | FK to checking_document(id)               | The ID of the checking document                                     |
+| `checking_document_enhanced_text_id` | UUID      | FK to checking_document_enhanced_text(id) | The ID of the sentence stored in the database                       |
+| `text_vector`                        | INTEGER[] | NOT NULL                                  | The extracted text vector of each sentence in the checking document |
+| `created_at`                         | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP                 | When the sentence text vector was recorded.                         |
+
+
+---
+
+### `checking_document_check_process`
+
+| Column                             | Type      | Constraints                             | Description                                                                 |
+| ---------------------------------- | --------- | --------------------------------------- | --------------------------------------------------------------------------- |
+| `id`                               | UUID      | PK                                      | Unique identifier                                                           |
+| `checking_document_id`             | UUID      | FK to checking_document(id)             | The ID of the checking document                                             |
+| `checking_document_text_vector_id` | UUID      | FK to checking_document_text_vector(id) | The ID of the text vector in the checking document                          |
+| `research_document_text_vector_id` | UUID      | FK to research_document_text_vector(id) | The ID of the text vector that is similar to the checking document's vector |
+| `similarity`                       | DECIMAL   | NOT NULL                                | What percent are the vectors similar                                        |
+| `created_at`                       | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP               | When the similarity was recorded.                                           |
+
+---
+
+### `checking_document_report`
+
+| Column                 | Type      | Constraints                 | Description                                           |
+| ---------------------- | --------- | --------------------------- | ----------------------------------------------------- |
+| `id`                   | UUID      | PK                          | Unique identifier                                     |
+| `checking_document_id` | UUID      | FK to checking_document(id) | The ID of the checking document                       |
+| `report_result`        | DECIMAL   | NOT NULL                    | The result of the report. What percentage plagiarized |
+| `created_at`           | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP   | When the report was recorded                          |
+
+---
+
 
 > Don’t forget: Normalize first, cry later.
 
