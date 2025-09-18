@@ -1,0 +1,7 @@
+wheel
+setup-tools
+Django
+python-pdfbox
+python-dotenv
+psycopg
+psycopg_binary
