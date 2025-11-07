@@ -38,10 +38,7 @@ def fetch_users(limit: int, offset: int, active_only: bool = True) -> list[dict]
     Raises:
     - ValueError: If the `limit` or `offset` is out of acceptable bounds.
     - DatabaseError: If there is an issue connecting to or querying the database.
-
-    Example:
-    >>> fetch_users(limit=50, offset=0)
-    [{'id': 1, 'name': 'Alice', ...}, ...]
+    
     """
     if not (1 <= limit <= 1000):
         raise ValueError("Limit must be between 1 and 1000.")

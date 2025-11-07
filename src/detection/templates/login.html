@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Login — Plagiarism Detection{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="login-window bg-amber-500 h-full flex flex-col justify-center items-center gap-10">
+  
+  <div class="flex flex-col gap-10">  
+    <h1 class="login-title text-6xl">Login</h1>
+
+    <form method="post" class="login-form flex flex-col gap-5">
+      {% csrf_token %}
+      <div>
+        <input type="text" name="username" placeholder="Username / Email" class="pl-10 border-2 border-neutral-700" required>
+        <input type="password" name="password" placeholder="Password" class="pl-10 border-2 border-neutral-700" required>
+      </div>
+      <!-- Forgot password link -->
+      {% comment %} <a href="#" class="forgot-link">Forgot password?</a> {% endcomment %}
+
+      <button type="submit" class="login-btn pl-20 pr-20 border-2 border-neutral-700">Login</button>
+    </form>
+
+    <p class="login-footer">
+      Don’t have an account? <a href="{% url 'continue_page' %}" class="create-link text-cyan-950 underline underline-offset-4">Create one</a>
+    </p>
+
+  </div>
+
+</div>
+{% endblock %}

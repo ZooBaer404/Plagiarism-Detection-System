@@ -1,0 +1,95 @@
+/* Instructor Signup specific tweaks — builds on continue.css */
+
+.form-card {
+  position: relative;
+  z-index: 5;
+  width: 400px;
+  background: rgba(255, 255, 255, 0.05); /* translucent */
+  border-radius: 20px;
+  padding: 40px;
+  margin: 120px auto;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+}
+
+
+.form-card h1 {
+  color: #4dabff;
+  margin-bottom: 25px;
+}
+
+.form-card label {
+  display: block;
+  text-align: left;
+  font-size: 0.9rem;
+  color: #b0c0d0;
+  margin-top: 15px;
+}
+
+.form-card input,
+.form-card select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  margin-top: 5px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.form-card button {
+  margin-top: 25px;
+  width: 100%;
+  background: linear-gradient(135deg, #1e90ff, #0066ff);
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.form-card button:hover {
+  background: linear-gradient(135deg, #0066ff, #0044cc);
+  transform: scale(1.03);
+}
+/* Instructor Signup – extends login design */
+.select-field {
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 12px;
+  border: none;
+  outline: none;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  width: 100%;
+  transition: background 0.2s ease;
+}
+
+.select-field option {
+  color: #000; /* readable in dropdown */
+}
+
+.select-field:focus {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Adjust spacing so it matches the login layout */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.login-btn {
+  margin-top: 10px;
+}
+
+/* Subtle glow to differentiate signup */
+.login-window {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 25px rgba(0,0,50,0.6);
+  backdrop-filter: blur(25px);
+}

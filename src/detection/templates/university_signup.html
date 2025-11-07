@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}University Signup — Plagiarism Detection{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/signup_university.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="signup-window h-full w-full bg-emerald-400 flex flex-col justify-center items-center gap-5">
+  <div class="flex flex-col gap-5">
+    <h1 class="signup-title text-6xl">Register Your University</h1>
+    <form method="POST" enctype="multipart/form-data" class="signup-form w-4xl flex flex-col gap-5">
+      {% csrf_token %}
+      <div class="flex flex-col">
+        <label>University Name</label>
+        <input type="text" name="university_name" class="border-2 border-neutral-700" required>
+      </div>
+
+      <div class="flex flex-col">
+        <label>Password</label>
+        <input type="password" name="password" class="border-2 border-neutral-700" required>
+      </div>
+
+      <div class="flex flex-col">
+        <label>Upload Certificate (PDF / Image)</label>
+        <input type="file" name="university_certificate" accept=".pdf,.jpg,.png" class="border-2 border-neutral-700 " required>
+      </div>
+
+      <button type="submit" class="submit-btn border-2 border-neutral-700">Submit for Approval</button>
+    </form>
+
+    <p class="signup-footer">
+      Already registered? <a href="/login/" class="login-link">Login</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

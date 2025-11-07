@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<!-- =========================================
+     Load Page-Specific CSS File
+     ========================================= -->
+<link rel="stylesheet" href="{% static 'css/admin_account.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- =========================================================
+     PAGE: Admin Account (Frontend Only)
+     DESCRIPTION:
+       Displays admin profile details and sign-out button.
+       This layout will serve as a template for University
+       and Instructor account profile pages as well.
+   ========================================================= -->
+
+<div class="account-page-container">
+
+  <!-- =========================================
+       HEADER SECTION
+       ========================================= -->
+  <header class="account-header">
+    <!-- Brand / Home link -->
+    <a href="{% url 'admin_dashboard' %}" class="brand-title">Plagiarism Detection</a>
+
+    <!-- Page Title -->
+    <h1>Admin Profile</h1>
+  </header>
+
+  <!-- =========================================
+       ACCOUNT INFORMATION SECTION
+       ========================================= -->
+  <section class="account-info">
+
+    <!-- Profile Icon / Avatar Placeholder -->
+    <div class="profile-picture">
+      <!-- Static letter (A) – can be replaced with image later -->
+      <span class="profile-letter">A</span>
+    </div>
+
+    <!-- Static Information (to be dynamically replaced later) -->
+    <div class="info-text">
+      <p><strong>Name:</strong> John Doe</p>
+      <p><strong>Email:</strong> admin@example.com</p>
+      <p><strong>Username:</strong> admin123</p>
+    </div>
+  </section>
+
+  <!-- =========================================
+       ACTION BUTTONS SECTION
+       ========================================= -->
+  <section class="account-actions">
+    <!-- Back to Dashboard Button -->
+    <a href="{% url 'admin_dashboard' %}" class="btn-back">⬅ Back to Dashboard</a>
+
+    <!-- Logout Button (placeholder – backend logic to be added) -->
+    <a href="#" class="btn-logout">Sign Out</a>
+  </section>
+
+</div>
+{% endblock %}

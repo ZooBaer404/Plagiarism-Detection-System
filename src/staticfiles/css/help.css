@@ -1,0 +1,65 @@
+/* Main container */
+.help-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 80px auto 40px auto;
+  padding: 0 20px;
+  color: #fff;
+}
+
+/* Header with back button */
+.help-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.help-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.back-btn {
+  font-size: 0.95rem;
+  color: #7aa0ff;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px);
+  transition: all 0.2s ease;
+}
+.back-btn:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+/* Sections */
+.help-section {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.35);
+}
+
+.help-section h2 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #aad0ff;
+}
+
+.help-section p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.85);
+}
+
+/* Scrollable */
+.main-area {
+  overflow-y: auto;
+  padding-bottom: 40px;
+}

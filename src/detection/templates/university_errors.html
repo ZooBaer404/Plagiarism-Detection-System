@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/university_errors.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="errors-container">
+  <header class="errors-header">
+    <h1>System Errors & Reports</h1>
+    <a href="{% url 'university_dashboard' %}" class="btn-back">⬅ Back to Dashboard</a>
+  </header>
+
+  <div class="errors-grid">
+
+    <!-- UPLOAD ERRORS -->
+    <section class="column upload-errors">
+      <h2>Upload Errors</h2>
+
+      <div class="error-card">
+        <h3>Document_05.pdf</h3>
+        <p>Error: File type not supported</p>
+        <p>Date: Oct 23, 2025 — 11:34 PM</p>
+        <div class="actions">
+          <button class="btn retry">Retry Upload 🔁</button>
+          <button class="btn delete">Delete 🗑️</button>
+        </div>
+      </div>
+
+      <div class="error-card">
+        <h3>Research_AI.docx</h3>
+        <p>Error: Connection Timeout</p>
+        <p>Date: Oct 24, 2025 — 08:45 AM</p>
+        <div class="actions">
+          <button class="btn retry">Retry Upload 🔁</button>
+          <button class="btn delete">Delete 🗑️</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROCESSING ERRORS -->
+    <section class="column processing-errors">
+      <h2>Processing Errors</h2>
+
+      <div class="error-card">
+        <h3>Plagiarism_Check_01.pdf</h3>
+        <p>Error: Parsing failed (missing header)</p>
+        <p>Date: Oct 25, 2025 — 04:10 PM</p>
+        <div class="actions">
+          <button class="btn view">View Log 📄</button>
+          <button class="btn mark-fixed">Mark Fixed ✅</button>
+        </div>
+      </div>
+
+      <div class="error-card">
+        <h3>Report_Final.zip</h3>
+        <p>Error: Compression error during analysis</p>
+        <p>Date: Oct 26, 2025 — 01:22 PM</p>
+        <div class="actions">
+          <button class="btn view">View Log 📄</button>
+          <button class="btn mark-fixed">Mark Fixed ✅</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESOLVED ERRORS -->
+    <section class="column resolved-errors">
+      <h2>Resolved / Fixed</h2>
+
+      <div class="error-card">
+        <h3>Document_07.pdf</h3>
+        <p>Status: Successfully reprocessed</p>
+        <p>Fixed: Oct 25, 2025 — 09:00 AM</p>
+        <div class="actions">
+          <button class="btn view">View Details 🔍</button>
+          <button class="btn delete">Delete 🗑️</button>
+        </div>
+      </div>
+
+      <div class="error-card">
+        <h3>Thesis_Project.docx</h3>
+        <p>Status: Issue resolved and verified</p>
+        <p>Fixed: Oct 26, 2025 — 05:20 PM</p>
+        <div class="actions">
+          <button class="btn view">View Details 🔍</button>
+          <button class="btn delete">Delete 🗑️</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %}

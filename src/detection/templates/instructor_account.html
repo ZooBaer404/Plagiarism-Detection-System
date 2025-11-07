@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<!-- =========================================
+     LOAD PAGE-SPECIFIC STYLESHEET
+     ========================================= -->
+<link rel="stylesheet" href="{% static 'css/instructor_account.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- =========================================================
+     PAGE: Instructor Account (Frontend Only)
+     DESCRIPTION:
+       Displays instructor profile information
+       and provides navigation + sign-out options.
+       Layout is consistent with all account profile pages.
+   ========================================================= -->
+
+<div class="account-page-container">
+
+  <!-- =========================================
+       HEADER SECTION
+       ========================================= -->
+  <header class="account-header">
+    <!-- Link back to Instructor Dashboard -->
+    <a href="{% url 'instructor_dashboard' %}" class="brand-title">Plagiarism Detection</a>
+
+    <!-- Page Title -->
+    <h1>Instructor Profile</h1>
+  </header>
+
+  <!-- =========================================
+       ACCOUNT INFORMATION CARD
+       ========================================= -->
+  <section class="account-info">
+
+    <!-- Placeholder Profile Icon (static letter I) -->
+    <div class="profile-picture">
+      <span class="profile-letter">I</span>
+    </div>
+
+    <!-- Static Information (to be dynamically replaced via backend) -->
+    <div class="info-text">
+      <p><strong>Name:</strong> Ahmad Rahimi</p>
+      <p><strong>Email:</strong> instructor@uni.edu.af</p>
+      <p><strong>Username:</strong> instructor_ahmad</p>
+    </div>
+  </section>
+
+  <!-- =========================================
+       ACTION BUTTONS SECTION
+       ========================================= -->
+  <section class="account-actions">
+    <!-- Back Navigation -->
+    <a href="{% url 'instructor_dashboard' %}" class="btn-back">⬅ Back to Dashboard</a>
+
+    <!-- Logout Button (backend logic pending) -->
+    <a href="#" class="btn-logout">Sign Out</a>
+  </section>
+
+</div>
+{% endblock %}

@@ -1,0 +1,150 @@
+/* =======================================================
+   University Upload Page (Frontend)
+   ======================================================= */
+body {
+  font-family: "Segoe UI", sans-serif;
+  color: #f1f5ff;
+  background: linear-gradient(135deg, #0b1220, #182342);
+}
+
+/* HEADER */
+.upload-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 60px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+.brand-title {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.4rem;
+  transition: 0.3s;
+}
+.brand-title:hover { color: #00c8a3; }
+.page-title { font-size: 1.2rem; font-weight: 500; }
+.profile-icon span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: #1f2940; color: #00c8a3; font-weight: 700;
+  transition: 0.3s;
+}
+.profile-icon span:hover { background: #00c8a3; color: #fff; }
+
+/* MAIN UPLOAD AREA */
+.upload-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+}
+.upload-box {
+  text-align: center;
+  width: 100%;
+  max-width: 650px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 15px;
+  padding: 50px 40px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+.upload-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+  color: #00c8a3;
+}
+.file-input { display: none; }
+
+.upload-btn, .upload-all-btn {
+  display: inline-block;
+  background: #00c8a3;
+  color: #fff;
+  padding: 12px 28px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 1rem;
+  min-width: 180px;
+}
+.upload-btn:hover,
+.upload-all-btn:hover { background: #00a888; }
+.upload-all-btn { margin-top: 16px; }
+
+.file-list {
+  margin-top: 18px;
+  text-align: left;
+  font-size: 0.95rem;
+  color: #ffffffcc;
+  background: rgba(255,255,255,0.04);
+  padding: 15px;
+  border-radius: 8px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+.file-list p {
+  margin: 6px 0;
+  padding: 5px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.hidden { display: none; }
+
+/* Loading/Uploading style */
+.upload-all-btn.uploading {
+  background: #555;
+  cursor: wait;
+}
+
+/* File rows & remove button */
+.file-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 6px 10px;
+  margin-bottom: 6px;
+}
+
+.file-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-size {
+  font-size: 0.85rem;
+  color: #ffffff99;
+  margin-right: 8px;
+}
+
+.remove-btn {
+  background: transparent;
+  border: 1px solid #ff4c4c;
+  color: #ff4c4c;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.remove-btn:hover {
+  background: #ff4c4c;
+  color: #fff;
+}
+
+.no-files-msg {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #ffffff99;
+  text-align: center;
+}

@@ -1,0 +1,131 @@
+/* =======================================================
+   Admin Pending Universities – 3 Column Layout
+   ======================================================= */
+
+.pending-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0b1220, #182342);
+  color: #f1f5ff;
+  font-family: "Segoe UI", sans-serif;
+  padding: 40px 60px;
+}
+
+.pending-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 15px;
+  margin-bottom: 40px;
+}
+
+.pending-header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.btn-back {
+  color: #00c8a3;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+}
+.btn-back:hover {
+  color: #03f3c4;
+}
+
+/* --- GRID LAYOUT --- */
+.pending-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+}
+
+.column {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.column h2 {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 8px;
+  margin-bottom: 15px;
+  color: #00c8a3;
+  font-size: 1.3rem;
+}
+
+.uni-card {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 12px;
+  transition: transform 0.2s ease, background 0.3s;
+}
+.uni-card:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.uni-card h3 {
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: #fff;
+  transition: background 0.3s;
+}
+
+.btn.approve {
+  background: #00c8a3;
+}
+.btn.approve:hover {
+  background: #02e0ba;
+}
+
+.btn.reject {
+  background: #e74c3c;
+}
+.btn.reject:hover {
+  background: #ff6656;
+}
+
+.btn.delete {
+  background: #a233ff;
+}
+.btn.delete:hover {
+  background: #bb63ff;
+}
+
+.uni-card.link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+.uni-card.link:hover .view-text {
+  color: #00c8a3;
+}
+.view-text {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+/* --- Empty message --- */
+.empty-msg {
+  opacity: 0.7;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 15px;
+}

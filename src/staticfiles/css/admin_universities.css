@@ -1,0 +1,169 @@
+/* =======================================================
+   Admin Universities – Final Fixed Version
+   ======================================================= */
+
+.pending-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0b1220, #182342);
+  color: #f1f5ff;
+  font-family: "Segoe UI", sans-serif;
+  padding: 40px 60px;
+  overflow-x: hidden;
+}
+
+/* Header */
+.pending-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 15px;
+  margin-bottom: 40px;
+}
+
+.pending-header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.btn-back {
+  color: #00c8a3;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+}
+.btn-back:hover {
+  color: #03f3c4;
+}
+
+/* --- GRID LAYOUT --- */
+.pending-grid {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 25px;
+  flex-wrap: nowrap;
+  height: 78vh; /* fixed equal height for all columns */
+}
+
+/* --- COLUMN --- */
+.column {
+  flex: 1;
+  min-width: 320px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  backdrop-filter: blur(12px);
+  overflow-y: auto;          /* scroll inside the column */
+  scrollbar-width: thin;     /* modern browsers */
+  scrollbar-color: #00c8a3 rgba(255, 255, 255, 0.05);
+}
+
+.column::-webkit-scrollbar {
+  width: 6px;
+}
+.column::-webkit-scrollbar-thumb {
+  background-color: #00c8a3;
+  border-radius: 5px;
+}
+
+/* column title */
+.column h2 {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 8px;
+  margin-bottom: 15px;
+  color: #00c8a3;
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+/* --- University cards --- */
+.uni-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 12px;
+  transition: transform 0.2s ease, background 0.3s;
+}
+.uni-card:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.uni-card h3 {
+  font-size: 1rem;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+/* --- Buttons layout --- */
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: #fff;
+  transition: background 0.3s, transform 0.2s;
+}
+.btn:hover {
+  transform: scale(1.05);
+}
+
+/* button colors */
+.btn.approve {
+  background: #00c8a3;
+}
+.btn.approve:hover {
+  background: #02e0ba;
+}
+
+.btn.reject {
+  background: #e74c3c;
+}
+.btn.reject:hover {
+  background: #ff6656;
+}
+
+.btn.delete {
+  background: #a233ff;
+  margin-left: auto;
+}
+.btn.delete:hover {
+  background: #bb63ff;
+}
+
+.btn.unreject {
+  background: #008cff;
+}
+.btn.unreject:hover {
+  background: #00a6ff;
+}
+
+/* --- Empty message --- */
+.empty-msg {
+  opacity: 0.7;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 15px;
+}
+
+/* Make sure each column always same height */
+.pending-grid > .column {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}

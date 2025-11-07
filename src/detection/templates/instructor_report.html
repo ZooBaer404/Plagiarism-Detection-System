@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<!-- =========================================
+     LOAD PAGE-SPECIFIC STYLESHEET
+     ========================================= -->
+<link rel="stylesheet" href="{% static 'css/instructor_report.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- =========================================================
+     PAGE: Instructor Report Overview
+     DESCRIPTION:
+       Displays a detailed plagiarism report summary for a
+       selected document. Includes similarity score,
+       statistics, matching sources, and text comparison.
+   ========================================================= -->
+
+<div class="report-container">
+
+  <!-- =========================================
+       HEADER SECTION
+       ========================================= -->
+  <header class="report-header">
+    <!-- Brand / Home Link -->
+    <a href="{% url 'instructor_dashboard' %}" class="brand-title">Plagiarism Detection</a>
+
+    <!-- Page Title -->
+    <h1 class="page-title">Report Overview</h1>
+
+    <!-- Profile Icon -->
+    <a href="{% url 'instructor_account' %}" class="profile-icon" title="Account Info">
+      <span>I</span>
+    </a>
+  </header>
+
+  <!-- =========================================
+       MAIN REPORT BODY
+       ========================================= -->
+  <main class="report-body">
+
+    <!-- =========================================
+         SUMMARY SECTION
+         (File info and overall similarity)
+         ========================================= -->
+    <section class="report-summary">
+
+      <!-- Left Side: File Information -->
+      <div class="summary-left">
+        <h2>Uploaded File:</h2>
+        <p><strong>{{ checking_document.checking_document_file.name }}</strong></p>
+        <p>Uploaded: <span>{{ checking_document.created_at|timesince }} ago</span></p>
+      </div>
+
+      <!-- Right Side: Similarity Circle -->
+      <div class="summary-right">
+        <div class="similarity-circle">
+          <span class="percent">{{ checking_document_report }} %</span>
+          <p>Matched</p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- =========================================
+         DETAILS SECTION
+         (Statistics & Matching Sources)
+         ========================================= -->
+    <section class="report-details">
+
+      <!-- Document Stats -->
+      <div class="stats-box">
+        <h3>Document Statistics</h3>
+        <p><strong>Character Count:</strong> {{ checking_document_stats.no_of_characters }} </p>
+        <p><strong>Sentence Count:</strong> {{ checking_document_stats.no_of_sentences }} </p>
+        <p><strong>Word Count:</strong> {{ checking_document_stats.no_of_words }} </p>
+        <p><strong>Image Count:</strong> {{ checking_document_stats.no_of_images }} </p>
+        <p><strong>Document Size:</strong> {{ checking_document_stats.size_of_document }} </p>
+        <p><strong>Unique Content:</strong> {{ unique_content }}%</p>
+        <p><strong>Matched Sources:</strong> {{ matched_sources_no }} </p>
+      </div>
+
+      <!-- Top Sources -->
+      <div class="sources-box">
+        <h3>Top Matching Sources</h3>
+        <ul>
+          {% for document in matched_sources %}
+            <li><a href="{% url "view_document" document.id %}">{{ document.research_document_name }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+
+    </section>
+
+    <!-- =========================================
+         TEXT COMPARISON SECTION
+         (Highlighted plagiarized fragments)
+         ========================================= -->
+
+
+      {% for check in checking_document_checking_process %}
+      <section class="comparison-section">
+      <h3>Text Comparison: {{ check.checking_document_id.checking_document_name }} vs {{ check.research_document_text_vector_id.research_document_id.research_document_file.name }}</h3>
+
+      <p>
+        {{ check.checking_document_text_vector_id.checking_document_enhanced_text_id.sentence_index }}
+        {{ check.checking_document_text_vector_id.checking_document_enhanced_text_id.sentence_enhanced_text }}
+      </p>
+      <p>
+        {{ check.research_document_text_vector_id.research_document_enhanced_text_id.sentence_index }}
+        {{ check.research_document_text_vector_id.research_document_enhanced_text_id.sentence_enhanced_text }}
+      </p>
+    </section>
+
+    {% endfor %}
+
+    <!-- =========================================
+         ACTION BUTTONS SECTION
+         (Save, Delete, Download)
+         ========================================= -->
+    <section class="report-actions">
+      <a href="#" class="btn save">💾 Save Report</a>
+      <a href="#" class="btn delete">🗑 Delete</a>
+      <a href="#" class="btn download">⬇️ Download PDF</a>
+    </section>
+
+  </main>
+</div>
+{% endblock %}

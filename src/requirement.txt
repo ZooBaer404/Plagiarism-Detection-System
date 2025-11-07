@@ -1,7 +1,12 @@
 wheel
-setup-tools
 Django
-python-pdfbox
 python-dotenv
 psycopg
 psycopg_binary
+PyMuPDF
+pytesseract
+sentence-transformers
+pytest
+nltk
+numpy
+celery

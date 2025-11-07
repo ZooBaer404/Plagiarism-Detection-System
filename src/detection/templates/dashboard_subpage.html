@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<!-- =========================================
+     Load Shared Dashboard Subpage Styles
+     ========================================= -->
+<link rel="stylesheet" href="{% static 'css/dashboard_subpage.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- =========================================================
+     TEMPLATE: Dashboard Subpage (Generic)
+     DESCRIPTION:
+       Reusable subpage structure used by dashboards such as:
+       - Admin
+       - University
+       - Instructor
+       Provides consistent layout for all secondary dashboard pages.
+   ========================================================= -->
+
+<div class="subpage-container">
+
+  <!-- =========================================
+       HEADER SECTION
+       ========================================= -->
+  <header class="subpage-header">
+
+    <!-- Brand / Home or Dashboard Return Link -->
+    <a href="{% url return_url %}" class="brand-title">Plagiarism Detection</a>
+
+    <!-- Dynamic Page Title -->
+    <h1>{{ page_title }}</h1>
+
+    <!-- Profile Icon Linking to Account Page -->
+    <a href="{% url account_url %}" class="profile-icon">
+      <span>{{ user_icon }}</span>
+    </a>
+  </header>
+
+  <!-- =========================================
+       MAIN CONTENT AREA
+       ========================================= -->
+  <main class="subpage-content">
+    {% block sub_content %}
+    <!-- Child templates will inject their unique content here -->
+    {% endblock %}
+  </main>
+
+  <!-- =========================================
+       FOOTER SECTION / NAVIGATION
+       ========================================= -->
+  <div class="subpage-footer">
+    <!-- Back Button: Navigates to Dashboard -->
+    <a href="{% url return_url %}" class="btn-back">⬅ Back to Dashboard</a>
+  </div>
+
+</div>
+{% endblock %}

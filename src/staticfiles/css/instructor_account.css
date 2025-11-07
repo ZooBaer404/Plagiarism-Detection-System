@@ -1,0 +1,131 @@
+/* ===========================================================
+   FILE: instructor_account.css
+   AUTHOR: Sayed Noorullah Hashimi
+   PURPOSE: Instructor Account/Profile page (iOS Glass Style)
+   =========================================================== */
+
+/* === Base page === */
+.account-page-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0b1220, #182342);
+  color: #fff;
+  font-family: "Segoe UI", sans-serif;
+  padding: 50px 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* === Header === */
+.account-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1000px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 20px;
+  margin-bottom: 40px;
+}
+.brand-title {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.4rem;
+  transition: 0.3s;
+}
+.brand-title:hover { color: #00c8a3; }
+.account-header h1 {
+  font-size: 1.3rem;
+  color: #ffffffd9;
+}
+
+/* === Info card === */
+.account-info {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding: 40px 50px;
+  border-radius: 20px;
+
+  /* iOS glass effect */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  transition: 0.4s ease;
+}
+.account-info:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+}
+
+/* Profile circle */
+.profile-picture {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #00c8a3;
+
+  /* iOS soft glow */
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 0 15px rgba(0, 200, 163, 0.35),
+    inset 0 0 8px rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+}
+.info-text p {
+  margin: 8px 0;
+  color: #ffffffb8;
+  font-size: 0.95rem;
+}
+
+/* === Buttons === */
+.account-actions {
+  margin-top: 40px;
+  display: flex;
+  gap: 20px;
+}
+.btn-back, .btn-logout {
+  padding: 10px 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #fff;
+  font-weight: 600;
+  transition: 0.3s;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+}
+.btn-back {
+  background: linear-gradient(145deg, #00c8a3, #009d84);
+}
+.btn-back:hover {
+  background: linear-gradient(145deg, #00e0b7, #00b392);
+}
+.btn-logout {
+  background: linear-gradient(145deg, #e74c3c, #c0392b);
+}
+.btn-logout:hover {
+  background: linear-gradient(145deg, #ff6b5a, #d94536);
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+  .account-info {
+    flex-direction: column;
+    text-align: center;
+    padding: 30px 25px;
+  }
+  .account-header {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+}

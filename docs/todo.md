@@ -10,5 +10,9 @@ Location: docs/todo.md
 These are docs we plan to write:
 
 - [ ] Change the stack to Java Spring Boot
+- [ ] Add nltk.download in the instructions or docs
+- [ ] View university individual repository
+- [ ] https://dbdiagram.io/d tool for diagram
+- [ ] Plagiarism result - colorful
 
 <!-- END OF: todo.md -->

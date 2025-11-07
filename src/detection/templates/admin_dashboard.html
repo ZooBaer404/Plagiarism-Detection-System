@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<!-- =========================================
+     Load Page-Specific CSS File
+     ========================================= -->
+<link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- =========================================================
+     PAGE: Admin Dashboard
+     DESCRIPTION:
+       Displays Admin’s main control center.
+       Contains quick links to Universities, Pending Approvals,
+       Latest Reports, Activities, and System Overview.
+   ========================================================= -->
+
+<div class="admin-dashboard-container h-full bg-slate-200 flex flex-col gap-5">
+
+  <!-- =========================================
+       HEADER SECTION
+       ========================================= -->
+  <header class="admin-header flex justify-between p-1 flex-none">
+    <!-- Site Title / Home Link -->
+    <a href="{% url 'admin_dashboard' %}" class="brand-title text-4xl">Plagiarism Detection</a>
+
+    <!-- Page Title -->
+    <h1 class="page-title text-2xl">Admin Dashboard</h1>
+
+    <!-- Profile Icon Redirecting to Admin Account -->
+    <a href="{% url 'admin_account' %}" class="profile-icon border-2 p-2" title="Account Info">
+      <span>A</span>
+    </a>
+  </header>
+
+  <!-- =========================================
+      MAIN DASHBOARD GRID
+      ========================================= -->
+  <main class="dashboard-grid grid grid-rows-3 grid-cols-3 gap-3 p-1 flex-1">
+
+    <!-- =========================================
+        LEFT COLUMN (Universities + Pending)
+        ========================================= -->
+    <section class="left-col row-span-3 grid grid-rows-2 gap-2">
+
+      <!-- ===== Universities Section ===== -->
+      <div class="dashboard-box border-2 border-neutral-700 flex flex-col gap-2">
+        <h2 class="text-2xl"><a href="{% url 'admin_universities' %}">Universities</a></h2>
+
+        <div class="flex flex-col gap-2 p-2">
+          {% for approved_uni in approved_unis %}
+          <div class="item-box border-2 border-neutral-500">{{ approved_uni.university_name }}</div>
+          {% endfor %}
+        </div>
+        {% comment %} <div class="item-box">Kardan University</div>
+        <div class="item-box">Kabul University</div>
+        <div class="item-box">Iqra University</div> {% endcomment %}
+      </div>
+
+      <!-- ===== Pending Approvals Section ===== -->
+      <div class="dashboard-box border-2 border-neutral-700 flex flex-col gap-2">
+        <!-- NOTE:
+            This also links to the same subpage as Universities,
+            since both sections share the same management interface.
+        -->
+        <h2 class="text-2xl"><a href="{% url 'admin_universities' %}">Pending Approval</a></h2>
+        <div class="flex flex-col gap-2 p-2">
+          {% for pending_uni in pending_unis %}
+          <div class="item-box border-2 border-neutral-500">{{ pending_uni.university_name }}</div>
+          {% endfor %}
+        </div>
+
+        {% comment %} <div class="item-box">University #456</div>
+        <div class="item-box">University #789</div> {% endcomment %}
+      </div>
+    </section>
+
+    <!-- =========================================
+        MIDDLE COLUMN – Latest Reports
+        ========================================= -->
+    <section class="reports-box dashboard-box border-2 flex flex-col row-span-2">
+      <!-- Clickable Title linking to Reports Subpage -->
+      <h2 class="text-2xl"><a href="{% url 'admin_reports' %}">Latest Reports</a></h2>
+
+      <div class="flex flex-col gap-2 p-2">
+        {% for latest_report in latest_reports %}
+        <div class="report-card">
+          <strong>University:</strong> {{ latest_report.checking_document_id.instructor_id.university_id.university_name }} <br>
+          <span>Sent Note:  {{ latest_report.checking_document_id.checking_document_name }} </span><br>
+          <span>Response Note: {{ latest_report.report_result }}%</span>
+        </div>
+        {% endfor %}
+      </div>
+
+    </section>
+
+    <!-- =========================================
+        RIGHT COLUMN – Latest Activities
+        ========================================= -->
+    <section class="activity-box dashboard-box border-2 flex flex-col row-span-2">
+      <!-- Clickable Title linking to Activities Subpage -->
+      <h2 class="text-2xl"><a href="{% url 'admin_activities' %}">Latest Activities</a></h2>
+
+      <div class="flex flex-col gap-2 p-2">
+        {% for latest_instructor_activity in latest_instructor_activities %}
+        
+        <div class="activity-card">
+          <p><strong>{{ latest_instructor_activity.created_at|timesince }}</strong></p>
+          <p>Instructor #{{ latest_instructor_activity.instructor_id.last_name  }} in {{latest_instructor_activity.instructor_id.university_id.university_name }} uploaded a document</p>
+        </div>
+        
+        {% endfor %}
+        <!-- Sample Activity Cards -->
+        
+        {% for latest_university_activity in latest_university_activities %}
+        <div class="activity-card">
+          <p><strong>University: {{ latest_university_activity.university_id.university_name }} </strong></p>
+          <p>Submitted Repository</p>
+        </div>
+        {% endfor %}
+      </div>
+
+    </section>
+
+    <!-- =========================================
+        BOTTOM ROW – System Overview
+        ========================================= -->
+    <section class="bottom-box dashboard-box border-2 col-span-2 flex flex-col gap-5">
+      <h2 class="text-2xl">System Overview</h2>
+
+      <!-- General Statistics Overview -->
+      <div class="stats-row grid grid-cols-3 grid-rows-1 grow p-5 gap-5 ">
+        <div class="item-box border-2 border-neutral-700 flex flex-col items-center"><p class="text-3xl">Total Universities</p> <p class="text-5xl">{{ total_universities }}</p></div>
+        <div class="item-box border-2 border-neutral-700 flex flex-col items-center"><p class="text-3xl">Total Instructors</p> <p class="text-5xl">{{ total_instructors }}</p></div>
+        <div class="item-box border-2 border-neutral-700 flex flex-col items-center"><p class="text-3xl">Documents Processed</p> <p class="text-5xl">{{ total_documents_processed }}</p></div>
+      </div>
+    </section>
+  </main>
+</div>
+{% endblock %}

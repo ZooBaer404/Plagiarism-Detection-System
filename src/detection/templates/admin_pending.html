@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<!-- =========================================
+     Load Page-Specific CSS File
+     ========================================= -->
+<link rel="stylesheet" href="{% static 'css/admin_pending.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- =========================================================
+     PAGE: Admin – Universities Management
+     DESCRIPTION:
+       Displays universities separated into three columns:
+       Pending, Approved, and All Universities.
+       Each section includes appropriate actions.
+   ========================================================= -->
+
+<div class="pending-container">
+
+  <!-- =========================================
+       PAGE HEADER
+       ========================================= -->
+  <header class="pending-header">
+    <h1>Universities Management</h1>
+
+    <!-- Navigation Back to Dashboard -->
+    <a href="{% url 'admin_dashboard' %}" class="btn-back">⬅ Back to Dashboard</a>
+  </header>
+
+  <!-- =========================================
+       MAIN GRID – THREE COLUMNS
+       ========================================= -->
+  <div class="pending-grid">
+
+    <!-- =========================================
+         COLUMN 1 – Pending Universities
+         ========================================= -->
+    <section class="column pending">
+      <h2>Pending Universities</h2>
+
+      <!-- Django loop to display universities awaiting approval -->
+      {% for uni in pending %}
+      <div class="uni-card">
+        <!-- University Name -->
+        <h3>{{ uni.university_name }}</h3>
+
+        <!-- Action Buttons: Approve / Reject -->
+        <div class="actions">
+          <button class="btn approve">Approve ✅</button>
+          <button class="btn reject">Reject ❌</button>
+        </div>
+      </div>
+
+      <!-- Display message if no pending universities exist -->
+      {% empty %}
+      <p class="empty-msg">No pending universities 🎉</p>
+      {% endfor %}
+    </section>
+
+    <!-- =========================================
+         COLUMN 2 – Approved Universities
+         ========================================= -->
+    <section class="column approved">
+      <h2>Approved Universities</h2>
+
+      <!-- Django loop for approved universities -->
+      {% for uni in approved %}
+      <div class="uni-card">
+        <h3>{{ uni.university_name }}</h3>
+
+        <!-- Action Button: Delete -->
+        <div class="actions">
+          <button class="btn delete">Delete 🗑️</button>
+        </div>
+      </div>
+
+      <!-- Display message if none approved yet -->
+      {% empty %}
+      <p class="empty-msg">No approved universities yet.</p>
+      {% endfor %}
+    </section>
+
+    <!-- =========================================
+         COLUMN 3 – All Universities
+         ========================================= -->
+    <section class="column all">
+      <h2>All Universities</h2>
+
+      <!-- Django loop for all universities in database -->
+      {% for uni in all %}
+      <a href="{% url 'university_profile' uni.id %}" class="uni-card link">
+        <h3>{{ uni.university_name }}</h3>
+        <span class="view-text">View Profile →</span>
+      </a>
+
+      <!-- Display message if list is empty -->
+      {% empty %}
+      <p class="empty-msg">No universities available.</p>
+      {% endfor %}
+    </section>
+  </div>
+</div>
+{% endblock %}

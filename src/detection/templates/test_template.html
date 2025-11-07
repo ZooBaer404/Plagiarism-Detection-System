@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/university_upload.css' %}">
+{% endblock %}
+
+{% block content %}
+
+    <div>
+        {{ message }}
+    </div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/university_upload.js' %}"></script>
+{% endblock %}

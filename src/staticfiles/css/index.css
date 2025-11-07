@@ -1,0 +1,78 @@
+/* ------------------------- Homepage (Index) Styles ------------------------- */
+
+/* Welcome block */
+.welcome-container {
+  text-align: center;
+  margin-top: 40px;
+  transform: translateY(-20px); /* push a little up */
+}
+
+.welcome-line {
+  font-size: 1.4rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: #f0f6ff;
+  text-align: left;    /* move WELCOME TO to left */
+  margin-right: 10%;
+  margin-bottom: -10px;
+}
+
+.welcome-text, .to-text {
+  display: inline-block;
+  margin: 0 2px;
+}
+
+/* Title */
+.title {
+  font-size: 3.2rem;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: #ffffff;
+  margin: 0;
+  text-align: center;
+}
+
+.plagiarism-word {
+  color: #ffb3b3; /* accent color */
+}
+
+.subtitle {
+  font-size: 1rem;
+  margin-top: 8px;
+  color: #cccccc;
+  text-align: center;
+}
+
+/* Continue section */
+.continue-section {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.continue-hint {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 6px;
+  font-style: italic;
+}
+
+.continue-btn {
+  display: inline-block;
+  padding: 6px 60px;
+  font-size: 0.9rem;
+  border-radius: 25px;
+  background: linear-gradient(135deg, #4a5a8c, #6a7bb5);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.continue-btn:hover {
+  transform: scale(1.05) translateY(-2px);
+  opacity: 0.95;
+}

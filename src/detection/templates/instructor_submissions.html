@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<!-- =========================================
+     LOAD PAGE-SPECIFIC STYLESHEET
+     ========================================= -->
+<link rel="stylesheet" href="{% static 'css/instructor_submissions.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- =========================================================
+     PAGE: Instructor Submissions
+     DESCRIPTION:
+       Displays all documents uploaded by the instructor.
+       Divided into three sections:
+         - Pending Review
+         - Reviewed
+         - Rejected
+       Each card contains relevant details and actions.
+   ========================================================= -->
+
+<div class="instructor-submissions-container">
+
+  <!-- =========================================
+       HEADER SECTION
+       ========================================= -->
+  <header class="instructor-header">
+    <!-- Brand / Title -->
+    <a href="{% url 'instructor_dashboard' %}" class="brand-title">Plagiarism Detection</a>
+
+    <!-- Page Title -->
+    <h1 class="page-title">Submissions</h1>
+
+    <!-- Profile Icon -->
+    <a href="{% url 'instructor_account' %}" class="profile-icon" title="Account Info">
+      <span>I</span>
+    </a>
+  </header>
+
+  <!-- =========================================
+       MAIN CONTENT SECTION
+       ========================================= -->
+  <main class="submissions-main">
+
+    <!-- Section Title -->
+    <h2 class="section-title">Uploaded Documents</h2>
+
+    <!-- =========================================================
+         SUBMISSIONS GRID
+         Contains Pending, Reviewed, and Rejected sections
+       ========================================================= -->
+    <div class="submissions-grid">
+
+      <!-- =========================================
+           PENDING SECTION
+           ========================================= -->
+      <section class="submission-section">
+        <h3 class="sub-title pending">⏳ Pending Review</h3>
+
+        <!-- Example Pending Documents -->
+        <div class="submission-card">
+          <strong>AI_Paper.pdf</strong>
+          <p>Uploaded: Oct 25, 2025</p>
+          <p>Status: Pending</p>
+        </div>
+
+        <div class="submission-card">
+          <strong>ML_Thesis.docx</strong>
+          <p>Uploaded: Oct 22, 2025</p>
+          <p>Status: Pending</p>
+        </div>
+      </section>
+
+      <!-- =========================================
+           REVIEWED SECTION
+           ========================================= -->
+      <section class="submission-section">
+        <h3 class="sub-title reviewed">✅ Reviewed</h3>
+
+        <!-- Example Reviewed Documents -->
+        <div class="submission-card">
+          <strong>Research_2025.pdf</strong>
+          <p>Checked on: Oct 19, 2025</p>
+          <p>Result: 9% Similarity</p>
+          <button class="btn-view">View Report</button>
+        </div>
+
+        <div class="submission-card">
+          <strong>AI_Ethics.docx</strong>
+          <p>Checked on: Oct 14, 2025</p>
+          <p>Result: 18% Similarity</p>
+          <button class="btn-view">View Report</button>
+        </div>
+      </section>
+
+      <!-- =========================================
+           REJECTED SECTION
+           ========================================= -->
+      <section class="submission-section">
+        <h3 class="sub-title rejected">❌ Rejected</h3>
+
+        <!-- Example Rejected Document -->
+        <div class="submission-card">
+          <strong>DeepFake_Study.pdf</strong>
+          <p>Uploaded: Oct 10, 2025</p>
+          <p>Reason: Formatting issue</p>
+          <button class="btn-delete">Delete</button>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- =========================================
+         BACK BUTTON
+         ========================================= -->
+    <div class="back-section">
+      <a href="{% url 'instructor_dashboard' %}" class="btn-back">⬅ Back to Dashboard</a>
+    </div>
+
+  </main>
+</div>
+{% endblock %}

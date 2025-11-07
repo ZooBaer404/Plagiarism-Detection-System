@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ============================================================
+       BASE TEMPLATE — Plagiarism Detection
+       Used as the main wrapper for all other HTML pages.
+       ============================================================ -->
+
+  <title>{% block title %}Plagiarism Detection{% endblock %}</title>
+
+  <!-- ============================================================
+       GLOBAL STYLES (shared across all pages)
+       ============================================================ -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+  <!-- ============================================================
+       PAGE-SPECIFIC STYLES (injected by child templates)
+       ============================================================ -->
+  {% comment %} {% block extra_css %}{% endblock %} {% endcomment %}
+</head>
+
+<body class="{% block body_class %}{% endblock %} h-full w-full">
+
+  {% comment %} <!-- ============================================================
+       BACKGROUND ELEMENTS (Canvas + Gradient)
+       ============================================================ -->
+  <canvas id="bgCanvas"></canvas>
+  <div class="gradient-overlay"></div> {% endcomment %}
+
+  <!-- ============================================================
+       GLOBAL HEADER / NAVIGATION BAR
+       ============================================================ -->
+  {% comment %} <header class="site-header">
+    <nav class="top-nav">
+
+    </nav>
+  </header> {% endcomment %}
+
+  <!-- ============================================================
+       DJANGO MESSAGES (flash notifications)
+       ============================================================ -->
+  {% if messages %}
+  <div class="h-3 fixed top-0 right-0 left-0 z-20">
+    {% for message in messages %}
+      {% if message.tags == 'success' %}
+        <div class="alert"
+             style="background: rgba(46,204,113,0.25);
+                    margin: 10px auto; width: 80%; padding: 12px 20px;
+                    color: #fff; text-align: center;
+                    backdrop-filter: blur(25px);">
+          {{ message }}
+        </div>
+      {% elif message.tags == 'warning' %}
+        <div class="alert"
+             style="background: rgba(241,196,15,0.25);
+                    margin: 10px auto; width: 80%; padding: 12px 20px;
+                    color: #fff; text-align: center;
+                    backdrop-filter: blur(25px);">
+          {{ message }}
+        </div>
+      {% elif message.tags == 'error' %}
+        <div class="alert"
+             style="background: rgba(231,76,60,0.25);
+                    margin: 10px auto; width: 80%; padding: 12px 20px;
+                    color: #fff; text-align: center;
+                    backdrop-filter: blur(25px);">
+          {{ message }}
+        </div>
+      {% else %}
+        <div class="alert"
+             style="background: rgba(255,255,255,0.08);
+                    margin: 10px auto; width: 80%; padding: 12px 20px;
+                    color: #fff; text-align: center;
+                    backdrop-filter: blur(25px);">
+          {{ message }}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+
+  <!-- ============================================================
+       MAIN CONTENT AREA
+       (Each page injects its main UI here)
+       ============================================================ -->
+  <main class="h-screen bg-neutral-50 flex flex-col">
+    {% block content %}{% endblock %}
+  </main>
+
+
+  <!-- ============================================================
+       GLOBAL SCRIPTS
+       ============================================================ -->
+  {% comment %} <script src="{% static 'js/bg-waves.js' %}"></script> {% endcomment %}
+
+  <!-- ============================================================
+       PAGE-SPECIFIC SCRIPTS
+       (Injected by child templates when needed)
+       ============================================================ -->
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

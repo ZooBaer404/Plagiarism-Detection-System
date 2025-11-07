@@ -36,9 +36,6 @@ def function_name(param1: Type, param2: Type, optional_param: Type = default) ->
     - SpecificError: When this condition happens.
     - AnotherError: When something else goes wrong.
 
-    Example:
-    >>> function_name(10, "data")
-    {'result': 'ok'}
     """
     pass  # your implementation here
 

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Help — Plagiarism Detection{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/help.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="help-container">
+  <!-- Top bar with back button -->
+  <div class="help-header">
+    <a href="/" class="back-btn">← Back</a>
+    <h1 class="help-title">Help & Information</h1>
+  </div>
+
+  <!-- Scrollable sections -->
+  <section class="help-section">
+    <h2>What is this?</h2>
+    <p>
+      Plagiarism Detection is an academic tool designed to help universities,
+      instructors, and administrators detect and prevent plagiarism in research,
+      assignments, and other academic work.
+    </p>
+  </section>
+
+  <section class="help-section">
+    <h2>How to Use</h2>
+    <p>
+      Here you will find instructions on how to upload documents, run checks,
+      and view reports. (Details will be added later.)
+    </p>
+  </section>
+
+  <section class="help-section">
+    <h2>Security</h2>
+    <p>
+      All uploaded files are securely stored and processed. Your documents are
+      never shared with third parties, and privacy is our top priority.
+    </p>
+  </section>
+
+  <section class="help-section">
+    <h2>Contact Us</h2>
+    <p>
+      For support or inquiries, please contact us at:
+      <br>Email: support@plagiarismdetection.com
+      <br>Phone: +123 456 789
+    </p>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Instructor Signup — Plagiarism Detection{% endblock %}
+
+{% block content %}
+<!-- =========================================================
+     PAGE: Instructor Signup
+     DESCRIPTION:
+       Signup form for new instructors to register into
+       the plagiarism detection platform.
+       Allows name, email, password, and university selection.
+   ========================================================= -->
+
+<div class="login-window h-full w-full bg-sky-400 flex flex-col justify-center items-center gap-5">
+     
+     <div class="flex flex-col gap-5">
+          <!-- =========================================
+               PAGE TITLE
+               ========================================= -->
+          <h1 class="login-title text-6xl">Instructor Signup</h1>
+          
+          <!-- =========================================
+               SIGNUP FORM
+               ========================================= -->
+          <form method="POST" enctype="multipart/form-data" class="login-form" action="">
+               {% csrf_token %}
+
+               <div class="flex flex-col gap-2">
+                    <div class="flex flex-col">
+                         <label for="first_name">First Name</label>
+                         <input type="text" name="first_name" class="border-2 border-neutral-700" required>
+                    </div>
+                    
+                    <div class="flex flex-col">
+                         <label for="last_name">Last Name</label>
+                         <input type="text" name="last_name" class="border-2 border-neutral-700" required>
+                    </div>
+                    
+                    <div class="flex flex-col">
+                         <label for="email">Email</label>
+                         <input type="email" name="email" class="border-2 border-neutral-700" required>
+                    </div>
+                    
+                    <div class="flex flex-col">
+                         <label for="password">Password</label>
+                         <input type="password" name="password" class="border-2 border-neutral-700" required>
+                    </div>
+                    
+                    <div class="flex flex-col">
+                         <label for="university">University</label>
+                         <select name="university_id" id="university" class="border-2 border-neutral-700">
+                              {% for university in universities %}
+                              <option value="{{university.id}}">{{university.university_name}}</option>
+                              {% endfor %}
+                         </select>
+                    </div>
+                    
+                    <div class="flex flex-col">
+                         <label for="certificate">Certificate</label>
+                         <input type="file" name="certificate" accept=".pdf,.png" class="border-2 border-neutral-700" required>
+                    </div>
+                    
+                    <div class="flex flex-col">
+                         <label for="field">Field</label>
+                         <input type="text" name="field" class="border-2 border-neutral-700" required>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <input type="submit" class="login-btn border-2 border-neutral-700">
+               </div>
+          </form>
+
+               <!-- =========================================
+               LOGIN LINK
+               Redirects users who already have an account
+               ========================================= -->
+          <p class="login-footer">
+          Already have an account?
+          <a href="/login/" class="create-link">Login here</a>
+          </p>
+     </div>
+</div>
+{% endblock %}

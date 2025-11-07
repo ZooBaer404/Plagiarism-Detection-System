@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/university_upload_done.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="upload-done-container">
+  <header class="upload-done-header">
+    <a href="{% url 'university_dashboard' %}" class="brand-title">Plagiarism Detection</a>
+    <h1>Upload Summary</h1>
+    <a href="{% url 'university_account' %}" class="profile-icon"><span>U</span></a>
+  </header>
+
+  <main class="upload-summary">
+    <div class="success-icon">✅</div>
+    <h2>Upload Complete</h2>
+    <p>Your documents have been successfully added to your university's repository and are being processed.</p>
+
+    <div class="uploaded-files">
+      <h3>Uploaded Unprrocessed Files</h3>
+      <ul id="uploadedList">
+        <!-- These will later be rendered dynamically when backend is ready -->
+        {% for file in pending %}
+          <li>{{ file.research_document_name }} ({{ file.research_document_file.size }} Bytes)</li>
+        {% endfor %}
+
+      </ul>
+    </div>
+
+    <div class="upload-actions">
+      <a href="{% url 'university_dashboard' %}" class="btn-back">⬅ Back to Dashboard</a>
+      <a href="{% url 'university_upload' %}" class="btn-upload-more">Upload More Files</a>
+    </div>
+  </main>
+</div>
+{% endblock %}

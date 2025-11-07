@@ -1,0 +1,188 @@
+/* ------------------------- Shared page styles ------------------------- */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #f0f6ff; /* brighter text */
+  background: #0b1220; /* dark base */
+}
+
+/* Minimal override: background stack + welcome/title tweaks */
+#bgCanvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  pointer-events: none;
+  background: transparent;
+}
+
+/* Soft diagonal academic "wave" background */
+.gradient-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+
+  background: linear-gradient(
+    135deg,                 /* bottom-right → top-left */
+    rgba(7, 0, 32, 0.9),  /* deep navy */
+    rgba(7, 1, 56, 0.9), /* academic blue */
+    rgba(34, 1, 56, 0.9), /* muted blue-gray */
+    rgba(13, 0, 31, 0.9)   /* soft steel */
+  );
+  background-size: 350% 350%;
+  animation: bgWave 25s ease infinite;
+}
+
+.site-header,
+.welcome-container,
+.continue-section {
+  position: relative;
+  z-index: 5;
+}
+
+/* Welcome row right-aligned and title bigger/wider */
+.welcome-line { text-align: right; margin-right: 10%; margin-bottom: 12px; font-weight: 700; letter-spacing: 2px; }
+.welcome-text, .to-text { display: inline-block; margin: 0 2px; }
+.title { font-size: clamp(2.6rem, 4vw, 3.6rem); font-weight: 800; letter-spacing: 3px; text-align: center; margin: 0; }
+.subtitle { text-align: center; }
+
+
+@keyframes bgWave {
+  0%   { background-position: 100% 100%; }
+  50%  { background-position: 0% 0%; }
+  100% { background-position: 100% 100%; }
+}
+
+/* Top nav */
+.site-header {
+  position: fixed;
+  top: 12px;
+  right: 24px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.small-link {
+  color: rgba(255,255,255,0.9);
+  text-decoration: none;
+  margin-left: 14px;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+.small-link:hover { color: #fff; }
+
+/* Main area (centers content) */
+.main-area {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  box-sizing: border-box;
+}
+
+/* Move main welcome section a little higher */
+.welcome-container {
+  margin-top: 40px;        /* less space from top */
+  transform: translateY(-20px); /* push everything slightly upward */
+}
+
+.welcome-line {
+  font-size: 1.4rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: #f0f6ff;
+
+  text-align: left;   /* move to the left side */
+  margin-right: 10%;   /* push a bit inward from right edge */
+  margin-bottom: -10px; /* space above the title */
+}
+
+.welcome-text,
+.to-text {
+  display: inline-block;
+  margin: 0 2px;
+}
+
+.title {
+  font-size: 3.2rem;     /* bigger */
+  font-weight: 800;      /* bolder */
+  letter-spacing: 5px;   /* wider spacing */
+  color: #ffffff;
+  text-align: center;    /* keep title centered */
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 1rem;
+  margin-top: 8px;
+  color: #cccccc;
+  text-align: center;
+}
+
+
+
+
+.plagiarism-word {
+  color: #ffb3b3; /* pale red highlight */
+}
+
+
+/* Continue button */
+/* Continue button container (keeps it centered) */
+.continue-section {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+/* Button */
+.continue-btn {
+  display: inline-block;
+  padding: 6px 60px;
+  font-size: 0.9rem;
+  border-radius: 25px;
+  background: linear-gradient(135deg, #4a5a8c, #6a7bb5);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* On hover — only scale & move up */
+.continue-btn:hover {
+  transform: scale(1.05) translateY(-2px);
+  opacity: 0.95;
+}
+/* Small text above continue button */
+.continue-hint {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 6px;
+  font-style: italic;
+}
+
+
+
+/* Help watermark */
+.help-link {
+  position: fixed;
+  bottom: 18px;
+  left: 18px;
+  z-index: 20;
+  color: rgba(255,255,255,0.3);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .title { font-size: 2.2rem; }
+  .welcome-line { font-size: 1rem; }
+  .continue-btn { padding: 8px 80px; }
+}

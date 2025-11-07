@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/university_upload.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="upload-container">
+
+  <!-- Header -->
+  <header class="upload-header">
+    <a href="{% url 'university_dashboard' %}" class="brand-title">Plagiarism Detection</a>
+    <h1 class="page-title">University Repository Upload</h1>
+    <a href="{% url 'university_account' %}" class="profile-icon"><span>U</span></a>
+  </header>
+
+  <!-- Upload Section -->
+  <main class="upload-section">
+    <div class="upload-box">
+      <div class="upload-icon">📂</div>
+      <h3>Select Files to Upload</h3>
+
+      <form id="multiUploadForm" method="POST" enctype="multipart/form-data" action={% url 'university_upload' %} >
+        {% csrf_token %}
+
+        {% comment %} <input type="file" id="multiFileInput" class="file-input" name="documents" accept=".pdf" multiple> {% endcomment %}
+        
+          {% for field in form %}
+              <div>
+                  {{ field.label_tag }}
+                  {{ field }}
+                  {% if field.help_text %}
+                      <p class="helptext">{{ field.help_text }}</p>
+                  {% endif %}
+                  {% for error in field.errors %}
+                      <p class="errorlist">{{ error }}</p>
+                  {% endfor %}
+              </div>
+          {% endfor %}
+
+          <button type="submit">Upload</button>
+        {% comment %} <label for="{{ field.id_for_label }}">{{ field.label }}</label> {% endcomment %}
+        {% comment %} <input type="{{ field.type }}" id="multiFileInput" class="file-input" name="documents" accept=".pdf"> {% endcomment %}
+        
+
+        {% comment %} <label for="multiFileInput" class="upload-btn">Choose Files</label>
+
+                    <!-- File list display -->
+            <div id="fileList" class="file-list hidden"></div>
+            <p id="noFilesMsg" class="no-files-msg hidden">No files selected yet.</p> {% endcomment %}
+      </form>
+    </div>
+  </main>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% comment %} <script src="{% static 'js/university_upload.js' %}"></script> {% endcomment %}
+{% endblock %}

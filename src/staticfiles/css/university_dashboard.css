@@ -1,0 +1,188 @@
+/* ===========================================================
+   University Dashboard – Fixed Multi-Row Grid Version
+   =========================================================== */
+
+.university-dashboard-container {
+  min-height: 100vh;
+  padding: 30px 60px;
+  background: linear-gradient(135deg, #0b1220, #182342);
+  color: #f1f5ff;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* ===== HEADER ===== */
+.uni-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 15px;
+}
+
+.brand-title {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.4rem;
+  transition: 0.3s;
+}
+.brand-title:hover { color: #00c8a3; }
+
+.page-title { font-size: 1.2rem; font-weight: 500; }
+
+.profile-icon span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #1f2940;
+  color: #00c8a3;
+  font-weight: bold;
+  transition: 0.3s;
+}
+.profile-icon span:hover { background: #00c8a3; color: #fff; }
+
+/* ===== GRID LAYOUT ===== */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1.2fr; /* left / middle / right */
+  grid-template-rows: auto auto; /* 2 rows */
+  grid-template-areas:
+    "left repos errors"
+    "left upload upload";
+  gap: 25px;
+  margin-top: 30px;
+  align-items: start;
+}
+
+/* Assign areas */
+.left-col { grid-area: left; display: flex; flex-direction: column; gap: 25px; }
+.repo-box { grid-area: repos; }
+.errors-box { grid-area: errors; }
+.upload-box { grid-area: upload; }
+
+/* ===== BOXES ===== */
+.dashboard-box {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 15px;
+  padding: 18px 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-box h2 {
+  font-size: 1rem;
+  margin-bottom: 15px;
+  color: #ffffffcc;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 5px;
+}
+
+.dashboard-box h2 a {
+  color: #ffffffcc;
+  text-decoration: none;
+  transition: 0.3s;
+}
+.dashboard-box h2 a:hover {
+  color: #00c8a3;
+  text-decoration: underline;
+}
+
+/* ===== ITEM / REPO STYLES ===== */
+.item-box,
+.repo-item {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+/* ===== REPOSITORIES ===== */
+.repo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.search-icon {
+  cursor: pointer;
+  font-size: 1.1rem;
+  opacity: 0.8;
+  transition: 0.3s;
+}
+.search-icon:hover { opacity: 1; transform: scale(1.2); }
+
+/* ===== UPLOAD SECTION ===== */
+
+/* Adjusted upload section for better spacing */
+.upload-box {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  height: 140px; /* a bit taller for breathing space */
+  padding: 25px 30px;
+}
+.upload-area {
+  display: inline-block;
+  padding: 12px 26px;
+  background: rgba(0, 200, 163, 0.2);
+  color: #00c8a3;
+  border-radius: 10px;
+  border: 1px solid #00c8a3;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+  letter-spacing: 0.3px;
+}
+.upload-area:hover { background: #00c8a3; color: #fff; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 992px) {
+  .dashboard-grid {
+    grid-template-areas:
+      "repos"
+      "errors"
+      "upload"
+      "left";
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Clickable dashboard boxes */
+.link-box {
+  display: block;
+  text-decoration: none;
+  color: #fff;
+  transition: 0.3s;
+}
+
+.link-box:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-3px);
+}
+
+/* Upload button wrapper & note */
+.upload-btn-wrapper {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.upload-note {
+  font-size: 0.9rem;
+  color: #ffffffb3;
+  margin-top: 12px;
+  line-height: 1.5;
+  max-width: 500px;   /* limit width so it doesn’t stretch too long */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+
+
+
+
+

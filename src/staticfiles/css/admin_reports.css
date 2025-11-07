@@ -1,0 +1,120 @@
+/* =======================================================
+   Admin Latest Reports – PS5 Wide Panels Style
+   ======================================================= */
+
+.reports-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0b1220, #182342);
+  color: #f1f5ff;
+  font-family: "Segoe UI", sans-serif;
+  padding: 40px 60px;
+  overflow-x: hidden;
+}
+
+/* Header */
+.reports-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 15px;
+  margin-bottom: 40px;
+}
+
+.reports-header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.btn-back {
+  color: #00c8a3;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+}
+.btn-back:hover { color: #03f3c4; }
+
+/* --- GRID --- */
+.reports-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); /* 3 in row or 1 wide */
+  gap: 30px;
+  width: 100%;
+}
+
+/* --- REPORT CARD --- */
+.report-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 25px;
+  padding: 25px 30px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
+  min-height: 160px;
+}
+
+.report-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-6px);
+  box-shadow: 0 0 35px rgba(0, 200, 163, 0.3);
+}
+
+.report-card h2 {
+  font-size: 1.4rem;
+  color: #00c8a3;
+  margin-bottom: 10px;
+  text-shadow: 0 0 8px rgba(0, 200, 163, 0.4);
+}
+
+.report-card p {
+  margin: 4px 0;
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+/* --- Buttons --- */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.btn {
+  border: none;
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: #fff;
+  transition: background 0.3s, transform 0.2s;
+}
+.btn:hover {
+  transform: scale(1.05);
+}
+
+/* button colors */
+.btn.view {
+  background: #00c8a3;
+}
+.btn.view:hover {
+  background: #02e0ba;
+}
+
+.btn.delete {
+  background: #a233ff;
+}
+.btn.delete:hover {
+  background: #bb63ff;
+}
+
+/* Responsive tweak */
+@media (max-width: 800px) {
+  .reports-grid {
+    grid-template-columns: 1fr; /* only 1 per row on smaller screens */
+  }
+  .report-card {
+    padding: 25px 20px;
+  }
+}

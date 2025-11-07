@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/university_repositories.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="repositories-container">
+  <header class="repositories-header">
+    <h1>University Repositories</h1>
+    <a href="{% url 'university_dashboard' %}" class="btn-back">⬅ Back to Dashboard</a>
+  </header>
+
+  <div class="repositories-grid">
+    <!-- Uploaded Repositories -->
+    <section class="column uploaded">
+      <h2>Uploaded Repositories</h2>
+      {% comment %} <div class="repo-card">
+        <h3>Machine Learning Research.pdf</h3>
+        <p>Uploaded: Oct 22, 2025</p>
+        <p>Status: Awaiting Review</p>
+        <div class="actions">
+          <button class="btn view">View Details 👁️</button>
+          <button class="btn delete">Delete 🗑️</button>
+        </div>
+      </div> {% endcomment %}
+
+      {% for paper in repositories %}
+
+      <div class="repo-card">
+        <h3>{{ paper.research_document_name }}</h3>
+        <p>Uploaded: {{ paper.created_at|timesince }}</p>
+        <div class="actions">
+          <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="type" value="view">
+            <input type="hidden" name="paper_id" value={{paper.id}}>
+            <button class="btn view" type="submit">View Details 👁️</button>
+          </form>
+
+          <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="type" value="delete">
+            <input type="hidden" name="paper_id" value={{paper.id}}>
+            <button class="btn delete" type="submit">Delete 🗑️</button>
+          </form>
+        </div>
+      </div>
+
+      {% endfor %}
+    </section>
+
+    <!-- Under Review -->
+    {% comment %} <section class="column review">
+      <h2>Under Review</h2>
+      <div class="repo-card">
+        <h3>Blockchain System Paper.pdf</h3>
+        <p>Submitted: Oct 20, 2025</p>
+        <p>Reviewer: Dr. Sara Ahmad</p>
+        <div class="actions">
+          <button class="btn view">View Progress 📊</button>
+          <button class="btn download">Download ⬇️</button>
+        </div>
+      </div>
+    </section> {% endcomment %}
+
+    <!-- Approved / Completed -->
+    <section class="column approved">
+     <h2>Completed</h2>
+      {% comment %}<div class="repo-card">
+        <h3>Deep Learning Project.zip</h3>
+        <p>Approved: Oct 10, 2025</p>
+        <p>Instructor: Mr. Omid Khan</p>
+        <div class="actions">
+          <button class="btn view">Open 🔍</button>
+          <button class="btn download">Download ⬇️</button>
+        </div>
+      </div> {% endcomment %}
+    </section>
+  </div>
+</div>
+{% endblock %}

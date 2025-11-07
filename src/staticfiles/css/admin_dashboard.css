@@ -1,0 +1,130 @@
+/* --- simple global reset --- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(135deg,#0b1220,#182342);
+  color: #f1f5ff;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ---------- header ---------- */
+.admin-header{
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid rgba(255,255,255,.15);
+  padding:20px 60px 15px;
+}
+.brand-title{
+  color:#fff;text-decoration:none;font-weight:700;font-size:1.4rem;transition:.3s;
+}
+.brand-title:hover{color:#00c8a3;}
+.page-title{font-size:1.2rem;font-weight:500;}
+.profile-icon span{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:40px;height:40px;border-radius:50%;
+  background:#1f2940;color:#00c8a3;font-weight:700;transition:.3s;
+}
+.profile-icon span:hover{background:#00c8a3;color:#fff;}
+
+/* ---------- main grid ---------- */
+.dashboard-grid{
+  display:grid;
+  grid-template-columns: 320px 1fr 1fr;    /* left | middle | right */
+  grid-template-rows: 380px 100px;         /* top row | bottom strip */
+  grid-template-areas:
+    "left reports activity"
+    "left bottom bottom";
+  gap:25px;
+  padding:30px 60px 40px;
+}
+
+/* area assignment */
+.left-col    { grid-area:left; display:flex; flex-direction:column; gap:25px; }
+.reports-box { grid-area:reports; }
+.activity-box{ grid-area:activity; }
+.bottom-box  { grid-area:bottom; }
+
+/* ---------- shared box styling ---------- */
+.dashboard-box{
+  background:rgba(255,255,255,.06);
+  border-radius:15px;
+  padding:18px 20px;
+  box-shadow:0 2px 8px rgba(0,0,0,.25);
+  display:flex;flex-direction:column;
+}
+.dashboard-box h2{
+  font-size:1rem;
+  margin-bottom:15px;
+  color:#ffffffcc;
+  border-bottom:1px solid rgba(255,255,255,.1);
+  padding-bottom:5px;
+}
+.dashboard-box h2 a{
+  color:#ffffffcc;text-decoration:none;transition:.3s;
+}
+.dashboard-box h2 a:hover{color:#00c8a3;text-decoration:underline;}
+
+/* inner items */
+.item-box,.report-card,.activity-card{
+  background:rgba(255,255,255,.08);
+  border-radius:8px;
+  padding:10px;
+  margin-bottom:10px;
+  font-size:.9rem;
+}
+
+/* ---------- system overview strip ---------- */
+
+
+.bottom-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80px;
+  padding-top: 4px;
+  padding-bottom: 6px;
+  gap: 6px;
+}
+
+.bottom-box h2 {
+  font-size: 0.95rem;
+  color: #ffffffcc;
+  font-weight: 600;
+  border: none;
+  margin-bottom: 4px;
+}
+
+.bottom-box .stats-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;                /* space between badges */
+}
+
+.bottom-box .item-box {
+  background: rgba(0, 200, 163, 0.15);
+  border: 1px solid #00c8a3;
+  color: #00c8a3;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.83rem;
+  text-align: center;
+  min-width: 160px;
+}
+
+/* ---------- responsive ---------- */
+@media(max-width:992px){
+  .dashboard-grid{
+    grid-template-columns:1fr;
+    grid-template-rows:auto;
+    grid-template-areas:
+      "reports"
+      "activity"
+      "bottom"
+      "left";
+    padding:20px;
+  }
+  .left-col{flex-direction:column;}
+  .bottom-box{flex-wrap:wrap;}
+}

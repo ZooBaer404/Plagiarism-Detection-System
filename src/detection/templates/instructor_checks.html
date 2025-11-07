@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<!-- =========================================
+     LOAD PAGE-SPECIFIC STYLESHEET
+     ========================================= -->
+<link rel="stylesheet" href="{% static 'css/instructor_checks.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- =========================================================
+     PAGE: Instructor — Previous Checks
+     DESCRIPTION:
+       Displays the list of documents previously checked by
+       the instructor, including similarity results and
+       report view actions.
+   ========================================================= -->
+
+<div class="instructor-checks-container">
+
+  <!-- =========================================
+       HEADER SECTION
+       ========================================= -->
+  <header class="instructor-header">
+    <!-- Brand Link (back to Dashboard) -->
+    <a href="{% url 'instructor_dashboard' %}" class="brand-title">Plagiarism Detection</a>
+
+    <!-- Page Title -->
+    <h1 class="page-title">Previous Checks</h1>
+
+    <!-- Profile Icon -->
+    <a href="{% url 'instructor_account' %}" class="profile-icon" title="Account Info">
+      <span>I</span>
+    </a>
+  </header>
+
+  <!-- =========================================
+       MAIN CONTENT SECTION
+       ========================================= -->
+  <main class="checks-main">
+
+    <!-- Section Title -->
+    <h2 class="section-title">Checked Documents</h2>
+
+    <!-- =========================================
+         TABLE OF CHECKED DOCUMENTS
+         ========================================= -->
+    <div class="checks-table">
+
+      <!-- Table Header Row -->
+      <div class="table-header">
+        <span>Document</span>
+        <span>Date</span>
+        <span>Similarity</span>
+        <span>Status</span>
+        <span>Actions</span>
+      </div>
+
+      <!-- =========================================
+           EXAMPLE DATA ROWS
+           (These will later be replaced with dynamic data
+           from the backend: each representing a plagiarism check result)
+           ========================================= -->
+
+      {% for document in checks %}
+
+      <div class="table-row">
+        <span>{{ document.checking_document_name }}</span>
+        <span>{{ document.created_at }}</span>
+        <span>{{ document.report_result }}%</span>
+
+        {% if document.report_result >= 80 %}
+          <span class="status flagged">Flagged</span>
+        {% else %}
+          <span class="status passed">Passed</span>
+        {% endif %}
+
+        <a href={% url 'instructor_report' document.id %}>
+          <button class="btn-view">View Report</button>
+        </a>
+      </div>
+      
+      {% endfor %}
+
+    </div>
+
+    <!-- =========================================
+         BACK NAVIGATION BUTTON
+         ========================================= -->
+    <div class="back-section">
+      <a href="{% url 'instructor_dashboard' %}" class="btn-back">⬅ Back to Dashboard</a>
+    </div>
+
+  </main>
+</div>
+{% endblock %}

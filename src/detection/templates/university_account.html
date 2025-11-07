@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/university_account.css' %}">
+{% endblock %}
+{% block content %}
+<!-- =========================================================
+     PAGE: University Account (Frontend Only)
+     
+     DESCRIPTION:
+       Displays University info and logout button.
+       Uses same layout as Admin account for consistency.
+   ========================================================= -->
+
+<div class="account-page-container">
+  <!-- Header -->
+  <header class="account-header">
+    <a href="{% url 'university_dashboard' %}" class="brand-title">Plagiarism Detection</a>
+    <h1>University Profile</h1>
+  </header>
+
+  <!-- Account Info -->
+  <section class="account-info">
+    <div class="profile-picture">
+      <span class="profile-letter">U</span>
+    </div>
+
+    <div class="info-text">
+      <p><strong>University Name:</strong> Kardan University</p>
+      <p><strong>Email:</strong> info@kardan.edu.af</p>
+      <p><strong>Username:</strong> kardan_admin</p>
+    </div>
+  </section>
+
+  <!-- Actions -->
+  <section class="account-actions">
+    <a href="{% url 'university_dashboard' %}" class="btn-back">⬅ Back to Dashboard</a>
+    <a href="#" class="btn-logout">Sign Out</a>
+  </section>
+</div>
+{% endblock %}

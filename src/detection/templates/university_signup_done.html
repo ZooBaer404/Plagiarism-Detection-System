@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}University Signup Successful{% endblock %}
+
+{% block content %}
+<div class="login-window h-full w-full bg-emerald-400 flex flex-col justify-center items-center gap-5">
+  <h1 class="login-title text-8xl">University Registered!</h1>
+  <p class="text-3xl">Your university has been successfully submitted for approval.</p>
+  <a href="{% url 'login_page' %}" class="border-2 border-neutral-700 pl-20 pr-20 text-black">Login</a>
+
+
+</div>
+{% endblock %}

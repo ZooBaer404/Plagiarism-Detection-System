@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- =========================================================
+     PAGE: Admin – Latest Reports
+     DESCRIPTION:
+       Displays recent plagiarism check reports from universities.
+       Each report includes document info, similarity percentage,
+       date, and action buttons (View / Delete).
+   ========================================================= -->
+
+<div class="reports-container bg-slate-100 h-full flex flex-col gap-2">
+
+  <!-- =========================================
+       HEADER SECTION
+       ========================================= -->
+  <header class="admin-header flex justify-between p-1 flex-none">
+    <!-- Site Title / Home Link -->
+    <a href="{% url 'admin_dashboard' %}" class="brand-title text-4xl">Plagiarism Detection</a>
+
+    <!-- Page Title -->
+    <h1 class="page-title text-2xl">Admin</h1>
+
+    <!-- Profile Icon Redirecting to Admin Account -->
+    <a href="{% url 'admin_account' %}" class="profile-icon border-2 p-2" title="Account Info">
+      <span>A</span>
+    </a>
+  </header>
+
+  <!-- =========================================
+       MAIN CONTENT GRID – REPORT CARDS
+       ========================================= -->
+  <div class="reports-grid p-2 flex flex-col gap-2">
+    <h2 class="text-2xl flex-none">Reports</h2>
+    <div class="border-2 border-neutral-700 grow p-2">
+      <table class="flex flex-col">
+        <thead>
+          <tr class="flex justify-between">
+            <th scope="col">Document</th>
+            <th scope="col">Similarity</th>
+            <th scope="col">Instructor</th>
+            <th scope="col">University</th>            
+            <th scope="col">Date</th>
+          </tr>
+        </thead>
+        <tbody class="flex flex-col">
+          {% for report in reports %}
+            <tr class="flex justify-between border-b-2 border-b-neutral-400">
+              <th scope="row">{{report.checking_document_file.name}}</th>
+              <td>{{report.report_result}}%</td>
+              <td>{{report.instructor_id.first_name }} {{report.instructor_id.last_name}}</td>
+              <td>{{report.instructor_id.university_id.university_name}}</td>
+              <td>{{report.last_modified_at}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

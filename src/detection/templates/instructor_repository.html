@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/instructor_repository.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="instructor-repository-container">
+
+  <!-- Header -->
+  <header class="instructor-header">
+    <a href="{% url 'instructor_dashboard' %}" class="brand-title">Plagiarism Detection</a>
+    <h1 class="page-title">Repository Access</h1>
+    <a href="{% url 'instructor_account' %}" class="profile-icon" title="Account Info">
+      <span>I</span>
+    </a>
+  </header>
+
+  <!-- Main Content -->
+  <main class="repository-main">
+    <h2 class="section-title">University Repositories</h2>
+
+    <div class="repository-grid">
+
+      <!-- Repository: Kardan University -->
+      <section class="repository-box">
+        <h3 class="repo-title">🏛 Kardan University</h3>
+        <div class="repo-file">
+          <strong>AI_Research_2025.pdf</strong>
+          <p>Uploaded: Oct 25, 2025</p>
+          <p>Access: ✅ Granted</p>
+          <button class="btn-download">Download</button>
+        </div>
+        <div class="repo-file">
+          <strong>Machine_Learning.docx</strong>
+          <p>Uploaded: Oct 18, 2025</p>
+          <p>Access: ✅ Granted</p>
+          <button class="btn-download">Download</button>
+        </div>
+      </section>
+
+      <!-- Repository: Kabul University -->
+      <section class="repository-box">
+        <h3 class="repo-title">🏛 Kabul University</h3>
+        <div class="repo-file">
+          <strong>Research_Paper_AI.pdf</strong>
+          <p>Uploaded: Oct 17, 2025</p>
+          <p>Access: 🔒 Restricted</p>
+          <button class="btn-request">Request Access</button>
+        </div>
+        <div class="repo-file">
+          <strong>CS_Archives_2024.zip</strong>
+          <p>Uploaded: Sep 28, 2025</p>
+          <p>Access: ✅ Granted</p>
+          <button class="btn-download">Download</button>
+        </div>
+      </section>
+
+      <!-- Repository: Iqra University -->
+      <section class="repository-box">
+        <h3 class="repo-title">🏛 Iqra University</h3>
+        <div class="repo-file">
+          <strong>Blockchain_Study.pdf</strong>
+          <p>Uploaded: Oct 21, 2025</p>
+          <p>Access: 🔒 Restricted</p>
+          <button class="btn-request">Request Access</button>
+        </div>
+        <div class="repo-file">
+          <strong>Quantum_Computing.pptx</strong>
+          <p>Uploaded: Oct 14, 2025</p>
+          <p>Access: ✅ Granted</p>
+          <button class="btn-download">Download</button>
+        </div>
+      </section>
+
+    </div>
+
+    <div class="back-section">
+      <a href="{% url 'instructor_dashboard' %}" class="btn-back">⬅ Back to Dashboard</a>
+    </div>
+  </main>
+</div>
+{% endblock %}

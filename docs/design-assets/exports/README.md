@@ -26,6 +26,12 @@ _Time Added:_ <2025-08-23 Sat>
 _Exported From:_ Figma
 _Note:_
 
+### [Index Pages Design Draft](assets/design_draft_index_pages.svg)
+
+_Description:_ Draft for index pages for every type of user
+_Time Added:_ <2025-10-02 Wed>
+_Exported From:_ Excalidraw
+_Note:_
 
 ### [Link](assets/)
 

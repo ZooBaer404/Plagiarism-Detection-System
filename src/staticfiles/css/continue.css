@@ -1,0 +1,109 @@
+
+/* Reset all links in continue window */
+.continue-window a {
+  color: inherit;
+  text-decoration: none;
+}
+.continue-window a:visited {
+  color: inherit;
+}
+
+
+
+
+/* Continue window */
+.continue-window {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 40px 50px;
+  max-width: 480px;
+  width: 90%;
+  margin: auto;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+.continue-title {
+  font-size: 1.7rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+.role-choice {
+  display: flex;
+  flex-direction: column;   /* stack vertically */
+  gap: 18px;                /* spacing between */
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+
+
+/* ✅ Force them into buttons */
+.role-btn,
+a.role-btn {
+  display: block;                  /* each button takes full line */
+  width: 100%;                     /* stretch inside container */
+  max-width: 300px;                /* limit so it doesn’t get too huge */
+  padding: 14px 0;                 /* taller */
+  border-radius: 12px;
+  background: linear-gradient(135deg, #5a5cf0, #7a7cff);
+  color: #fff !important;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none !important;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.role-btn:hover {
+  transform: scale(1.03);
+  background: linear-gradient(135deg, #6a6cff, #8a8eff);
+}
+
+
+
+/* ✅ Dedicated login link */
+.login-link {
+  color: #7aa0ff !important;
+  font-weight: 600;
+  text-decoration: none !important;
+}
+.login-link:hover {
+  text-decoration: underline;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #f0f6ff;
+  background: #0b1220;
+  overflow: hidden;
+}
+
+/* Background waves */
+.bg-waves {
+  position: fixed;
+  inset: 0;
+  background: url("../images/bg_waves.svg") repeat-x bottom center;
+  animation: moveWaves 15s linear infinite;
+  z-index: 1;
+  opacity: 0.3;
+}
+
+@keyframes moveWaves {
+  from { background-position-x: 0; }
+  to { background-position-x: 1000px; }
+}
+
+/* Gradient overlay */
+.gradient-overlay {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(12,18,32,0.85), rgba(22,34,56,0.85));
+  z-index: 2;
+}

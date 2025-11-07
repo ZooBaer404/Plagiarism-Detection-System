@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="form-window">
+  <h2>University Login</h2>
+  <form method="POST">
+    {% csrf_token %}
+    <input type="text" name="university_name" placeholder="University Name" required>
+    <input type="password" name="password" placeholder="Password" required>
+    <button type="submit">Login</button>
+  </form>
+  <div class="login-links">
+    <p>Are you an Admin? <a href="{% url 'login_admin' %}">Login here</a></p>
+    <p>Are you an Instructor? <a href="{% url 'login_instructor' %}">Login here</a></p>
+  </div>
+</div>
+{% endblock %}
