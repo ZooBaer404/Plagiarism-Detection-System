@@ -20,6 +20,8 @@ import detection.views as default_views
 import detection.instructor_views as instructor_views
 import detection.university_views as university_views
 import detection.admin_views as admin_views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -53,6 +55,7 @@ urlpatterns = [
     path("dashboard/university/instructors/", university_views.university_approve_instructor, name="university_instructors"),
     path("dashboard/university/pending/", university_views.university_approve_instructor, name="university_pending"),
     path("dashboard/university/repositories/", university_views.university_repositories, name="university_repositories"),
+    path("destination/university/repositories/<int:id>", university_views.university_repository, name="university_repository"),
     path("dashboard/university/errors/", university_views.university_errors, name="university_errors"),
 
     # Instructor
@@ -69,3 +72,5 @@ urlpatterns = [
     path("document/<int:id>", default_views.view_document, name="view_document"),
     # path("test", views.test_template, name="test_template"),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

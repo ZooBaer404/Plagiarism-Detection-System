@@ -5,16 +5,28 @@
 {% endblock %}
 
 {% block content %}
-<div class="repositories-container">
-  <header class="repositories-header">
-    <h1>University Repositories</h1>
-    <a href="{% url 'university_dashboard' %}" class="btn-back">⬅ Back to Dashboard</a>
+
+<div class="repositories-container h-full bg-neutral-800 text-white flex flex-col">
+  <!-- =========================================
+       HEADER SECTION
+       ========================================= -->
+  <header class="uni-header flex-none flex justify-between p-1">
+    <!-- Brand Title -->
+    <a href="{% url 'university_dashboard' %}"
+      class="brand-title text-4xl">Plagiarism Detection</a>
+    <!-- Page Title -->
+    <h1 class="page-title text-2xl">Repositories</h1>
+    <!-- Profile Icon -->
+    <a href="{% url 'university_account' %}" class="profile-icon border-2 p-2"
+      title="Account Information">
+      <span>U</span>
+    </a>
   </header>
 
-  <div class="repositories-grid">
+  <div class="repositories-grid p-2 flex-1 flex flex-col">
     <!-- Uploaded Repositories -->
-    <section class="column uploaded">
-      <h2>Uploaded Repositories</h2>
+    <section class="column uploaded border-2 border-neutral-700 flex-1 flex flex-col p-1">
+      <h2 class="text-2xl">Uploaded Repositories</h2>
       {% comment %} <div class="repo-card">
         <h3>Machine Learning Research.pdf</h3>
         <p>Uploaded: Oct 22, 2025</p>
@@ -25,58 +37,30 @@
         </div>
       </div> {% endcomment %}
 
-      {% for paper in repositories %}
+      <div class="grid gap-5 grid-flow-col p-2 grid-cols-5">
 
-      <div class="repo-card">
-        <h3>{{ paper.research_document_name }}</h3>
-        <p>Uploaded: {{ paper.created_at|timesince }}</p>
-        <div class="actions">
-          <form method="post">
-            {% csrf_token %}
-            <input type="hidden" name="type" value="view">
-            <input type="hidden" name="paper_id" value={{paper.id}}>
-            <button class="btn view" type="submit">View Details 👁️</button>
-          </form>
+        {% for paper in repositories %}
+          <div class="repo-card border-2 border-neutral-700 p-5 flex flex-col gap-2">
+            <div>
+              <h3 class="text-lg">{{ paper.research_document_name }}</h3>  
+              <p>Uploaded: {{ paper.created_at|timesince }}</p>
+            </div>
+            <div class="actions flex gap-2">
+              <input type="hidden" name="paper_id" value={{paper.id}}>
+              <a href="{% url 'university_repository' paper.id %}"><button class="btn view border-2 border-neutral-700 pl-10 pr-10 hover:cursor-pointer" type="submit">View Details</button></a>
 
-          <form method="post">
-            {% csrf_token %}
-            <input type="hidden" name="type" value="delete">
-            <input type="hidden" name="paper_id" value={{paper.id}}>
-            <button class="btn delete" type="submit">Delete 🗑️</button>
-          </form>
-        </div>
+              <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="type" value="delete">
+                <input type="hidden" name="paper_id" value={{paper.id}}>
+                <button class="btn delete border-2 border-neutral-700 pl-10 pr-10 hover:cursor-pointer" type="submit">Delete</button>
+              </form>
+            </div>
+          </div>
+        {% endfor %}
       </div>
-
-      {% endfor %}
     </section>
 
-    <!-- Under Review -->
-    {% comment %} <section class="column review">
-      <h2>Under Review</h2>
-      <div class="repo-card">
-        <h3>Blockchain System Paper.pdf</h3>
-        <p>Submitted: Oct 20, 2025</p>
-        <p>Reviewer: Dr. Sara Ahmad</p>
-        <div class="actions">
-          <button class="btn view">View Progress 📊</button>
-          <button class="btn download">Download ⬇️</button>
-        </div>
-      </div>
-    </section> {% endcomment %}
-
-    <!-- Approved / Completed -->
-    <section class="column approved">
-     <h2>Completed</h2>
-      {% comment %}<div class="repo-card">
-        <h3>Deep Learning Project.zip</h3>
-        <p>Approved: Oct 10, 2025</p>
-        <p>Instructor: Mr. Omid Khan</p>
-        <div class="actions">
-          <button class="btn view">Open 🔍</button>
-          <button class="btn download">Download ⬇️</button>
-        </div>
-      </div> {% endcomment %}
-    </section>
   </div>
 </div>
 {% endblock %}

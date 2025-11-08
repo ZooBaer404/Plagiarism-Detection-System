@@ -6,8 +6,8 @@ from detection.views import *
 from sentence_transformers import SentenceTransformer
 
 
-# model = SentenceTransformer("all-MiniLM-L6-v2")
-model = 0
+model = SentenceTransformer("all-MiniLM-L6-v2")
+# model = 0
 
 def UniversityUploadProcess(university):
     pending_research_papers = ResearchDocument.objects.filter(university_id=university, is_processed=False)

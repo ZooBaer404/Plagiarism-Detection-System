@@ -5,31 +5,45 @@
 {% endblock %}
 
 {% block content %}
-<div class="upload-container">
+<div class="upload-container h-full bg-neutral-800 text-white flex flex-col">
 
-  <!-- Header -->
-  <header class="upload-header">
-    <a href="{% url 'university_dashboard' %}" class="brand-title">Plagiarism Detection</a>
-    <h1 class="page-title">University Repository Upload</h1>
-    <a href="{% url 'university_account' %}" class="profile-icon"><span>U</span></a>
+  <!-- =========================================
+       HEADER SECTION
+       ========================================= -->
+  <header class="uni-header flex justify-between p-1">
+    <!-- Brand Title -->
+    <a href="{% url 'university_dashboard' %}" class="brand-title text-4xl">Plagiarism Detection</a>
+    <!-- Page Title -->
+    <h1 class="page-title text-2xl">University Repository Account</h1>
+    <!-- Profile Icon -->
+    <a href="{% url 'university_account' %}" class="profile-icon border-2 p-2" title="Account Information">
+      <span>U</span>
+    </a>
   </header>
 
   <!-- Upload Section -->
-  <main class="upload-section">
-    <div class="upload-box">
-      <div class="upload-icon">📂</div>
-      <h3>Select Files to Upload</h3>
+  <main class="upload-section flex flex-col justify-center items-center flex-1">
+    <div class="upload-box flex flex-col gap-2">
+      <h3 class="text-3xl">Select Files to Upload</h3>
 
-      <form id="multiUploadForm" method="POST" enctype="multipart/form-data" action={% url 'university_upload' %} >
+      <form id="multiUploadForm" method="POST" enctype="multipart/form-data" action={% url 'university_upload' %} class="flex flex-col gap-3">
         {% csrf_token %}
 
         {% comment %} <input type="file" id="multiFileInput" class="file-input" name="documents" accept=".pdf" multiple> {% endcomment %}
         
           {% for field in form %}
-              <div>
-                  {{ field.label_tag }}
-                  {{ field }}
-                  {% if field.help_text %}
+              <div class="flex flex-col gap-2">
+                      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                      {% if field.field.widget.input_type == "file" %}
+                          {{ field }}  {# Render Django’s own widget #}
+                      {% else %}
+                          <input type="{{ field.widget_type }}" 
+                                name="{{ field.html_name }}" 
+                                id="{{ field.id_for_label }}" 
+                                class="border-2 border-neutral-700"
+                                value="{{ field.value|default_if_none:'' }}">
+                      {% endif %}  
+                 {% if field.help_text %}
                       <p class="helptext">{{ field.help_text }}</p>
                   {% endif %}
                   {% for error in field.errors %}
@@ -38,7 +52,7 @@
               </div>
           {% endfor %}
 
-          <button type="submit">Upload</button>
+          <button type="submit" class="border-2 border-neutral-700">Upload</button>
         {% comment %} <label for="{{ field.id_for_label }}">{{ field.label }}</label> {% endcomment %}
         {% comment %} <input type="{{ field.type }}" id="multiFileInput" class="file-input" name="documents" accept=".pdf"> {% endcomment %}
         

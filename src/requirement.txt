@@ -10,3 +10,4 @@ pytest
 nltk
 numpy
 celery
+huggingface_hub[hf_xet]

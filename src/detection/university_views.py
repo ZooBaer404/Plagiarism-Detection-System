@@ -370,6 +370,35 @@ def university_repositories(request):
 
     })
 
+def university_repository(request, id):
+    user_type = request.session.get("type")
+    if user_type != "university":
+        messages.error(request, "You are not authorized for this document")
+        redirect("dashboard")
+
+    university_id = request.session.get("university_id")
+    print("university_id ", university_id)
+    research_document = ResearchDocument.objects.get(id=id)
+
+    if university_id != research_document.university_id.id:
+        messages.error(request, "You are not authorized for this document")
+        redirect("dashboard")
+
+    sentences = ResearchDocumentEnhancedText.objects.filter(research_document_id=research_document)
+    vectors = ResearchDocumentTextVector.objects.filter(research_document_id=research_document)
+    stats = ResearchDocumentBasicStats.objects.get(research_document_id=research_document)
+    images = ResearchDocumentImages.objects.filter(research_document_id=research_document)
+    references = ResearchDocumentReferences.objects.filter(research_document_id=research_document)
+    errors = ResearchDocumentParseError.objects.filter(research_document_id=research_document)
+
+    return render(request, "view_document.html", {"document": research_document, 
+                                                  "sentences": sentences, 
+                                                  "vectors": vectors, 
+                                                  "stats": stats,
+                                                  "images": images,
+                                                  "references": references,
+                                                  "errors": errors,})
+
 
 def university_errors(request):
     """Error logs: failed uploads, metadata issues, etc."""
@@ -388,6 +417,9 @@ def university_errors(request):
         messages.error(request, "Error: you are not signed in as a university")
         redirect("dashboard")
 
-    return render(request, "university_errors.html")
+    university_documents = ResearchDocument.objects.filter(university_id=university)
+    errors = ResearchDocumentParseError.objects.filter(research_document_id__in=university_documents)
+
+    return render(request, "university_errors.html", {"errors": errors,})
 
 

@@ -10,7 +10,7 @@
        repositories, error reports, and upload section.
    ========================================================= -->
 
-<div class="university-dashboard-container h-full bg-emerald-400 flex flex-col">
+<div class="university-dashboard-container h-full bg-neutral-800 text-white flex flex-col">
 
   <!-- =========================================
        HEADER SECTION
@@ -31,7 +31,7 @@
   <!-- =========================================
        MAIN DASHBOARD GRID
        ========================================= -->
-  <main class="dashboard-grid grid grid-cols-3 grid-rows-8 border-2 border-neutral-700 flex-1 p-2 gap-5">
+  <main class="dashboard-grid grid grid-cols-3 grid-rows-8 flex-1 p-2 gap-2">
 
     <!-- =========================================
          LEFT COLUMN
@@ -40,22 +40,22 @@
     <section class="left-col row-span-8 grid grid-rows-2 gap-2">
 
       <!-- Instructors Section -->
-      <div class="dashboard-box border-2 border-neutral-700 flex flex-col gap-2">
+      <div class="dashboard-box border-2 border-neutral-700 flex flex-col gap-2 p-2">
         <h2 class="text-2xl"><a href="{% url 'university_instructors' %}">Instructor</a></h2>
 
         {% for approved_instructor in approved_instructors %}
 
-          <div class="item-box">{{ approved_instructor.first_name }} {{ approved_instructor.last_name }}</div>
+          <div class="item-box border-2 border-neutral-700">{{ approved_instructor.first_name }} {{ approved_instructor.last_name }}</div>
 
         {% endfor %}
       </div>
 
       <!-- Pending Instructor Approvals -->
-      <div class="dashboard-box border-2 border-neutral-700 flex flex-col gap-2">
+      <div class="dashboard-box border-2 border-neutral-700 flex flex-col gap-2 p-2">
         <h2 class="text-2xl"><a href="{% url 'university_pending' %}">Pending Approval</a></h2>
         {% for pending_instructor in pending_instructors %}
 
-          <div class="item-box">{{ pending_instructor.first_name }} {{ pending_instructor.last_name }}</div>
+          <div class="item-box border-2 border-neutral-700">{{ pending_instructor.first_name }} {{ pending_instructor.last_name }}</div>
 
         {% endfor %}
         
@@ -66,31 +66,30 @@
          MIDDLE COLUMN
          (Repositories Overview)
        ========================================= -->
-    <div class="row-span-8 grid">
+    <div class="row-span-8 grid col-span-2 gap-2">
     
-      <section class="repo-box dashboard-box">
+      <section class="repo-box dashboard-box border-2 border-neutral-700 p-2 flex flex-col gap-2">
+        <h2 class="text-2xl"><a href="{% url 'university_repositories' %}">Repositories</a></h2>
         <div class="repo-header">
-          <h2><a href="{% url 'university_repositories' %}">Repositories</a></h2>
+          
+          <!-- Example Repository Items -->
+          {% for document in documents %}
+          <div class="repo-item">Document #{{ document.research_document_name }}</div>
+          {% endfor %}
         </div>
-        
-        <!-- Example Repository Items -->
-        {% for document in documents %}
-        <div class="repo-item">Document #{{ document.research_document_name }}</div>
-        {% endfor %}
       </section>
       
       <!-- =========================================
       RIGHT COLUMN
       (Error & Upload Info)
       ========================================= -->
-      <section class="errors-box dashboard-box">
-        <h2><a href="{% url 'university_errors' %}">Errors</a></h2>
-        
-        {% for documents_error in documents_errors %}
-        
-        <div class="item-box">{{ documents_error.research_document_id.research_document_name }} — {{ documents_error.error_message }} </div>
-        
-        {% endfor %}
+      <section class="errors-box dashboard-box border-2 border-neutral-700 flex flex-col gap-2 p-2">
+        <h2 class="text-2xl"><a href="{% url 'university_errors' %}">Errors</a></h2>
+        <div>
+          {% for documents_error in documents_errors %}
+          <div class="item-box border-2 border-neutral-700 p-1">{{ documents_error.research_document_id.research_document_name }} — {{ documents_error.error_message }} </div>
+          {% endfor %}
+        </div>
         
       </section>
       
@@ -98,21 +97,20 @@
       BOTTOM SECTION
       (Repository Upload Area)
       ========================================= -->
-      <section class="dashboard-box upload-box">
-        <h2>Upload Repository</h2>
+      <section class="dashboard-box upload-box border-2 border-neutral-700 flex flex-col gap-2 p-2">
+        <h2 class="text-2xl">Upload Repository</h2>
         
         <!-- Upload Button -->
-        <div class="upload-btn-wrapper">
-          <a href="{% url 'university_upload' %}" class="upload-area">
+        <div class="upload-btn-wrapper flex flex-col justify-center items-center flex-1 gap-3">
+          <a href="{% url 'university_upload' %}" class="upload-area text-3xl border-2 border-neutral-700 pl-20 pr-20 pt-3 pb-3">
             + Upload Files
           </a>
+          
+          <!-- Description Note -->
+          <p class="upload-note">
+            These files will be used as references for plagiarism detection.
+          </p>
         </div>
-        
-        <!-- Description Note -->
-        <p class="upload-note">
-          Upload multiple research documents to your university’s database.
-          These files will be used as references for plagiarism detection.
-        </p>
       </section>
     </div>
 

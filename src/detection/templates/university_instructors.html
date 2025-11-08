@@ -20,83 +20,91 @@
        Includes actions to approve, reject, remove, or reconsider.
    ========================================================= -->
 
-<div class="instructors-container">
+<div class="instructors-container h-full bg-neutral-800 text-white flex flex-col">
 
   <!-- =========================================
        HEADER SECTION
        ========================================= -->
-  <header class="instructors-header">
-    <h1>Instructor Management</h1>
-    <a href="{% url 'university_dashboard' %}" class="btn-back">⬅ Back to Dashboard</a>
+  <header class="uni-header flex-none flex justify-between p-1">
+    <!-- Brand Title -->
+    <a href="{% url 'university_dashboard' %}" class="brand-title text-4xl">Plagiarism Detection</a>
+    <!-- Page Title -->
+    <h1 class="page-title text-2xl">Instructors</h1>
+    <!-- Profile Icon -->
+    <a href="{% url 'university_account' %}" class="profile-icon border-2 p-2" title="Account Information">
+      <span>U</span>
+    </a>
   </header>
-
   <!-- =========================================
        MAIN GRID LAYOUT
        Contains three vertical columns for
        Pending, Approved, and Rejected instructors.
        ========================================= -->
-  <div class="instructors-grid">
+  <div class="instructors-grid flex-1 grid grid-cols-2 p-2 gap-5">
 
     <!-- =========================================
          PENDING INSTRUCTORS
          ========================================= -->
-    <section class="column pending">
-      <h2>Pending Instructors</h2>
-
-      {% for instructor in pending %}
-
-      <!-- Example Pending Instructor Card -->
-      <div class="inst-card">
-        <h3>Instructor #{{ instructor.id }} - {{ instructor.first_name }} {{ instructor.last_name }}</h3>
-        <p>Email: {{ instructor.email }}</p>
-        <p>Requested: {{ instructor.created_at|timesince }}</p>
-
-        <!-- Action Buttons -->
-        <div class="actions">
-          <form method="post">
-            {% csrf_token %}
-            <input class="hidden" type="hidden" name="type" value="approve">
-            <input class="hidden" type="hidden" name="approve_instructor" value={{ instructor.id }} >
-            <button class="btn approve submit" type="submit">Approve ✅</button>
-          </form>
-          {% comment %} <form method="post">
-            {% csrf_token %}
-            <input class="hidden" type="hidden" name="type" value="reject">
-            <input class="hidden" type="hidden" name="reject_instructor" value={{ instructor.id }} >
-            <button class="btn reject submit" type="submit">Reject ❌</button>
-          </form> {% endcomment %}
+    <section class="column pending border-2 border-neutral-700 p-2">
+      <h2 class="text-2xl">Pending Instructors</h2>
+      <div class="flex flex-col gap-3 p-1">
+        
+        {% for instructor in pending %}
+        
+        <!-- Example Pending Instructor Card -->
+        <div class="inst-card border-2 border-neutral-700 p-2">
+          <h3>Instructor #{{ instructor.id }} - {{ instructor.first_name }} {{ instructor.last_name }}</h3>
+          <p>Email: {{ instructor.email }}</p>
+          <p>Requested: {{ instructor.created_at|timesince }}</p>
+          
+          <!-- Action Buttons -->
+          <div class="actions">
+            <form method="post">
+              {% csrf_token %}
+              <input class="hidden" type="hidden" name="type" value="approve">
+              <input class="hidden" type="hidden" name="approve_instructor" value={{ instructor.id }} >
+              <button class="btn approve submit border-2 border-neutral-700 pl-10 pr-10" type="submit">Approve</button>
+            </form>
+            {% comment %} <form method="post">
+              {% csrf_token %}
+              <input class="hidden" type="hidden" name="type" value="reject">
+              <input class="hidden" type="hidden" name="reject_instructor" value={{ instructor.id }} >
+              <button class="btn reject submit" type="submit">Reject</button>
+              </form> {% endcomment %}
+            </div>
+          </div>
+          
+          {% endfor %}
         </div>
-      </div>
-
-      {% endfor %}
-
+          
     </section>
 
     <!-- =========================================
          APPROVED INSTRUCTORS
          ========================================= -->
-    <section class="column approved">
-      <h2>Approved Instructors</h2>
+    <section class="column approved flex flex-col gap-3 p-2 border-2 border-neutral-700">
+      <h2 class="text-2xl">Approved Instructors</h2>
 
       <!-- Example Approved Instructor Card -->
-
-      {% for instructor in approved %}
-
-        <div class="inst-card">
-          <h3>Instructor #{{ insructor.id }} - {{ instructor.first_name }} {{ instructor.last_name }}</h3>
+      <div>
+        {% for instructor in approved %}
+        
+        <div class="inst-card border-2 border-neutral-600 p-2">
+          <h3>Instructor #{{ instructor.id }} - {{ instructor.first_name }} {{ instructor.last_name }}</h3>
           <p>Email: {{ instructor.email }}</p>
           <p>Joined: {{ instructor.created_at }}</p>
           <div class="actions">
             <form method="post">
               {% csrf_token %}
               <input class="hidden" type="hidden" name="type" value="delete">
-              <input type="hidden" class="hidden" name="delete_instructor" value={{ instrutor.id }}>
-              <button class="btn delete">Remove</button>
+              <input type="hidden" class="hidden" name="delete_instructor" value={{ instructor.id }}>
+              <button class="btn delete border-2 border-neutral-700 pl-10 pr-10 pb-1">Remove</button>
             </form>
           </div>
         </div>
-
+        
         {% endfor %}
+      </div>
 
     </section>
 
