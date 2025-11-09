@@ -17,20 +17,22 @@
        report view actions.
    ========================================================= -->
 
-<div class="instructor-checks-container">
+<div class="instructor-checks-container h-full bg-amber-100 flex flex-col gap-2">
 
   <!-- =========================================
        HEADER SECTION
        ========================================= -->
-  <header class="instructor-header">
-    <!-- Brand Link (back to Dashboard) -->
-    <a href="{% url 'instructor_dashboard' %}" class="brand-title">Plagiarism Detection</a>
+  <header class="instructor-header flex justify-between p-2">
+    <!-- Logo/Title -->
+    <a href="{% url 'instructor_dashboard' %}"
+      class="brand-title text-4xl">Plagiarism Detection</a>
 
     <!-- Page Title -->
-    <h1 class="page-title">Previous Checks</h1>
+    <h1 class="page-title text-2xl">Instructor Checks</h1>
 
     <!-- Profile Icon -->
-    <a href="{% url 'instructor_account' %}" class="profile-icon" title="Account Info">
+    <a href="{% url 'instructor_account' %}" class="profile-icon border-2 p-2"
+      title="Account Info">
       <span>I</span>
     </a>
   </header>
@@ -38,58 +40,50 @@
   <!-- =========================================
        MAIN CONTENT SECTION
        ========================================= -->
-  <main class="checks-main">
+  <main
+    class="checks-main border-2 border-neutral-700 p-2 flex-1 flex flex-col gap-5">
 
     <!-- Section Title -->
-    <h2 class="section-title">Checked Documents</h2>
+    <h2 class="section-title text-2xl">Checked Documents</h2>
 
     <!-- =========================================
          TABLE OF CHECKED DOCUMENTS
          ========================================= -->
-    <div class="checks-table">
+    <div class="checks-table flex-1 overflow-x-auto">
+      <table class="table-fixed w-full text-left">
+        <thead class="">
+          <tr>
+            <th class="p-2 w-2/6">Document</th>
+            <th class="p-2 w-1/6">Date</th>
+            <th class="p-2 w-1/6">Similarity</th>
+            <th class="p-2 w-1/6">Status</th>
+            <th class="p-2 w-1/6">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for document in checks %}
+          <tr class="">
+            <td class="p-2">{{ document.checking_document_name }}</td>
+            <td class="p-2">{{ document.created_at }}</td>
+            <td class="p-2">{{ document.report_result|floatformat:2 }}%</td>
 
-      <!-- Table Header Row -->
-      <div class="table-header">
-        <span>Document</span>
-        <span>Date</span>
-        <span>Similarity</span>
-        <span>Status</span>
-        <span>Actions</span>
-      </div>
+            {% if document.report_result >= 80 %}
+            <td class="p-2 text-red-950 font-semibold">Flagged</td>
+            {% else %}
+            <td class="p-2 text-green-950 font-semibold">Passed</td>
+            {% endif %}
 
-      <!-- =========================================
-           EXAMPLE DATA ROWS
-           (These will later be replaced with dynamic data
-           from the backend: each representing a plagiarism check result)
-           ========================================= -->
-
-      {% for document in checks %}
-
-      <div class="table-row">
-        <span>{{ document.checking_document_name }}</span>
-        <span>{{ document.created_at }}</span>
-        <span>{{ document.report_result }}%</span>
-
-        {% if document.report_result >= 80 %}
-          <span class="status flagged">Flagged</span>
-        {% else %}
-          <span class="status passed">Passed</span>
-        {% endif %}
-
-        <a href={% url 'instructor_report' document.id %}>
-          <button class="btn-view">View Report</button>
-        </a>
-      </div>
-      
-      {% endfor %}
-
-    </div>
-
-    <!-- =========================================
-         BACK NAVIGATION BUTTON
-         ========================================= -->
-    <div class="back-section">
-      <a href="{% url 'instructor_dashboard' %}" class="btn-back">⬅ Back to Dashboard</a>
+            <td class="p-2">
+              <a href="{% url 'instructor_report' document.id %}">
+                <button class="px-3 py-1 border-2 border-neutral-700">
+                  View Report
+                </button>
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
 
   </main>

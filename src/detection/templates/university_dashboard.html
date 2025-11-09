@@ -10,7 +10,7 @@
        repositories, error reports, and upload section.
    ========================================================= -->
 
-<div class="university-dashboard-container h-full bg-neutral-800 text-white flex flex-col">
+<div class="university-dashboard-container h-full bg-neutral-800 text-white flex flex-col min-h-0 min-w-0 overflow-y-auto">
 
   <!-- =========================================
        HEADER SECTION
@@ -43,21 +43,22 @@
       <div class="dashboard-box border-2 border-neutral-700 flex flex-col gap-2 p-2">
         <h2 class="text-2xl"><a href="{% url 'university_instructors' %}">Instructor</a></h2>
 
-        {% for approved_instructor in approved_instructors %}
-
-          <div class="item-box border-2 border-neutral-700">{{ approved_instructor.first_name }} {{ approved_instructor.last_name }}</div>
-
-        {% endfor %}
+        <div class="overflow-y-auto">
+          {% for approved_instructor in approved_instructors %}
+          <div class="item-box border-2 border-neutral-700">{{ approved_instructor.first_name }} {{ approved_instructor.last_name }}</div>  
+          {% endfor %}
+        </div>
       </div>
 
       <!-- Pending Instructor Approvals -->
       <div class="dashboard-box border-2 border-neutral-700 flex flex-col gap-2 p-2">
         <h2 class="text-2xl"><a href="{% url 'university_pending' %}">Pending Approval</a></h2>
-        {% for pending_instructor in pending_instructors %}
 
+        <div class="overflow-y-auto">
+          {% for pending_instructor in pending_instructors %}
           <div class="item-box border-2 border-neutral-700">{{ pending_instructor.first_name }} {{ pending_instructor.last_name }}</div>
-
-        {% endfor %}
+          {% endfor %}
+        </div>
         
       </div>
     </section>
@@ -70,8 +71,8 @@
     
       <section class="repo-box dashboard-box border-2 border-neutral-700 p-2 flex flex-col gap-2">
         <h2 class="text-2xl"><a href="{% url 'university_repositories' %}">Repositories</a></h2>
-        <div class="repo-header">
-          
+        
+        <div class="repo-header overflow-y-auto">
           <!-- Example Repository Items -->
           {% for document in documents %}
           <div class="repo-item">Document #{{ document.research_document_name }}</div>
@@ -85,7 +86,8 @@
       ========================================= -->
       <section class="errors-box dashboard-box border-2 border-neutral-700 flex flex-col gap-2 p-2">
         <h2 class="text-2xl"><a href="{% url 'university_errors' %}">Errors</a></h2>
-        <div>
+        
+        <div class="overflow-y-auto">
           {% for documents_error in documents_errors %}
           <div class="item-box border-2 border-neutral-700 p-1">{{ documents_error.research_document_id.research_document_name }} — {{ documents_error.error_message }} </div>
           {% endfor %}

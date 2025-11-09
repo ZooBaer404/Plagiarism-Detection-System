@@ -69,6 +69,9 @@ urlpatterns = [
     path("dashboard/instructor/checks/", instructor_views.instructor_checks, name="instructor_checks"),
     path("dashboard/instructor/submissions/", instructor_views.instructor_submissions, name="instructor_submissions"),
     path("dashboard/instructor/repository/", instructor_views.instructor_repository, name="instructor_repository"),
+    path("check/<int:id>/references", instructor_views.instructor_report_references, name="instructor_report_reference"),
+    path("check/<int:id>/report/content", instructor_views.instructor_report_view_content, name="instructor_report_view_content"),
+    path("check/<int:id>/report/content/<int:sentence_id>", instructor_views.instructor_report_view_content_sentence, name="instructor_report_view_content_sentence"),
     path("document/<int:id>", default_views.view_document, name="view_document"),
     # path("test", views.test_template, name="test_template"),
 ]

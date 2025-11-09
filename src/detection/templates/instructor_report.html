@@ -1,13 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block extra_css %}
-<!-- =========================================
-     LOAD PAGE-SPECIFIC STYLESHEET
-     ========================================= -->
-<link rel="stylesheet" href="{% static 'css/instructor_report.css' %}">
-{% endblock %}
-
 {% block content %}
 <!-- =========================================================
      PAGE: Instructor Report Overview
@@ -17,113 +10,126 @@
        statistics, matching sources, and text comparison.
    ========================================================= -->
 
-<div class="report-container">
+<div class="report-container h-full bg-amber-100 flex flex-col gap-1">
 
   <!-- =========================================
        HEADER SECTION
        ========================================= -->
-  <header class="report-header">
-    <!-- Brand / Home Link -->
-    <a href="{% url 'instructor_dashboard' %}" class="brand-title">Plagiarism Detection</a>
+  <header class="instructor-header flex justify-between p-2">
+    <!-- Logo/Title -->
+    <a href="{% url 'instructor_dashboard' %}"
+      class="brand-title text-4xl">Plagiarism Detection</a>
 
     <!-- Page Title -->
-    <h1 class="page-title">Report Overview</h1>
+    <h1 class="page-title text-2xl">Instructor Report</h1>
 
     <!-- Profile Icon -->
-    <a href="{% url 'instructor_account' %}" class="profile-icon" title="Account Info">
+    <a href="{% url 'instructor_account' %}" class="profile-icon border-2 p-2"
+      title="Account Info">
       <span>I</span>
     </a>
   </header>
 
-  <!-- =========================================
-       MAIN REPORT BODY
-       ========================================= -->
-  <main class="report-body">
-
-    <!-- =========================================
-         SUMMARY SECTION
-         (File info and overall similarity)
-         ========================================= -->
-    <section class="report-summary">
-
-      <!-- Left Side: File Information -->
-      <div class="summary-left">
-        <h2>Uploaded File:</h2>
-        <p><strong>{{ checking_document.checking_document_file.name }}</strong></p>
-        <p>Uploaded: <span>{{ checking_document.created_at|timesince }} ago</span></p>
+  <main class="upload-section flex flex-col flex-1 p-2 gap-2">
+    <div
+      class="basic_stats border-2 border-neutral-700 flex flex-col gap-2 p-3">
+      <p class="text-3xl">{{document.checking_document_name}} - <a href="{% url 'instructor_report_view_content' document.id %}" class="text-xl underline">View Content</a></p>
+      <div class="grid grid-flow-col gap-2">
+        <p
+          class="flex flex-col gap-2 items-center border-2 border-neutral-700 p-5">Plagiarized:
+          <span
+            class="text-2xl">{{document.report_result|floatformat:2}}%</span></p>
+        <p
+          class="flex flex-col gap-2 items-center border-2 border-neutral-700 p-5">Sentences:
+          <span class="text-2xl">{{stats.no_of_sentences}}</span></p>
+        <p
+          class="flex flex-col gap-2 items-center border-2 border-neutral-700 p-5">Characters:
+          <span class="text-2xl">{{stats.no_of_characters}}</span></p>
+        <p
+          class="flex flex-col gap-2 items-center border-2 border-neutral-700 p-5">Words:
+          <span class="text-2xl">{{stats.no_of_words}}</span></p>
+        <p
+          class="flex flex-col gap-2 items-center border-2 border-neutral-700 p-5">Size:
+          <span><span class="text-2xl">{{stats.size_of_document}}
+            </span>bytes</span></p>
+        <p
+          class="flex flex-col gap-2 items-center border-2 border-neutral-700 p-5">Images:
+          <span class="text-2xl">{{stats.no_of_images}}</span></p>
       </div>
+    </div>
+    <div class="errors border-2 border-neutral-700 p-3 flex flex-col gap-2">
+      <p class="text-2xl">Errors</p>
+      <div>
+        {% for error in errors %}
+        <div class="border-2 border-neutral-700 p-1">
+          <p class="text-xs">{{error.created_at}}</p>
+          <p>{{error.error_message}}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
 
-      <!-- Right Side: Similarity Circle -->
-      <div class="summary-right">
-        <div class="similarity-circle">
-          <span class="percent">{{ checking_document_report }} %</span>
-          <p>Matched</p>
+    <div class="grid grid-cols-3 gap-2">
+      <div class="border-2 border-neutral-700 p-3 gap-2">
+        <p class="text-2xl">Images</p>
+        <div class="grid grid-cols-4 p-1 gap-3 overflow-y-auto max-h-[200px]">
+          {% for image in images %}
+          <img src="{{image.image.url}}" alt="file {{image.id}}"
+            class="border-2 border-neutral-700">
+          {% endfor %}
         </div>
       </div>
-
-    </section>
-
-    <!-- =========================================
-         DETAILS SECTION
-         (Statistics & Matching Sources)
-         ========================================= -->
-    <section class="report-details">
-
-      <!-- Document Stats -->
-      <div class="stats-box">
-        <h3>Document Statistics</h3>
-        <p><strong>Character Count:</strong> {{ checking_document_stats.no_of_characters }} </p>
-        <p><strong>Sentence Count:</strong> {{ checking_document_stats.no_of_sentences }} </p>
-        <p><strong>Word Count:</strong> {{ checking_document_stats.no_of_words }} </p>
-        <p><strong>Image Count:</strong> {{ checking_document_stats.no_of_images }} </p>
-        <p><strong>Document Size:</strong> {{ checking_document_stats.size_of_document }} </p>
-        <p><strong>Unique Content:</strong> {{ unique_content }}%</p>
-        <p><strong>Matched Sources:</strong> {{ matched_sources_no }} </p>
-      </div>
-
-      <!-- Top Sources -->
-      <div class="sources-box">
-        <h3>Top Matching Sources</h3>
-        <ul>
-          {% for document in matched_sources %}
-            <li><a href="{% url "view_document" document.id %}">{{ document.research_document_name }}</a></li>
+      <div class="border-2 border-neutral-700 p-3">
+        <p class="text-2xl">Sentences</p>
+        <div class="flex flex-col gap-2 overflow-y-auto max-h-[200px]">
+          {% for sentence in sentences %}
+          <span><span class="text-1xl">{{sentence.sentence_index}}. </span><span
+              class="text-xs">{{sentence.sentence_enhanced_text}}</span></span>
           {% endfor %}
-        </ul>
+        </div>
       </div>
+      <div class="border-2 border-neutral-700 p-3">
+        <p class="text-2xl">Vectors</p>
+        <div class="flex flex-col gap-2 overflow-y-auto max-h-[200px]">
+          {% for sentence in vectors %}
+          <span><span
+              class="text-1xl">{{sentence.research_document_enhanced_text_id.sentence_index}}.
+            </span><span class="text-xs">{{sentence.text_vector}}</span></span>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
 
-    </section>
+    <div class="border-2 border-neutral-700 p-3 flex-1">
+      <a href="{% url 'instructor_report_reference' document.id %}"><p class="text-2xl">References</p></a>
+      <div class="flex flex-col gap-2 overflow-y-auto max-h-[400px] border-2 border-neutral-700 flex-1">
 
-    <!-- =========================================
-         TEXT COMPARISON SECTION
-         (Highlighted plagiarized fragments)
-         ========================================= -->
+        <div class="grid gap-2 p-2">
+          
+          <div class="flex flex-col gap-2">
+            {% for before, current, after in checking_references_combined %}
+            <div class="p-2 border-2 border-neutral-700">
+              <p class="text-xs">
+                {% for sentence in before %}
+                {% if forloop.first %}
+                <span class="text-xs font-bold">{{sentence.checking_document_id.checking_document_name}} - Sentence #{{sentence.sentence_index|add:1}}</span><br/>
+                {% endif %}
+                {{sentence.sentence_enhanced_text}}
+                {% endfor %}
+                
+                <span class="bg-red-400">{{current.sentence_enhanced_text}}</span>
+                
+                {% for sentence in after %}
+                {{sentence.sentence_enhanced_text}}
+                {% endfor %}
+              </p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
 
-
-      {% for check in checking_document_checking_process %}
-      <section class="comparison-section">
-      <h3>Text Comparison: {{ check.checking_document_id.checking_document_name }} vs {{ check.research_document_text_vector_id.research_document_id.research_document_file.name }}</h3>
-
-      <p>
-        {{ check.checking_document_text_vector_id.checking_document_enhanced_text_id.sentence_index }}
-        {{ check.checking_document_text_vector_id.checking_document_enhanced_text_id.sentence_enhanced_text }}
-      </p>
-      <p>
-        {{ check.research_document_text_vector_id.research_document_enhanced_text_id.sentence_index }}
-        {{ check.research_document_text_vector_id.research_document_enhanced_text_id.sentence_enhanced_text }}
-      </p>
-    </section>
-
-    {% endfor %}
-
-    <!-- =========================================
-         ACTION BUTTONS SECTION
-         (Save, Delete, Download)
-         ========================================= -->
-    <section class="report-actions">
-      <a href="#" class="btn save">💾 Save Report</a>
-      <a href="#" class="btn delete">🗑 Delete</a>
-      <a href="#" class="btn download">⬇️ Download PDF</a>
-    </section>
+      </div>
+    </div>
 
   </main>
 </div>

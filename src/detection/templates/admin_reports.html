@@ -34,19 +34,19 @@
   <div class="reports-grid p-2 flex flex-col gap-2">
     <h2 class="text-2xl flex-none">Reports</h2>
     <div class="border-2 border-neutral-700 grow p-2">
-      <table class="flex flex-col">
+      <table class="table-auto w-full">
         <thead>
-          <tr class="flex justify-between">
-            <th scope="col">Document</th>
-            <th scope="col">Similarity</th>
-            <th scope="col">Instructor</th>
-            <th scope="col">University</th>            
-            <th scope="col">Date</th>
+          <tr class="">
+            <th scope="col" class="p-2 w-2/6">Document</th>
+            <th scope="col" class="p-2 w-1/6">Similarity</th>
+            <th scope="col" class="p-2 w-1/6">Instructor</th>
+            <th scope="col" class="p-2 w-1/6">University</th>            
+            <th scope="col" class="p-2 w-1/6">Date</th>
           </tr>
         </thead>
-        <tbody class="flex flex-col">
+        <tbody class="">
           {% for report in reports %}
-            <tr class="flex justify-between border-b-2 border-b-neutral-400">
+            <tr class="border-b-2 border-b-neutral-400">
               <th scope="row">{{report.checking_document_file.name}}</th>
               <td>{{report.report_result}}%</td>
               <td>{{report.instructor_id.first_name }} {{report.instructor_id.last_name}}</td>

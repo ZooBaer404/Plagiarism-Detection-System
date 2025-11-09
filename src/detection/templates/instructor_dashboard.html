@@ -20,20 +20,20 @@
          - File Upload (for plagiarism checking)
    ========================================================= -->
 
-<div class="instructor-dashboard-container">
+<div class="instructor-dashboard-container h-full bg-amber-100 flex flex-col overflow-y-auto">
 
   <!-- =========================================
        HEADER SECTION
        ========================================= -->
-  <header class="instructor-header">
+  <header class="instructor-header flex justify-between p-2">
     <!-- Logo/Title -->
-    <a href="{% url 'instructor_dashboard' %}" class="brand-title">Plagiarism Detection</a>
+    <a href="{% url 'instructor_dashboard' %}" class="brand-title text-4xl">Plagiarism Detection</a>
 
     <!-- Page Title -->
-    <h1 class="page-title">Instructor Dashboard</h1>
+    <h1 class="page-title text-2xl">Instructor Dashboard</h1>
 
     <!-- Profile Icon -->
-    <a href="{% url 'instructor_account' %}" class="profile-icon" title="Account Info">
+    <a href="{% url 'instructor_account' %}" class="profile-icon border-2 p-2" title="Account Info">
       <span>I</span>
     </a>
   </header>
@@ -41,7 +41,7 @@
   <!-- =========================================
        DASHBOARD GRID LAYOUT
        ========================================= -->
-  <main class="dashboard-grid">
+  <main class="dashboard-grid border-2 flex-1 p-2 grid grid-cols-2 grid-rows-1 gap-2">
 
     <!-- =========================================
          LEFT COLUMN
@@ -49,95 +49,43 @@
            1. Previous Checks
            2. Submissions
        ========================================= -->
-    <section class="left-col">
+    <section class="left-col flex flex-col gap-2 border-2 border-neutral-700 p-1">
 
       <!-- Previous Checks -->
-      <div class="dashboard-box half-box">
-        <h2><a href="{% url 'instructor_checks' %}">Previous Checks</a></h2>
-        
+      <h2 class="text-2xl"><a href="{% url 'instructor_checks' %}">Previous Checks</a></h2>
+      
+      <div class="flex flex-col gap-2 overflow-y-auto">
         {% for check in previous_checks %}
-          <div class="check-item">
-            <strong>{{ check.checking_document_id.checking_document_name }}</strong>
-            <p>Plagiarized: {{ check.report_result }}%</p>
+          <div class="check-item border-2 border-neutral-700 p-2">
+            <strong>{{ check.checking_document_name }} ({{check.created_at}} - {{check.created_at|timesince}} ago)</strong>
+            <p>Checked: {{ check.report_result|floatformat:2 }}%</p>
           </div>
         {% endfor %}
-
       </div>
 
-      {% comment %} <!-- Submissions -->
-      <div class="dashboard-box half-box">
-        <h2><a href="{% url 'instructor_submissions' %}">Submissions</a></h2>
-        <div class="check-item">
-          <strong>AI_Paper.pdf</strong>
-          <p>Status: Checking...</p>
-        </div>
-        <div class="check-item">
-          <strong>Data_Analysis.docx</strong>
-          <p>Status: Pending Review</p>
-        </div>
-      </div> {% endcomment %}
     </section>
-
-    {% comment %} <!-- =========================================
-         MIDDLE COLUMN
-         Repository Access Overview
-       ========================================= -->
-    <section class="middle-col">
-      <div class="dashboard-box full-box repository-box">
-        <h2><a href="{% url 'instructor_repository' %}">Repository Access</a></h2>
-        <div class="check-item">
-          <strong>University Library</strong>
-          <p>120+ documents available</p>
-        </div>
-        <div class="check-item">
-          <strong>CS Folder</strong>
-          <p>Updated: Oct 25, 2025</p>
-        </div>
-        <div class="check-item">
-          <strong>Research Archives</strong>
-          <p>Shared by Kabul University</p>
-        </div>
-        <div class="check-item">
-          <strong>Thesis Collection 2024</strong>
-          <p>Download Access Granted</p>
-        </div>
-      </div>
-    </section> {% endcomment %}
 
     <!-- =========================================
          RIGHT COLUMN
          Upload Area (File submission for check)
          * JS handles file selection & generate button
        ========================================= -->
-    <section class="right-col">
-      <div class="upload-area dashboard-box">
-        <div class="upload-box">
-          <div class="upload-icon">⬆️</div>
-          <h3>Upload for Check</h3>
+    <section class="right-col flex flex-col border-2 border-neutral-700 justify-center items-center gap-5">
+      <h3 class="text-3xl">Upload for Check</h3>
 
-          <!-- File Upload Form -->
-          <form id="uploadForm" method="POST" enctype="multipart/form-data" action={% url 'instructor_dashboard' %}>
-            {% csrf_token %}
+      <!-- File Upload Form -->
+      <form id="uploadForm" method="POST" enctype="multipart/form-data" action="{% url 'instructor_dashboard' %}" class="flex flex-col gap-10 justify-center items-center">
+        {% csrf_token %}
 
-            <!-- File Input -->
-            <input type="file" id="fileInput" class="file-input" name="document" accept=".pdf">
-            <label for="fileInput" class="upload-btn">Choose File</label>
+        <!-- File Input -->
+        <input type="file" id="fileInput" class="file-input border-2 border-neutral-700 p-10" name="document" accept=".pdf">
+        {% comment %} <label for="fileInput" class="upload-btn">Choose File</label> {% endcomment %}
 
-            <!-- File Details (hidden by default) -->
-            <div id="fileDetails" class="file-details hidden"></div>
-
-            <!-- Generate Button (revealed via JS) -->
-            <button type="submit" id="generateBtn" class="generate-btn hidden">Generate Report</button>
-          </form>
-        </div>
-      </div>
+        <!-- Generate Button (revealed via JS) -->
+        <button type="submit" id="generateBtn" class="generate-btn border-2 border-neutral-700 pl-20 pr-20">Generate Report</button>
+      </form>
     </section>
 
   </main>
 </div>
-{% endblock %}
-
-{% block extra_js %}
-<!-- JS logic for upload interactivity -->
-<script src="{% static 'js/instructor_dashboard.js' %}"></script>
 {% endblock %}

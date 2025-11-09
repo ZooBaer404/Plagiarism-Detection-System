@@ -267,7 +267,7 @@ class CheckingDocumentEnhancedText(models.Model):
 class CheckingDocumentTextVector(models.Model):
     checking_document_id = models.ForeignKey(CheckingDocument, on_delete=models.CASCADE, null=False)
     checking_document_enhanced_text_id = models.ForeignKey(CheckingDocumentEnhancedText, on_delete=models.CASCADE, null=False)
-    text_vector = ArrayField(models.IntegerField())
+    text_vector = ArrayField(base_field=models.FloatField())
     created_at = models.DateTimeField(auto_now_add=True)
     last_modified_at = models.DateTimeField(auto_now=True)
     
@@ -284,3 +284,11 @@ class CheckingDocumentReport(models.Model):
     report_result = models.FloatField(null=False)
     created_at = models.DateTimeField(auto_now_add=True)
     last_modified_at = models.DateTimeField(auto_now=True)
+
+class CheckingDocumentTempFile(models.Model):
+    def research_document_directory_path(instance, filename):
+        # file will be uploaded to MEDIA_ROOT/certs/uni/uni_<name>/<filename>
+        return "checking/university_{0}/ins_{1}/temp/{2}".format(instance.checking_document_id.instructor_id.university_id.university_name, instance.checking_document_id.instructor_id, filename)
+    checking_document_id = models.ForeignKey(CheckingDocument, on_delete=models.CASCADE, null=False)
+    checking_document = models.FileField(upload_to=research_document_directory_path, null=False, validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
+    created_at = models.DateTimeField(auto_now_add=True)

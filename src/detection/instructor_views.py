@@ -17,7 +17,8 @@ from detection.core.ProcessCheckingDocument import *
 from django.views.generic.edit import FormView
 import torch
 from sentence_transformers import util
-
+import os
+from django.core.files import File
 
 def instructor_account(request):
     return render(request, "instructor_account.html")
@@ -231,38 +232,246 @@ def instructor_report(request, id):
         messages.error(request, "Checking document not found!")
         redirect("instructor_dashboard")
 
+    sentences = CheckingDocumentEnhancedText.objects.filter(checking_document_id=checking_document)
+    vectors = CheckingDocumentTextVector.objects.filter(checking_document_id=checking_document)
+    stats = CheckingDocumentBasicStats.objects.get(checking_document_id=checking_document)
+    images = CheckingDocumentImages.objects.filter(checking_document_id=checking_document)
+    errors = CheckingDocumentParseError.objects.filter(checking_document_id=checking_document)
 
-    checking_document_stats = CheckingDocumentBasicStats.objects.get(checking_document_id=checking_document)
-    unique_content = 100 - checking_document.report_result
-    matched_sources_ids = (
-        CheckingDocumentCheckingProcess.objects
-        .filter(checking_document_id=checking_document)
-        .values_list("research_document_text_vector_id__research_document_id", flat=True)
-        .distinct()
+    # research_references_before = list(list())
+    # research_references_after = list(list())
+    # research_references = list()
+
+    checking_references_before = list(list())
+    checking_references_after = list(list())
+    checking_references = list()
+    checking_process_references = CheckingDocumentCheckingProcess.objects.filter(checking_document_id=checking_document)
+    for process in checking_process_references:
+        checking_current_id = process.checking_document_text_vector_id.checking_document_enhanced_text_id.id
+        # research_current_id = process.research_document_text_vector_id.research_document_enhanced_text_id.id
+
+        checking_lower_bound_id = checking_current_id - 5
+        # research_lower_bound_id = research_current_id - 5
+
+        checking_upper_bound_id = checking_current_id + 5
+        # research_upper_bound_id = research_current_id + 5
+
+        checking_five_before = CheckingDocumentEnhancedText.objects.filter(id__lt=process.checking_document_text_vector_id.checking_document_enhanced_text_id.id, id__gte=checking_lower_bound_id)
+        # research_five_before = ResearchDocumentEnhancedText.objects.filter(id__lt=process.research_document_text_vector_id.research_document_enhanced_text_id.id, id__gte=research_lower_bound_id)
+
+        checking_five_after = CheckingDocumentEnhancedText.objects.filter(id__lte=checking_upper_bound_id, id__gt=process.checking_document_text_vector_id.checking_document_enhanced_text_id.id)
+        # research_five_after = ResearchDocumentEnhancedText.objects.filter(id__lte=research_upper_bound_id, id__gt=process.research_document_text_vector_id.research_document_enhanced_text_id.id)
+
+        checking_references.append(process.checking_document_text_vector_id.checking_document_enhanced_text_id)
+        # research_references.append(process.research_document_text_vector_id.research_document_enhanced_text_id)
+
+        checking_references_before.append(checking_five_before)
+        # research_references_before.append(research_five_before)
+
+        checking_references_after.append(checking_five_after)
+        # research_references_after.append(research_five_after)
+
+    checking_references_combined = zip(
+        checking_references_before,
+        checking_references,
+        checking_references_after
     )
 
-    matched_sources_no = (
-        CheckingDocumentCheckingProcess.objects
-        .filter(checking_document_id=checking_document)
-        .values("research_document_text_vector_id__research_document_id")
-        .distinct()
-        .count()
-    )
+    # research_references_combined = zip(
+    #     research_references_before,
+    #     research_references,
+    #     research_references_after
+    # )
+
+    # references_combined = zip(
+    #     checking_references_combined,
+    #     research_references_combined
+    # )
+
+    return render(request, "instructor_report.html", {"document": checking_document, 
+                                                  "sentences": sentences, 
+                                                  "vectors": vectors, 
+                                                  "stats": stats,
+                                                  "images": images,
+                                                #   "references_combined": references_combined,
+                                                  "checking_references_combined": checking_references_combined,
+                                                #   "research_references_combined": research_references_combined,
+                                                  "references": checking_process_references,
+                                                  "errors": errors,})
+
+
+def instructor_report_references(request, id):
+    """
+    Displays a static report preview for demonstration.
+    """
+    user_type = request.session.get("type")
+    if user_type != "instructor":
+        messages.error(request, "You are not logged in as an instructor")
+        redirect("dashboard")
+
+    instructor_id = request.session.get("instructor_id")
+    if not instructor_id:
+        messages.error(request, "Error: you are not authorized for this report")
+        redirect("instructor_dashboard")
     
-    matched_sources = ResearchDocument.objects.filter(id__in=matched_sources_ids)
+    print("instructor id is ", instructor_id)
 
-    checking_document_checking_process = CheckingDocumentCheckingProcess.objects.filter(checking_document_id=checking_document)
+    instructor = Instructor.objects.get(id=instructor_id)
+    if not instructor:
+        messages.error(request, "Error: you are not signed in")
+        redirect(request, "instructor_login")
 
-    return render(request, "instructor_report.html", {
-        "checking_document": checking_document,
-        "checking_document_report": checking_document.report_result,
-        "checking_document_stats": checking_document_stats,
-        "unique_content": unique_content,
-        "matched_sources": matched_sources,
-        "matched_sources_no": matched_sources_no,
-        "checking_document_checking_process": checking_document_checking_process,
-    })
+    checking_document = CheckingDocument.objects.get(id=id)
+    if not checking_document:
+        messages.error(request, "Checking document not found!")
+        redirect("instructor_dashboard")
 
+    errors = CheckingDocumentParseError.objects.filter(checking_document_id=checking_document)
+
+    research_references_before = list(list())
+    research_references_after = list(list())
+    research_references = list()
+
+    checking_references_before = list(list())
+    checking_references_after = list(list())
+    checking_references = list()
+    checking_process_references = CheckingDocumentCheckingProcess.objects.filter(checking_document_id=checking_document)
+    for process in checking_process_references:
+        checking_current_id = process.checking_document_text_vector_id.checking_document_enhanced_text_id.id
+        research_current_id = process.research_document_text_vector_id.research_document_enhanced_text_id.id
+
+        checking_lower_bound_id = checking_current_id - 5
+        research_lower_bound_id = research_current_id - 5
+
+        checking_upper_bound_id = checking_current_id + 5
+        research_upper_bound_id = research_current_id + 5
+
+        checking_five_before = CheckingDocumentEnhancedText.objects.filter(id__lt=process.checking_document_text_vector_id.checking_document_enhanced_text_id.id, id__gte=checking_lower_bound_id)
+        research_five_before = ResearchDocumentEnhancedText.objects.filter(id__lt=process.research_document_text_vector_id.research_document_enhanced_text_id.id, id__gte=research_lower_bound_id)
+
+        checking_five_after = CheckingDocumentEnhancedText.objects.filter(id__lte=checking_upper_bound_id, id__gt=process.checking_document_text_vector_id.checking_document_enhanced_text_id.id)
+        research_five_after = ResearchDocumentEnhancedText.objects.filter(id__lte=research_upper_bound_id, id__gt=process.research_document_text_vector_id.research_document_enhanced_text_id.id)
+
+        checking_references.append(process.checking_document_text_vector_id.checking_document_enhanced_text_id)
+        research_references.append(process.research_document_text_vector_id.research_document_enhanced_text_id)
+
+        checking_references_before.append(checking_five_before)
+        research_references_before.append(research_five_before)
+
+        checking_references_after.append(checking_five_after)
+        research_references_after.append(research_five_after)
+
+    checking_references_combined = zip(
+        checking_references_before,
+        checking_references,
+        checking_references_after
+    )
+
+    research_references_combined = zip(
+        research_references_before,
+        research_references,
+        research_references_after
+    )
+
+    paired_references = zip(
+        checking_references_combined,
+        research_references_combined
+    )
+
+    return render(request, "instructor_report_references.html", {"document": checking_document, 
+                                                  "paired_references": paired_references,
+                                                  "references": checking_process_references,})
+
+
+def instructor_report_view_content(request, id):
+    user_type = request.session.get("type")
+    if user_type != "instructor":
+        messages.error(request, "You are not logged in as an instructor")
+        redirect("dashboard")
+
+    instructor_id = request.session.get("instructor_id")
+    if not instructor_id:
+        messages.error(request, "Error: you are not authorized for this report")
+        redirect("instructor_dashboard")
+    
+    print("instructor id is ", instructor_id)
+
+    instructor = Instructor.objects.get(id=instructor_id)
+    if not instructor:
+        messages.error(request, "Error: you are not signed in")
+        redirect(request, "instructor_login")
+
+    checking_document = CheckingDocument.objects.get(id=id)
+    if not checking_document:
+        messages.error(request, "Checking document not found!")
+        redirect("instructor_dashboard")
+
+    checking_document_sentences = CheckingDocumentEnhancedText.objects.filter(checking_document_id=checking_document)
+    checking_document_pdf_url = checking_document.checking_document_file.url
+    print("pdf url: ", checking_document.checking_document_file.url)
+
+    return render(request, "instructor_report_view_content.html", {
+        "document": checking_document,
+        "sentences": checking_document_sentences,
+        "pdf_url": checking_document_pdf_url,})
+
+
+def instructor_report_view_content_sentence(request, id, sentence_id):
+    user_type = request.session.get("type")
+    if user_type != "instructor":
+        messages.error(request, "You are not logged in as an instructor")
+        redirect("dashboard")
+
+    instructor_id = request.session.get("instructor_id")
+    if not instructor_id:
+        messages.error(request, "Error: you are not authorized for this report")
+        redirect("instructor_dashboard")
+    
+    print("instructor id is ", instructor_id)
+
+    instructor = Instructor.objects.get(id=instructor_id)
+    if not instructor:
+        messages.error(request, "Error: you are not signed in")
+        redirect(request, "instructor_login")
+
+    checking_document = CheckingDocument.objects.get(id=id)
+    if not checking_document:
+        messages.error(request, "Checking document not found!")
+        redirect("instructor_dashboard")
+
+    checking_document_sentences = CheckingDocumentEnhancedText.objects.filter(checking_document_id=checking_document)
+    checking_document_sentence = CheckingDocumentEnhancedText.objects.get(id=sentence_id)
+    checking_document_pdf_url = checking_document.checking_document_file.path
+
+    doc = fitz.open(checking_document_pdf_url)
+    for page_num in range(doc.page_count):
+        page = doc.load_page(page_num)
+
+        text_instances = page.search_for(checking_document_sentence.sentence_enhanced_text)
+
+        for inst in text_instances:
+            page.add_highlight_annot(inst)
+    
+    temp_path = f"media/checking/temp/temp_{sentence_id}.pdf"
+    os.makedirs(os.path.dirname(temp_path), exist_ok=True)
+    doc.save(temp_path)
+    doc.close()
+
+    with open(temp_path, "rb") as f:
+        temp_file = CheckingDocumentTempFile.objects.create(
+            checking_document_id=checking_document,
+        )
+        temp_file.checking_document.save(f"highlighted_{sentence_id}.pdf", File(f), save=True)
+
+
+    checking_document_pdf_url = temp_file.checking_document.url
+    print("pdf url: ", checking_document.checking_document_file.url)
+
+    return render(request, "instructor_report_view_content_sentence.html", {
+        "document": checking_document,
+        "sentences": checking_document_sentences,
+        "sentence_id": sentence_id,
+        "pdf_url": checking_document_pdf_url,})
 
 def instructor_checks(request):
     """
