@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- =========================================================
+     PAGE: Instructor Report Overview
+     DESCRIPTION:
+       Displays a detailed plagiarism report summary for a
+       selected document. Includes similarity score,
+       statistics, matching sources, and text comparison.
+   ========================================================= -->
+
+<div class="report-container h-full bg-neutral-800 text-white flex flex-col gap-1">
+
+  <!-- =========================================
+       HEADER SECTION
+       ========================================= -->
+  <header class="instructor-header flex justify-between p-2">
+    <!-- Logo/Title -->
+    <a href="{% url 'dashboard' %}"
+      class="brand-title text-4xl">Plagiarism Detection</a>
+
+    <!-- Page Title -->
+    <h1 class="page-title text-2xl">University Repository View Content</h1>
+
+    <!-- Profile Icon -->
+    <a href="{% url 'university_account' %}" class="profile-icon border-2 p-2"
+      title="Account Info">
+      <span>U</span>
+    </a>
+  </header>
+
+  <main class="upload-section flex flex-col flex-1 p-2 gap-2">
+
+    <!-- PDF Viewer -->
+    <div class="grid grid-cols-2 gap-2 border-2 border-neutral-700 p-2 flex-1 overflow-hidden">
+      
+      
+        <div class="border-2 border-neutral-700 p-1">
+            <h2 class="text-xl mb-2">Document Preview</h2>
+            
+            <div class="grid gap-2 flex-1">
+                {% if pdf_url %}
+                <iframe src="{{ pdf_url }}" width="100%" height="900px" class="border-0 flex-1"></iframe>
+                {% else %}
+                <p class="text-red-600">No PDF file available.</p>
+                {% endif %}
+                <a href="{{ pdf_url }}" download class="border-2 border-neutral-700">Download PDF</a>
+            </div>
+        </div>
+        <div class="flex-1 border-2 border-neutral-700 p-1">
+          <h2 class="text-xl mb-2">Extracted Content</h2>
+          
+          <div class="max-h-[925px] overflow-y-auto">
+            <p>
+              {% for sentence in sentences %}
+              <a name="{{sentence.id}}" href="{% url 'university_repository_content_sentence' document.id sentence.id %}">
+                {{sentence.sentence_enhanced_text}}
+              </a>
+              {% endfor %}
+            </p>
+          </div>
+        </div>
+    </div>
+
+
+  </main>
+</div>
+{% endblock %}

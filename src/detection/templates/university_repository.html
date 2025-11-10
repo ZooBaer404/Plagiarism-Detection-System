@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="upload-container h-full bg-neutral-800 text-white flex flex-col">
+
+  <!-- =========================================
+       HEADER SECTION
+       ========================================= -->
+  <header class="uni-header flex justify-between p-1">
+    <!-- Brand Title -->
+    <a href="{% url 'university_dashboard' %}" class="brand-title text-4xl">Plagiarism Detection</a>
+    <!-- Page Title -->
+    <h1 class="page-title text-2xl">Repository</h1>
+    <!-- Profile Icon -->
+    <a href="{% url 'university_account' %}" class="profile-icon border-2 p-2" title="Account Information">
+      <span>U</span>
+    </a>
+  </header>
+
+  <main class="upload-section flex flex-col flex-1 p-2 gap-2">
+    <div class="basic_stats border-2 border-neutral-700 flex flex-col gap-2 p-3">
+        <p class="text-3xl">{{document.research_document_file.name}} - <a href="{% url 'university_repository_content' document.id %}" class="underline text-xs">View Content</a></p>
+        <div class="grid grid-flow-col gap-2">
+            <p class="flex flex-col gap-2 items-center border-2 border-neutral-700 p-5">Sentences: <span class="text-2xl">{{stats.no_of_sentences}}</span></p>
+            <p class="flex flex-col gap-2 items-center border-2 border-neutral-700 p-5">Characters: <span class="text-2xl">{{stats.no_of_characters}}</span></p>
+            <p class="flex flex-col gap-2 items-center border-2 border-neutral-700 p-5">Words: <span class="text-2xl">{{stats.no_of_words}}</span></p>
+            <p class="flex flex-col gap-2 items-center border-2 border-neutral-700 p-5">Size: <span><span class="text-2xl">{{stats.size_of_document}} </span>bytes</span></p>
+            <p class="flex flex-col gap-2 items-center border-2 border-neutral-700 p-5">Images: <span class="text-2xl">{{stats.no_of_images}}</span></p>
+        </div>
+    </div>
+    <div class="errors border-2 border-neutral-700 p-3 flex flex-col gap-2">
+        <p class="text-2xl">Errors</p>
+        <div>
+            {% for error in errors %}
+                <div class="border-2 border-neutral-700 p-1">
+                    <p class="text-xs">{{error.created_at}}</p>
+                    <p>{{error.error_message}}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="grid grid-cols-3 gap-2">
+        <div class="border-2 border-neutral-700 p-3 gap-2">
+            <p class="text-2xl">Images</p>
+            <div class="grid grid-cols-4 p-1 gap-3 overflow-y-auto max-h-[400px]">
+                {% for image in images %}
+                    <img src="{{image.image.url}}" alt="file {{image.id}}" class="border-2 border-neutral-700">
+                {% endfor %}
+            </div>
+        </div>
+        <div class="border-2 border-neutral-700 p-3">
+            <p class="text-2xl">Sentences</p>
+            <div class="flex flex-col gap-2 overflow-y-auto max-h-[400px]">
+                {% for sentence in sentences %}
+                    <span><span class="text-1xl">{{sentence.sentence_index}}. </span><span class="text-xs">{{sentence.sentence_enhanced_text}}</span></span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="border-2 border-neutral-700 p-3">
+            <p class="text-2xl">Vectors</p>
+            <div class="flex flex-col gap-2 overflow-y-auto max-h-[400px]">
+                {% for sentence in vectors %}
+                    <span><span class="text-1xl">{{sentence.research_document_enhanced_text_id.sentence_index}}. </span><span class="text-xs">{{sentence.text_vector}}</span></span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="border-2 border-neutral-700 p-3">
+        <p class="text-2xl">References</p>
+        <div class="flex flex-col gap-2 overflow-y-auto">
+            {% for reference in references %}
+                <span class="text-xs">{{reference.reference_text}}</span>
+            {% endfor %}
+        </div>
+    </div>
+
+
+
+  </main>
+
+</div>
+{% endblock %}

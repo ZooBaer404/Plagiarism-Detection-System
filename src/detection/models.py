@@ -172,6 +172,14 @@ class ResearchDocumentTextVector(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     last_modified_at = models.DateTimeField(auto_now=True)    
 
+class ResearchDocumentTempFile(models.Model):
+    def research_document_directory_path(instance, filename):
+        # file will be uploaded to MEDIA_ROOT/certs/uni/uni_<name>/<filename>
+        return "research/university_{0}/ins_{1}/temp/{2}".format(instance.research_document_id.university_id.university_name, instance.research_document_id, filename)
+    research_document_id = models.ForeignKey(ResearchDocument, on_delete=models.CASCADE, null=False)
+    research_document = models.FileField(upload_to=research_document_directory_path, null=False, validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
+    created_at = models.DateTimeField(auto_now_add=True)
+
 # class CheckingDocumentUpload(models.Model):
 #     checking_document_name = models.CharField(max_length=500, null=False)
 #     checking_document_path = models.CharField(max_length=1000, null=False)

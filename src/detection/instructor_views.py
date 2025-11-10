@@ -409,7 +409,7 @@ def instructor_report_view_content(request, id):
         messages.error(request, "Checking document not found!")
         redirect("instructor_dashboard")
 
-    checking_document_sentences = CheckingDocumentEnhancedText.objects.filter(checking_document_id=checking_document)
+    checking_document_sentences = CheckingDocumentEnhancedText.objects.filter(checking_document_id=checking_document).order_by("created_at")
     checking_document_pdf_url = checking_document.checking_document_file.url
     print("pdf url: ", checking_document.checking_document_file.url)
 
@@ -442,7 +442,7 @@ def instructor_report_view_content_sentence(request, id, sentence_id):
         messages.error(request, "Checking document not found!")
         redirect("instructor_dashboard")
 
-    checking_document_sentences = CheckingDocumentEnhancedText.objects.filter(checking_document_id=checking_document)
+    checking_document_sentences = CheckingDocumentEnhancedText.objects.filter(checking_document_id=checking_document).order_by("created_at")
     checking_document_sentence = CheckingDocumentEnhancedText.objects.get(id=sentence_id)
     checking_document_pdf_url = checking_document.checking_document_file.path
 

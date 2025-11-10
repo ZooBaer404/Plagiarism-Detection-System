@@ -17,8 +17,8 @@ from detection.core.ProcessCheckingDocument import *
 from django.views.generic.edit import FormView
 import torch
 from sentence_transformers import util
-
-
+import os
+from django.core.files import File
 
 def university_login(request):
     if request.method == "POST":
@@ -391,13 +391,95 @@ def university_repository(request, id):
     references = ResearchDocumentReferences.objects.filter(research_document_id=research_document)
     errors = ResearchDocumentParseError.objects.filter(research_document_id=research_document)
 
-    return render(request, "view_document.html", {"document": research_document, 
+    return render(request, "university_repository.html", {"document": research_document, 
                                                   "sentences": sentences, 
                                                   "vectors": vectors, 
                                                   "stats": stats,
                                                   "images": images,
                                                   "references": references,
                                                   "errors": errors,})
+
+def university_repository_content(request, id):
+    """Error logs: failed uploads, metadata issues, etc."""
+    user_type = request.session.get("type")
+    if user_type != "university":
+        messages.error(request, "You are not logged in as a university")
+        redirect("dashboard")
+    
+    university_id = request.session.get("university_id")
+    if not university_id:
+        messages.error(request, "Error: you are not authorized for this.")
+        redirect("dashboard")
+    
+    university = University.objects.get(id=university_id)
+    if not university:
+        messages.error(request, "Error: you are not signed in as a university")
+        redirect("dashboard")
+
+    research_document = ResearchDocument.objects.get(id=id)
+    if not research_document:
+        messages.error(request, "Research document not found!")
+        redirect("dashboard")
+
+    research_document_sentences = ResearchDocumentEnhancedText.objects.filter(research_document_id=research_document).order_by("created_at")
+    research_document_pdf_url = research_document.research_document_file.url
+
+    return render(request, "university_repository_content.html", {
+        "document": research_document,
+        "sentences": research_document_sentences,
+        "pdf_url": research_document_pdf_url,
+    })
+
+def university_repository_content_sentence(request, id, sentence_id):
+    """Error logs: failed uploads, metadata issues, etc."""
+    user_type = request.session.get("type")
+    if user_type != "university":
+        messages.error(request, "You are not logged in as a university")
+        redirect("dashboard")
+    
+    university_id = request.session.get("university_id")
+    if not university_id:
+        messages.error(request, "Error: you are not authorized for this.")
+        redirect("dashboard")
+    
+    university = University.objects.get(id=university_id)
+    if not university:
+        messages.error(request, "Error: you are not signed in as a university")
+        redirect("dashboard")
+
+    research_document = ResearchDocument.objects.get(id=id)
+    research_document_sentences = ResearchDocumentEnhancedText.objects.filter(research_document_id=research_document).order_by("created_at")
+    research_document_sentence = ResearchDocumentEnhancedText.objects.get(id=sentence_id)
+    research_document_pdf_url = research_document.research_document_file.path
+
+    doc = fitz.open(research_document_pdf_url)
+    for page_num in range(doc.page_count):
+        page = doc.load_page(page_num)
+
+        text_instances = page.search_for(research_document_sentence.sentence_enhanced_text)
+
+        for inst in text_instances:
+            page.add_highlight_annot(inst)
+    
+    temp_path = f"media/research/temp/temp_{sentence_id}.pdf"
+    os.makedirs(os.path.dirname(temp_path), exist_ok=True)
+    doc.save(temp_path)
+    doc.close()
+
+    with open(temp_path, "rb") as f:
+        temp_file = ResearchDocumentTempFile.objects.create(
+            research_document_id=research_document,
+        )
+        temp_file.research_document.save(f"highlighted_{sentence_id}.pdf", File(f), save=True)
+
+    research_document_pdf_url = temp_file.research_document.url
+
+    return render(request, "university_repository_content_sentence.html", {
+        "document": research_document,
+        "sentences": research_document_sentences,
+        "sentence_id": sentence_id,
+        "pdf_url": research_document_pdf_url,
+    })
 
 
 def university_errors(request):

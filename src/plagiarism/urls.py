@@ -56,6 +56,8 @@ urlpatterns = [
     path("dashboard/university/pending/", university_views.university_approve_instructor, name="university_pending"),
     path("dashboard/university/repositories/", university_views.university_repositories, name="university_repositories"),
     path("destination/university/repositories/<int:id>", university_views.university_repository, name="university_repository"),
+    path("repositories/repository/content/<int:id>", university_views.university_repository_content, name="university_repository_content"),
+    path("content/<int:id>/<int:sentence_id>", university_views.university_repository_content_sentence, name="university_repository_content_sentence"),
     path("dashboard/university/errors/", university_views.university_errors, name="university_errors"),
 
     # Instructor
