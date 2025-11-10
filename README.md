@@ -68,13 +68,21 @@ Please make sure to update tests as appropriate.
 
 ## Authors and acknowledgment
 
-Thanks to both my teammates [Sayed Noorullah Hashimi](https://github.com/Noor2099) [Mohammad Helal Afzali](https://github.com/Helalafzali) for their dedicated work. This project would not have been possible without them.
+Thanks to both my teammates [Sayed Noorullah Hashimi](https://github.com/Noor2099) and [Mohammad Helal Afzali](https://github.com/Helalafzali) for their dedicated work. This project would not have been possible without them.
 We really appreciate [Professor Mohammad Tahir](https://www.researchgate.net/profile/Muhammad-Tahir-182)'s hard work for putting up with us and thoroughly reviewing our project for mistakes.
 
 ## License
 
 [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
 
+## Demo Photos
+
+![Admin Dashboard](src/staticfiles/readme/first.PNG "Admin Dashboard Image")
+![University Dashboard](src/staticfiles/readme/sixth.PNG "University Dashboard Image")
+![Viewing Document's Content](src/staticfiles/readme/third.PNG "University Repository Document View")
+![Viewing Checked Report](src/staticfiles/readme/second.PNG "Instructor View Report")
+![Viewing Detailed Checked Report](src/staticfiles/readme/fifth.PNG "Instructor Detailed Report")
+
 ## Project Status
 
-PDS is in its earliest stages. We are preparing the requirements and technologies needed to build the project. PDS needs a CI-CD pipeline for automated testing. We are working on setting up the project.
+PDS is in its last stages of development. We are cleaning up the codebase and getting it ready for presentation.
