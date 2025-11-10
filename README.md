@@ -1,5 +1,5 @@
 <p align="center">
- <img width="100px" src="#" align="center" alt="Project Logo" />
+ <!-- <img width="100px" src="#" align="center" alt="Project Logo" /> -->
  <h2 align="center">Plagiarism Detection System</h2>
  <p align="center">Helping professors efficiently detect plagiarized content from students' research projects</p>
 </p>
