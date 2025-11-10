@@ -34,7 +34,7 @@
   <div class="reports-grid p-2 flex flex-col gap-2">
     <h2 class="text-2xl flex-none">Reports</h2>
     <div class="border-2 border-neutral-700 grow p-2">
-      <table class="table-auto w-full">
+      <table class="table-auto w-full text-left">
         <thead>
           <tr class="">
             <th scope="col" class="p-2 w-2/6">Document</th>
@@ -47,7 +47,7 @@
         <tbody class="">
           {% for report in reports %}
             <tr class="border-b-2 border-b-neutral-400">
-              <th scope="row">{{report.checking_document_file.name}}</th>
+              <th scope="row" class="text-xs">{{report.checking_document_file.name}}</th>
               <td>{{report.report_result}}%</td>
               <td>{{report.instructor_id.first_name }} {{report.instructor_id.last_name}}</td>
               <td>{{report.instructor_id.university_id.university_name}}</td>

@@ -70,15 +70,15 @@ def login_page(request):
             return redirect("admin_dashboard")
 
         # Check University
-        uni = University.objects.get(university_name=username, password=password)
-        if uni.DoesNotExist:
+        uni = University.objects.filter(university_name=username, password=password).first()
+        if uni:
             request.session["type"] = "university"
             request.session["university_id"] = uni.id
             return redirect("university_dashboard")
 
         # Check Instructor
-        inst = Instructor.objects.get(email=username, password=password)
-        if inst.DoesNotExist:
+        inst = Instructor.objects.filter(email=username, password=password).first()
+        if inst:
             request.session["type"] = "instructor"
             request.session["instructor_id"] = inst.id
             return redirect("instructor_dashboard")

@@ -36,6 +36,7 @@
         <p class="text-2xl flex-none">References</p>
         <div class="grid grid-cols-2 gap-3 p-2 flex-1 overflow-y-auto border-2 border-neutral-700 max-h-[950px]">
 
+
         {% for checking, research in paired_references %}
             {% with before=checking.0 current=checking.1 after=checking.2 %}
             {% with rbefore=research.0 rcurrent=research.1 rafter=research.2 %}

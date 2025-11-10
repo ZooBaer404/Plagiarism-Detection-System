@@ -56,6 +56,9 @@ def instructor_dashboard(request):
             for checking_sentence in sentence_vectors_obj:
                 check_tensor = torch.tensor(checking_sentence.text_vector).unsqueeze(0)
                 
+                if len(checking_sentence.checking_document_enhanced_text_id.sentence_enhanced_text) < 30: # if string length is less than this, skip it
+                    continue
+
                 for research_sentence in research_vectors:
                     research_tensor = torch.tensor(research_sentence.text_vector).unsqueeze(0)
                     similarity = util.cos_sim(check_tensor, research_tensor).item()

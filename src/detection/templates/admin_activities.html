@@ -36,34 +36,34 @@
   <div class="activities-panel p-2 flex flex-col gap-2">
     <h2 class="text-2xl">Activities</h2>
     <!-- ====== COLUMN HEADERS ====== -->
-    <table class="activities-header-row flex flex-col p-2 border-2 border-neutral-700">
-      <thead>
-        <tr class="flex justify-between">
-          <th scope="col">User</th>
-          <th scope="col">Action</th>
-          <th scope="col">Name</th>
-          <th scope="col">Fileanme</th>
-          <th scope="col">Timestamp</th>
+    <table class="w-full text-sm text-left rtl:text-right border-2 border-neutral-700">
+      <thead class="text-xs uppercase font-bold">
+        <tr class="">
+          <th scope="col" class="px-6 py-3">User</th>
+          <th scope="col" class="px-6 py-3">Action</th>
+          <th scope="col" class="px-6 py-3">Name</th>
+          <th scope="col" class="px-6 py-3">File Name</th>
+          <th scope="col" class="px-6 py-3">Timestamp</th>
         </tr>
       </thead>
       <tbody>
         {% for report in reports %}
-        <tr class="activity-row flex justify-between border-b-2 border-b-neutral-400">
-          <th scope="col">{{report.instructor_id.first_name}}
+        <tr class="activity-row border-b">
+          <th scope="col" class="px-6 py-4 font-medium whitespace-nowrap">{{report.instructor_id.first_name}}
             {{report.instructor_id.last_name}}</th>
-          <tr>Uploaded a checking document</td>
-          <tr>{{report.checking_document_name}}</td>
-          <tr>{{report.checking_document_file.name}}</td>
-          <tr>{{report.created_at}}</td>
+          <td class="px-6 py-4">Uploaded a checking document</td>
+          <td class="px-6 py-4">{{report.checking_document_name}}</td>
+          <td class="px-6 py-4">{{report.checking_document_file.name}}</td>
+          <td class="px-6 py-4">{{report.created_at}}</td>
         </tr>
         {% endfor %}
         {% for report in university_reports %}
-        <tr class="activity-row flex justify-between border-b-2 border-b-neutral-400">
-          <th scope="col">{{report.university.university_name}}</th>
-          <tr>Uploaded a research document</td>
-          <tr>{{report.research_document_name}}</td>
-          <tr>{{report.research_document_file.name}}</td>
-          <tr>{{report.created_at}}</td>
+        <tr class="activity-row border-b">
+          <th scope="col" class="px-6 py-4 font-medium whitespace-nowrap">{{report.university_id.university_name}}</th>
+          <td class="px-6 py-4">Uploaded a research document</td>
+          <td class="px-6 py-4">{{report.research_document_name}}</td>
+          <td class="px-6 py-4">{{report.research_document_file.name}}</td>
+          <td class="px-6 py-4">{{report.created_at}}</td>
         </tr>
         {% endfor %}
       </tbody>

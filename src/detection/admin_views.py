@@ -79,10 +79,13 @@ def admin_activities(request):
         messages.error(request, "Error: you are not signed in as a admin")
         redirect("login_page")
 
-    research_document = ResearchDocument.objects.all()
-    checking_document = CheckingDocument.objects.all()
+    university_reports = ResearchDocument.objects.all()
+    reports = CheckingDocument.objects.all()
 
-    return render(request, "admin_activities.html")
+    return render(request, "admin_activities.html", {
+        "reports": reports,
+        "university_reports": university_reports,
+    })
 
 
 # ----------------------------------------# ADMIN LOGIN PAGE
