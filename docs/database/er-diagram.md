@@ -7,8 +7,6 @@ Location: docs/database/er-diagram.md
 
 # ER-Diagram
 
-**Suggestion**: Use [dbdiagram.io](https://dbdiagram.io), [QuickDBD](https://www.quickdatabasediagrams.com/), or [draw.io] to draw your Entity-Relationship diagram and export it as SVG/PNG.
-
 Save your ERD as:
 - [ ] `docs/design-assets/diagrams/erd/README.md`
 - [ ] Link it from `schema.md` like this:

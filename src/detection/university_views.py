@@ -21,6 +21,25 @@ import os
 from django.core.files import File
 
 def university_login(request):
+    """
+    Handles university authentication and session initialization.
+
+    This view validates login credentials, ensures that the university
+    is admin-approved, and initializes session variables for authorized access.
+
+    Args:
+        request (HttpRequest): The HTTP request containing form data and session info.
+
+    Returns:
+        HttpResponse:
+            - Redirects to the university dashboard on successful login.
+            - Renders 'login_university.html' or redirects with an error message on failure.
+
+    Notes:
+        - Prevents duplicate logins by clearing previous user sessions (admin/instructor).
+        - Displays warnings if approval is pending.
+    """
+
     if request.method == "POST":
         name = request.POST.get("university_name")
         password = request.POST.get("password")
@@ -61,6 +80,23 @@ def university_login(request):
 
 
 def university_account(request):
+    """
+    Displays the university account page.
+
+    Verifies that the current session user is a university, then renders
+    the university’s account information page.
+
+    Args:
+        request (HttpRequest): The current HTTP request with session data.
+
+    Returns:
+        HttpResponse: Renders 'university_account.html'.
+
+    Notes:
+        - Redirects unauthorized users to the dashboard with an error message.
+        - Frontend-only page for account viewing.
+    """
+
     user_type = request.session.get("type")
     if user_type != "university":
         messages.error(request, "You are not logged in as a university")
@@ -83,8 +119,24 @@ def university_account(request):
 # ----------------------------------------
 def signup_university(request):
     """
-    University signup — with certificate upload.
+    Handles university signup with optional certificate upload.
+
+    This view allows universities to register new accounts, optionally
+    uploading an accreditation certificate. Submissions await admin approval.
+
+    Args:
+        request (HttpRequest): The incoming request containing form data and file uploads.
+
+    Returns:
+        HttpResponse:
+            - Redirects to the login page on successful submission.
+            - Renders 'signup_university.html' with validation errors on failure.
+
+    Notes:
+        - Uploaded certificates are stored safely using Django’s storage system.
+        - Passwords are stored in plaintext (⚠️ should be hashed in production).
     """
+
     if request.method == "POST":
         uni_name = request.POST.get("university_name", "").strip()
         password = request.POST.get("password", "").strip()
@@ -111,6 +163,21 @@ def signup_university(request):
     return render(request, "signup_university.html")
 
 def university_signup(request):
+    """
+    Registers a new university account.
+
+    Handles the creation of a new university record with uploaded certificate.
+    Requires all fields to be present.
+
+    Args:
+        request (HttpRequest): The HTTP request object containing POST and FILES data.
+
+    Returns:
+        HttpResponse:
+            - Redirects to 'university_signup_done' after success.
+            - Renders 'university_signup.html' on failure.
+    """
+
     if request.method == "POST":
         name = request.POST.get("university_name")
         password = request.POST.get("password")
@@ -136,10 +203,40 @@ def university_signup(request):
     return render(request, "university_signup.html")
 
 def university_signup_done(request):
+    """
+    Displays confirmation after successful university signup.
+
+    Args:
+        request (HttpRequest): The request object.
+
+    Returns:
+        HttpResponse: Renders 'university_signup_done.html'.
+    """
+
     return render(request, "university_signup_done.html")
 
 
 def university_dashboard(request):
+    """
+    Displays the university dashboard with instructor and document management.
+
+    This view:
+    - Verifies university session authentication.
+    - Shows lists of pending and approved instructors.
+    - Displays uploaded research documents and any parsing errors.
+    - Handles instructor approval and rejection actions.
+
+    Args:
+        request (HttpRequest): The incoming HTTP request.
+
+    Returns:
+        HttpResponse: Renders 'university_dashboard.html' with instructor and document data.
+
+    Notes:
+        - Access restricted to logged-in universities.
+        - Processes POST requests for instructor approval or rejection.
+    """
+
     # --- Authentication guard ---
     
     user_type = request.session.get("type")
@@ -209,6 +306,23 @@ def university_dashboard(request):
 
 
 def university_approve_instructor(request):
+    """
+    Approves, deletes, or manages instructors under a university.
+
+    Verifies session authentication and processes instructor-related actions
+    (approval or deletion) submitted through POST requests.
+
+    Args:
+        request (HttpRequest): The incoming HTTP request.
+
+    Returns:
+        HttpResponse: Renders 'university_instructors.html' with updated instructor lists.
+
+    Notes:
+        - Only available to university-type session users.
+        - Displays success or warning messages depending on action.
+    """
+
     user_type = request.session.get("type")
     if user_type != "university":
         messages.error(request, "You are not logged in as a university")
@@ -269,7 +383,25 @@ def university_approve_instructor(request):
 
 
 def university_upload(request):
-    """Upload page for universities (frontend only)."""
+    """
+    Handles research document uploads from universities.
+
+    Displays the upload form, validates submissions, and saves documents
+    for later parsing and plagiarism processing.
+
+    Args:
+        request (HttpRequest): The incoming HTTP request with file uploads.
+
+    Returns:
+        HttpResponse:
+            - Redirects to 'university_upload_done' upon successful upload.
+            - Renders 'university_upload.html' with validation messages on failure.
+
+    Notes:
+        - Only accessible to authenticated universities.
+        - Uses Django form validation via ResearchDocumentUploadForm.
+    """
+
 
     user_type = request.session.get("type")
     if user_type != "university":
@@ -302,7 +434,23 @@ def university_upload(request):
 
 
 def university_upload_done(request):
-    """Upload confirmation page."""
+    """
+    Displays the upload confirmation and triggers document processing.
+
+    After a successful upload, this view calls the
+    `UniversityUploadProcessDocuments` function to analyze pending research papers.
+
+    Args:
+        request (HttpRequest): The request object.
+
+    Returns:
+        HttpResponse: Renders 'university_upload_done.html' with pending papers list.
+
+    Notes:
+        - Access restricted to logged-in universities.
+        - Displays success confirmation and processing summary.
+    """
+
 
     university_id = request.session.get("university_id")
     if not university_id:
@@ -316,7 +464,20 @@ def university_upload_done(request):
 
 
 def university_instructors(request):
-    """Instructor management page for universities."""
+    """
+    Displays instructor management interface for universities.
+
+    Args:
+        request (HttpRequest): The current HTTP request.
+
+    Returns:
+        HttpResponse: Renders 'university_instructors.html'.
+
+    Notes:
+        - Frontend-only layout placeholder for instructor lists and management actions.
+        - Restricted to authenticated university sessions.
+    """
+
     user_type = request.session.get("type")
     if user_type != "university":
         messages.error(request, "You are not logged in as a university")
@@ -336,6 +497,23 @@ def university_instructors(request):
 
 
 def university_repositories(request):
+    """
+    Lists research repositories uploaded by the university.
+
+    Displays all documents uploaded by the university, allowing viewing or deletion.
+
+    Args:
+        request (HttpRequest): The HTTP request containing session and form data.
+
+    Returns:
+        HttpResponse: Renders 'university_repositories.html' with repository listings.
+
+    Notes:
+        - POST actions: 
+            - 'view' renders individual repository.
+            - 'delete' removes the document record.
+    """
+
     """Repositories list uploaded by this university."""
     user_type = request.session.get("type")
     if user_type != "university":
@@ -371,6 +549,24 @@ def university_repositories(request):
     })
 
 def university_repository(request, id):
+    """
+    Displays a detailed view of a specific research document.
+
+    Retrieves all associated text, vectors, statistics, images, references,
+    and parsing errors for the selected document.
+
+    Args:
+        request (HttpRequest): The request object.
+        id (int): The ID of the research document to display.
+
+    Returns:
+        HttpResponse: Renders 'university_repository.html' with document data.
+
+    Notes:
+        - Access restricted to the university that owns the document.
+        - Displays NLP-parsed data, references, and error logs.
+    """
+
     user_type = request.session.get("type")
     if user_type != "university":
         messages.error(request, "You are not authorized for this document")
@@ -400,7 +596,20 @@ def university_repository(request, id):
                                                   "errors": errors,})
 
 def university_repository_content(request, id):
-    """Error logs: failed uploads, metadata issues, etc."""
+    """
+    Displays the content and parsed text of a research document.
+
+    Provides sentence-level breakdown of the uploaded document along
+    with a link to the original PDF for context.
+
+    Args:
+        request (HttpRequest): The request object.
+        id (int): The research document ID.
+
+    Returns:
+        HttpResponse: Renders 'university_repository_content.html' with text and metadata.
+    """
+
     user_type = request.session.get("type")
     if user_type != "university":
         messages.error(request, "You are not logged in as a university")
@@ -431,7 +640,25 @@ def university_repository_content(request, id):
     })
 
 def university_repository_content_sentence(request, id, sentence_id):
-    """Error logs: failed uploads, metadata issues, etc."""
+    """
+    Highlights a specific sentence in a university research PDF.
+
+    Opens the document, searches for the sentence, highlights it using
+    PyMuPDF, and generates a temporary annotated PDF for display.
+
+    Args:
+        request (HttpRequest): The request object.
+        id (int): The document ID.
+        sentence_id (int): The sentence ID to highlight.
+
+    Returns:
+        HttpResponse: Renders 'university_repository_content_sentence.html' with the highlighted PDF.
+
+    Notes:
+        - Generates and saves a temporary highlighted copy in 'media/research/temp/'.
+        - Useful for visual verification of text matches.
+    """
+
     user_type = request.session.get("type")
     if user_type != "university":
         messages.error(request, "You are not logged in as a university")
@@ -483,7 +710,23 @@ def university_repository_content_sentence(request, id, sentence_id):
 
 
 def university_errors(request):
-    """Error logs: failed uploads, metadata issues, etc."""
+    """
+    Displays parsing or upload errors for a university’s documents.
+
+    Lists all research document errors associated with the logged-in university,
+    including metadata and parsing failures.
+
+    Args:
+        request (HttpRequest): The HTTP request.
+
+    Returns:
+        HttpResponse: Renders 'university_errors.html' with error details.
+
+    Notes:
+        - Restricted to authenticated universities.
+        - Useful for debugging failed or incomplete research uploads.
+    """
+
     user_type = request.session.get("type")
     if user_type != "university":
         messages.error(request, "You are not logged in as a university")

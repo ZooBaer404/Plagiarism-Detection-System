@@ -19,6 +19,23 @@ import torch
 from sentence_transformers import util
 
 def get_user_type(user):
+    """
+    Determines the user's account type based on their linked model.
+
+    Checks the provided user instance across all role models (Admin, University, Instructor)
+    and returns a string representing the user type.
+
+    Args:
+        user (User): The user instance to check.
+
+    Returns:
+        str: One of ["admin", "university", "instructor", "unknown"] depending on the match.
+
+    Notes:
+        - If the user is not found in any of the related role models, returns "unknown".
+        - Helps route authenticated users to the correct dashboard.
+    """
+
     try:
         admin = Admin.objects.get(user=user)
         return "admin"
@@ -40,14 +57,35 @@ def get_user_type(user):
     return "unknown"  # If user is not found in any of the roles
 
 def dashboard(request):
-    if request.user.is_authenticated:
-        user_type = request.session.get("type")
-        if user_type == "admin":
-            redirect("admin_dashboard")
-        elif user_type == "university":
-            redirect("instructor_dashboard")
-        elif user_type == "admin":
-            redirect("university_dashboard")
+    """
+    Redirects authenticated users to their respective dashboard based on session type.
+
+    Determines the logged-in user's session type and redirects them accordingly:
+        - Admin → admin_dashboard
+        - University → university_dashboard
+        - Instructor → instructor_dashboard
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse:
+            - Redirects to the appropriate dashboard if authenticated.
+            - Renders 'index.html' for unauthenticated users.
+
+    Notes:
+        - Uses 'type' stored in the session to determine user role.
+        - Default fallback is the homepage if no session type is found.
+    """
+
+    user_type = request.session.get("type")
+        
+    if user_type == "admin":
+        return redirect("admin_dashboard")
+    elif user_type == "instructor":
+        return redirect("instructor_dashboard")
+    elif user_type == "university":
+        return redirect("university_dashboard")
 
     return render(request, "index.html")
 
@@ -56,8 +94,25 @@ def dashboard(request):
 # ----------------------------------------
 def login_page(request):
     """
-    Shared login page for Admin, University, and Instructor.
+    Handles unified login for Admin, University, and Instructor users.
+
+    This shared authentication view verifies credentials against each user type
+    and redirects to their respective dashboard upon success.
+
+    Args:
+        request (HttpRequest): The incoming HTTP request containing POST data.
+
+    Returns:
+        HttpResponse:
+            - Redirects to the appropriate dashboard upon successful authentication.
+            - Renders 'login.html' with an error message if authentication fails.
+
+    Notes:
+        - Checks three models in order: Admin → University → Instructor.
+        - Stores session keys ('type' and user ID) for role identification.
+        - Displays an error message if credentials are invalid.
     """
+
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
@@ -93,9 +148,38 @@ def login_page(request):
 # HELP PAGE
 # ----------------------------------------
 def help_page(request):
+    """
+    Displays the help and support page.
+
+    Provides general guidance, FAQs, or support contact information for all user types.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse: Renders 'help.html'.
+    """
+
     return render(request, "help.html")
 
 def view_document(request, id):
+    """
+    Displays a single research document file for preview.
+
+    Retrieves a specific document from the database and renders it in a viewer template.
+
+    Args:
+        request (HttpRequest): The incoming HTTP request.
+        id (int): The ID of the ResearchDocument to view.
+
+    Returns:
+        HttpResponse: Renders 'view_document.html' with the document file context.
+
+    Notes:
+        - Used for in-browser PDF/document viewing.
+        - Assumes the document exists; no error handling for missing IDs.
+    """
+
     file = ResearchDocument.objects.get(id=id).research_document_file
 
     return render(request, "view_document.html", {
@@ -103,7 +187,33 @@ def view_document(request, id):
     })
 
 def signup_page(request):
+    """
+    Displays the unified signup options page.
+
+    Serves as an entry point for users to choose between
+    Admin, University, or Instructor signup paths.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse: Renders 'signup.html'.
+    """
+
     return render(request, "signup.html")
 
 def continue_page(request):
+    """
+    Displays the continue page (intermediate navigation screen).
+
+    Typically used to direct users to their next step in the authentication
+    or onboarding process.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse: Renders 'continue.html'.
+    """
+
     return render(request, "continue.html")

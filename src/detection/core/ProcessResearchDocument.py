@@ -7,6 +7,29 @@ import re
 from nltk.tokenize import sent_tokenize
 
 def ResearchDocumentParse(document: ResearchDocument):
+    """
+    Parses and analyzes a research document, extracting text, images, and reference data.
+
+    This function processes a research paper (PDF) to:
+    - Extract all textual content and embedded images from each page.
+    - Compute document-level statistics such as number of words, sentences, characters, pages, images, and references.
+    - Identify the 'References' section and separate it from the main content.
+    - Save all extracted information (images, references, parsed text, and basic stats) into related database models.
+
+    Args:
+        document (ResearchDocument): The research document instance containing file metadata and path.
+
+    Returns:
+        str: The main text of the document excluding the 'References' section.
+        Returns an empty string if no 'References' section is found.
+
+    Notes:
+        - Uses PyMuPDF (`fitz`) for text and image extraction.
+        - Automatically creates related database records for statistics, text, images, and references.
+        - If the 'References' section is missing, an error record is logged.
+    """
+
+
     no_of_pages = 0
     no_of_words = 0
     no_of_characters = 0
@@ -109,6 +132,20 @@ def ResearchDocumentParse(document: ResearchDocument):
     return original_text
 
 def ResearchDocumentGetSentencesFromText(document_extracted_text):
+    """
+    Tokenizes extracted document text into a list of sentences using natural language processing.
+
+    Args:
+        document_extracted_text (str): The full extracted text from the research document.
+
+    Returns:
+        list[str]: A list of sentences extracted from the text.
+
+    Notes:
+        - Uses NLTK's `sent_tokenize` for accurate sentence segmentation.
+        - Provides better precision compared to manual regex-based sentence splitting.
+    """
+
     # # Split on .\n, or !, ?, or newline not preceded by period
     # sentences = re.split(r'\.\n|[!?]\s+|(?<!\.)\n', document_extracted_text)
     # # Clean and filter
@@ -120,6 +157,28 @@ def ResearchDocumentGetSentencesFromText(document_extracted_text):
     return sentences
 
 def ResearchDocumentStoreTextSentences(document, document_extracted_text):
+    """
+    Stores each sentence from the extracted research text as a separate record in the database.
+
+    This function:
+    - Splits the research paper text into sentences.
+    - Saves each sentence in the `ResearchDocumentEnhancedText` model with its index.
+    - Returns both the list of sentences and their corresponding database objects.
+
+    Args:
+        document (ResearchDocument): The research document being processed.
+        document_extracted_text (str): The textual content extracted from the research paper.
+
+    Returns:
+        tuple[list[str], list[ResearchDocumentEnhancedText]]:
+            - A list of extracted sentences.
+            - A list of their respective saved database objects.
+
+    Notes:
+        - Prints confirmation messages after successful storage.
+        - Essential for downstream processes like vectorization and semantic analysis.
+    """
+
     sentences = ResearchDocumentGetSentencesFromText(document_extracted_text)
     sentences_objs = list()
 
@@ -137,6 +196,26 @@ def ResearchDocumentStoreTextSentences(document, document_extracted_text):
 
 
 def ResearchDocumentGenerateTextVector(document, model, sentences, sentences_objs):
+    """
+    Generates vector embeddings for each sentence in a research document using a given NLP model.
+
+    This function encodes each sentence into a numerical vector representation,
+    which is then saved in the `ResearchDocumentTextVector` model alongside its related sentence record.
+
+    Args:
+        document (ResearchDocument): The document being analyzed.
+        model: The sentence embedding model (e.g., SentenceTransformer or similar encoder).
+        sentences (list[str]): List of sentences to be vectorized.
+        sentences_objs (list[ResearchDocumentEnhancedText]): Corresponding sentence database objects.
+
+    Returns:
+        list: The list of generated sentence vectors (as NumPy arrays or lists).
+
+    Notes:
+        - Each sentence vector is converted to a list before storage for database compatibility.
+        - Enables semantic similarity analysis, document comparison, and other NLP-based features.
+    """
+
     sentences_vectors = model.encode(sentences)
     print("vectors: ", sentences_vectors, "\n\n")
 

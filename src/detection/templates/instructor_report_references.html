@@ -65,7 +65,7 @@
                 {% for sentence in rbefore %}
                     {% if forloop.first %}
                     <span class="text-xs font-bold">
-                        {{ sentence.research_document_id.research_document_name }} - Sentence #{{ sentence.sentence_index|add:1 }}
+                        {{ sentence.research_document_id.research_document_file.name }} - Sentence #{{ sentence.sentence_index|add:1 }}
                     </span><br />
                     {% endif %}
                     {{ sentence.sentence_enhanced_text }}

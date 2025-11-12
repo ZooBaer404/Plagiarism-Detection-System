@@ -21,9 +21,42 @@ import os
 from django.core.files import File
 
 def instructor_account(request):
+    """
+    Renders the Instructor Account page.
+
+    Displays static instructor account information, such as profile details
+    and basic navigation options. Does not modify any data.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse: Renders the 'instructor_account.html' template.
+    """
+
     return render(request, "instructor_account.html")
 
 def instructor_dashboard(request):
+    """
+    Displays the main Instructor Dashboard and handles document uploads.
+
+    This view allows instructors to:
+    - Upload documents for plagiarism checking.
+    - Process and compare documents against university research repositories.
+    - View previous submissions and their corresponding plagiarism results.
+
+    Args:
+        request (HttpRequest): The incoming request object.
+
+    Returns:
+        HttpResponse: Renders the instructor dashboard with previous submissions.
+
+    Notes:
+        - Only accessible to logged-in instructors.
+        - Uses sentence vector comparisons with cosine similarity for plagiarism detection.
+        - Saves detailed plagiarism reports and results for each document.
+    """
+
 
     instructor_id = request.session.get("instructor_id")
     if not instructor_id:
@@ -48,7 +81,8 @@ def instructor_dashboard(request):
 
             percent_per_sentence = 100.0 / checking_document_no_sentences
 
-            research_vectors = ResearchDocumentTextVector.objects.all()
+            research_documents = ResearchDocument.objects.filter(university_id=checking_document.instructor_id.university_id)
+            research_vectors = ResearchDocumentTextVector.objects.filter(research_document_id__in=research_documents)
             plagiarized_result = 0.0
             similarity_threshold = 0.85 # 85%
 
@@ -90,6 +124,28 @@ def instructor_dashboard(request):
 
 
 def instructor_signup(request: HttpRequest):
+    """
+    Handles instructor registration and validation.
+
+    This view manages instructor sign-ups by:
+    - Validating form inputs.
+    - Ensuring the selected university exists.
+    - Checking for duplicate accounts.
+    - Creating a pending instructor record awaiting university approval.
+
+    Args:
+        request (HttpRequest): The incoming HTTP request.
+
+    Returns:
+        HttpResponse: 
+            - Renders the signup page with validation messages on failure.
+            - Redirects to the login page upon successful registration.
+
+    Notes:
+        - Uploaded certificates are saved with instructor details.
+        - Passwords are stored in plaintext (⚠️ should be hashed in production).
+    """
+
     # Retrieve all universities for dropdown selection
     universities = University.objects.all()
     form = InstructorForm()
@@ -156,6 +212,16 @@ def instructor_signup(request: HttpRequest):
 #     Displays a confirmation message after signup success.
 # ============================================================
 def instructor_signup_done(request):
+    """
+    Displays the confirmation page after a successful instructor sign-up.
+
+    Args:
+        request (HttpRequest): The request object.
+
+    Returns:
+        HttpResponse: Renders the 'instructor_signup_done.html' template.
+    """
+
     return render(request, "instructor_signup_done.html")
 
 
@@ -165,6 +231,25 @@ def instructor_signup_done(request):
 #     Validates credentials and ensures the instructor is approved.
 # ============================================================
 def instructor_login(request):
+    """
+    Handles instructor authentication and session management.
+
+    Validates the instructor’s credentials, checks approval status, and
+    initializes session variables for authenticated access.
+
+    Args:
+        request (HttpRequest): The HTTP request containing login credentials.
+
+    Returns:
+        HttpResponse:
+            - Redirects to the instructor dashboard upon successful login.
+            - Renders the login form again on failure.
+
+    Notes:
+        - Displays warnings if the account is pending university approval.
+        - Clears existing session data from other user roles before login.
+    """
+
 
     if request.method == "POST":
         email = request.POST.get("email")
@@ -211,8 +296,25 @@ def instructor_login(request):
 
 def instructor_report(request, id):
     """
-    Displays a static report preview for demonstration.
+    Displays a detailed plagiarism report for a specific document.
+
+    This view retrieves all related data for a submitted document,
+    including text, vectors, images, parsing errors, and plagiarism
+    match results. It also compiles contextual text around matched
+    segments for review.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        id (int): The ID of the checking document to display.
+
+    Returns:
+        HttpResponse: Renders 'instructor_report.html' with full report data.
+
+    Notes:
+        - Restricted to the document’s owner (instructor).
+        - Displays pre- and post-context for each plagiarized segment.
     """
+
     user_type = request.session.get("type")
     if user_type != "instructor":
         messages.error(request, "You are not logged in as an instructor")
@@ -305,8 +407,23 @@ def instructor_report(request, id):
 
 def instructor_report_references(request, id):
     """
-    Displays a static report preview for demonstration.
+    Displays detailed reference comparison between checked and research documents.
+
+    This report view shows the contextual relationship between the instructor’s
+    document references and matching research paper references.
+
+    Args:
+        request (HttpRequest): The request object.
+        id (int): The ID of the checking document to analyze.
+
+    Returns:
+        HttpResponse: Renders 'instructor_report_references.html' with paired reference data.
+
+    Notes:
+        - Shows sentences before and after each plagiarized match for both sides.
+        - Useful for analyzing the accuracy of citation or reference overlaps.
     """
+
     user_type = request.session.get("type")
     if user_type != "instructor":
         messages.error(request, "You are not logged in as an instructor")
@@ -387,6 +504,24 @@ def instructor_report_references(request, id):
 
 
 def instructor_report_view_content(request, id):
+    """
+    Displays the full content of a submitted document, page by page.
+
+    This view renders the extracted sentences and provides a preview link
+    to the uploaded PDF document.
+
+    Args:
+        request (HttpRequest): The request object.
+        id (int): The document ID.
+
+    Returns:
+        HttpResponse: Renders 'instructor_report_view_content.html' with document and sentence data.
+
+    Notes:
+        - Only accessible to the instructor who uploaded the document.
+        - Fetches ordered sentence data and file URLs for inline preview.
+    """
+
     user_type = request.session.get("type")
     if user_type != "instructor":
         messages.error(request, "You are not logged in as an instructor")
@@ -420,6 +555,25 @@ def instructor_report_view_content(request, id):
 
 
 def instructor_report_view_content_sentence(request, id, sentence_id):
+    """
+    Highlights and previews a specific sentence within the uploaded PDF document.
+
+    Opens the PDF using PyMuPDF, locates the target sentence, highlights it,
+    and saves a temporary annotated copy for review.
+
+    Args:
+        request (HttpRequest): The request object.
+        id (int): The ID of the checking document.
+        sentence_id (int): The specific sentence ID to highlight.
+
+    Returns:
+        HttpResponse: Renders 'instructor_report_view_content_sentence.html' with the highlighted PDF.
+
+    Notes:
+        - Generates a temporary annotated file stored in 'media/checking/temp/'.
+        - Helps instructors visually identify plagiarized or key text segments.
+    """
+
     user_type = request.session.get("type")
     if user_type != "instructor":
         messages.error(request, "You are not logged in as an instructor")
@@ -478,8 +632,19 @@ def instructor_report_view_content_sentence(request, id, sentence_id):
 
 def instructor_checks(request):
     """
-    Lists previous plagiarism checks for the instructor.
+    Lists all previous plagiarism checks performed by the instructor.
+
+    Args:
+        request (HttpRequest): The request object.
+
+    Returns:
+        HttpResponse: Renders 'instructor_checks.html' with the list of checks.
+
+    Notes:
+        - Only accessible to logged-in instructors.
+        - Each record links to its detailed plagiarism report.
     """
+
     user_type = request.session.get("type")
     if user_type != "instructor":
         messages.error(request, "You are not logged in as an instructor")
@@ -500,8 +665,19 @@ def instructor_checks(request):
 
 def instructor_submissions(request):
     """
-    Displays all document submissions made by the instructor.
+    Displays all submitted documents by the instructor.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse: Renders 'instructor_submissions.html'.
+
+    Notes:
+        - Static layout placeholder for future enhancements (e.g., filtering, sorting).
+        - Access restricted to authenticated instructors.
     """
+
     user_type = request.session.get("type")
     if user_type != "instructor":
         messages.error(request, "You are not logged in as an instructor")
@@ -519,8 +695,22 @@ def instructor_submissions(request):
 
 def instructor_repository(request):
     """
-    Shows repositories uploaded by universities for reference.
+    Displays repositories uploaded by universities for instructor reference.
+
+    Allows instructors to browse or access university-level research documents
+    for comparison, learning, or future plagiarism checks.
+
+    Args:
+        request (HttpRequest): The request object.
+
+    Returns:
+        HttpResponse: Renders 'instructor_repository.html'.
+
+    Notes:
+        - View is restricted to authenticated instructors.
+        - Frontend-only placeholder for repository browsing features.
     """
+
     user_type = request.session.get("type")
     if user_type != "instructor":
         messages.error(request, "You are not logged in as an instructor")

@@ -9,6 +9,29 @@ from nltk.tokenize import sent_tokenize
 ## CheckingDocument Processing
 
 def CheckingDocumentParse(document: CheckingDocument):
+    """
+    Extracts and analyzes content from the given document, including text, images, and references.
+
+    This function processes a PDF document to:
+    - Extract all textual content across all pages.
+    - Detect and save embedded images.
+    - Compute key document statistics (pages, words, sentences, characters, references, etc.).
+    - Identify and separate the 'References' section from the main text.
+    - Store parsed text, reference entries, and statistical data in respective database models.
+
+    Args:
+        document (CheckingDocument): The document object containing metadata and file reference.
+
+    Returns:
+        str: The original text content of the document (excluding the 'References' section).
+        Returns an empty string if no 'References' section is found.
+
+    Notes:
+        - Relies on PyMuPDF (fitz) for PDF parsing.
+        - Saves multiple related objects (images, references, statistics, parsed text) to the database.
+        - Handles and logs errors when a 'References' section is missing.
+    """
+
     no_of_pages = 0
     no_of_words = 0
     no_of_characters = 0
@@ -111,6 +134,20 @@ def CheckingDocumentParse(document: CheckingDocument):
     return original_text
 
 def CheckingDocumentGetSentencesFromText(document_extracted_text):
+    """
+    Splits the extracted document text into individual sentences using NLP-based tokenization.
+
+    Args:
+        document_extracted_text (str): The full text extracted from the document.
+
+    Returns:
+        list[str]: A list of sentences derived from the input text.
+
+    Notes:
+        - Utilizes NLTK's `sent_tokenize` for more accurate sentence segmentation.
+        - Filters out unnecessary whitespace and empty entries.
+    """
+
     # # Split on .\n, or !, ?, or newline not preceded by period
     # sentences = re.split(r'\.\n|[!?]\s+|(?<!\.)\n', document_extracted_text)
     # # Clean and filter
@@ -122,6 +159,26 @@ def CheckingDocumentGetSentencesFromText(document_extracted_text):
     return sentences
 
 def CheckingDocumentStoreTextSentences(document, document_extracted_text):
+    """
+    Stores each sentence from the extracted text as a separate database record.
+
+    This function tokenizes the document text into sentences, creates individual
+    `CheckingDocumentEnhancedText` entries for each, and stores them with index tracking.
+
+    Args:
+        document (CheckingDocument): The document object being processed.
+        document_extracted_text (str): The text content extracted from the document.
+
+    Returns:
+        tuple[list[str], list[CheckingDocumentEnhancedText]]:
+            - List of extracted sentences.
+            - List of corresponding saved database objects.
+
+    Notes:
+        - Useful for later NLP or semantic vectorization steps.
+        - Prints progress logs showing the number of sentences saved.
+    """
+
     sentences = CheckingDocumentGetSentencesFromText(document_extracted_text)
     sentences_objs = list()
 
@@ -139,6 +196,28 @@ def CheckingDocumentStoreTextSentences(document, document_extracted_text):
 
 
 def CheckingDocumentGenerateTextVector(document, model, sentences, sentences_objs):
+    """
+    Generates and stores semantic vector representations for each sentence in the document.
+
+    This function uses a provided NLP embedding model (e.g., SentenceTransformer)
+    to encode sentences into vector representations, which are then stored in
+    the `CheckingDocumentTextVector` model linked to their corresponding text entries.
+
+    Args:
+        document (CheckingDocument): The document object being processed.
+        model: The text embedding model used to generate sentence vectors.
+        sentences (list[str]): The list of sentences to be vectorized.
+        sentences_objs (list[CheckingDocumentEnhancedText]): Corresponding database objects for each sentence.
+
+    Returns:
+        list[CheckingDocumentTextVector]: A list of saved text vector database objects.
+
+    Notes:
+        - Each sentence vector is stored as a list (converted from NumPy array or tensor).
+        - Ensures one-to-one mapping between sentence text and vector.
+        - Prints debugging info including number of generated vectors.
+    """
+
     sentences_vectors = model.encode(sentences)
     sentences_vectors_obj = list()
 

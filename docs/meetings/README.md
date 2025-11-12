@@ -39,6 +39,7 @@ If it wasn’t written down here — it didn’t happen. Period.
 |------------------|----------------------------|--------------------------------------------|---------------|-----------------------------------------------------------------------------|
 | <2025-06-27 Fri> | Stakeholder's introduction | Introducing the project to the team        | Yes           | The team has a clear idea of the project and everyone knows what to do next |
 | <2025-08-?? ???> | Teammates' Project Setup   | Installing the project in each member's PC | No            | The team has their computers set up for project                             |
+| <2025-11-12 Wed> | Sprint Codebase Cleanup    | Cleaning up the codebase for the project   | Yes           | The project will be cleaner, more readable, and portable                    |
 
 ---
 
