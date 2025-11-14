@@ -243,9 +243,6 @@
   .left-0 {
     left: calc(var(--spacing) * 0);
   }
-  .isolate {
-    isolation: isolate;
-  }
   .z-20 {
     z-index: 20;
   }
@@ -330,6 +327,9 @@
   .max-h-\[400px\] {
     max-height: 400px;
   }
+  .max-h-\[900px\] {
+    max-height: 900px;
+  }
   .max-h-\[925px\] {
     max-height: 925px;
   }
@@ -339,8 +339,14 @@
   .min-h-0 {
     min-height: calc(var(--spacing) * 0);
   }
+  .w-1 {
+    width: calc(var(--spacing) * 1);
+  }
   .w-1\/6 {
     width: calc(1/6 * 100%);
+  }
+  .w-2 {
+    width: calc(var(--spacing) * 2);
   }
   .w-2\/6 {
     width: calc(2/6 * 100%);
@@ -360,6 +366,9 @@
   .flex-none {
     flex: none;
   }
+  .flex-grow {
+    flex-grow: 1;
+  }
   .grow {
     flex-grow: 1;
   }
@@ -368,6 +377,9 @@
   }
   .table-fixed {
     table-layout: fixed;
+  }
+  .border-collapse {
+    border-collapse: collapse;
   }
   .transform {
     transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
@@ -481,6 +493,39 @@
   .border-b-neutral-400 {
     border-bottom-color: var(--color-neutral-400);
   }
+  .bg-\[\#0d1117\] {
+    background-color: #0d1117;
+  }
+  .bg-\[\#0f0f0f\] {
+    background-color: #0f0f0f;
+  }
+  .bg-\[\#1a1b1e\] {
+    background-color: #1a1b1e;
+  }
+  .bg-\[\#1e1e1e\] {
+    background-color: #1e1e1e;
+  }
+  .bg-\[\#1e1f29\] {
+    background-color: #1e1f29;
+  }
+  .bg-\[\#202225\] {
+    background-color: #202225;
+  }
+  .bg-\[\#f3f4f6\] {
+    background-color: #f3f4f6;
+  }
+  .bg-\[\#f5f3ee\] {
+    background-color: #f5f3ee;
+  }
+  .bg-\[\#f7f4ef\] {
+    background-color: #f7f4ef;
+  }
+  .bg-\[\#faf9f7\] {
+    background-color: #faf9f7;
+  }
+  .bg-\[\#fcfbf7\] {
+    background-color: #fcfbf7;
+  }
   .bg-amber-100 {
     background-color: var(--color-amber-100);
   }
@@ -535,8 +580,14 @@
   .px-3 {
     padding-inline: calc(var(--spacing) * 3);
   }
+  .px-5 {
+    padding-inline: calc(var(--spacing) * 5);
+  }
   .px-6 {
     padding-inline: calc(var(--spacing) * 6);
+  }
+  .px-10 {
+    padding-inline: calc(var(--spacing) * 10);
   }
   .py-1 {
     padding-block: calc(var(--spacing) * 1);
@@ -642,6 +693,39 @@
   }
   .whitespace-nowrap {
     white-space: nowrap;
+  }
+  .text-\[\#1f2937\] {
+    color: #1f2937;
+  }
+  .text-\[\#2d2d2d\] {
+    color: #2d2d2d;
+  }
+  .text-\[\#2e2e2e\] {
+    color: #2e2e2e;
+  }
+  .text-\[\#303030\] {
+    color: #303030;
+  }
+  .text-\[\#333333\] {
+    color: #333333;
+  }
+  .text-\[\#c9d1d9\] {
+    color: #c9d1d9;
+  }
+  .text-\[\#d4d4d4\] {
+    color: #d4d4d4;
+  }
+  .text-\[\#e3e5e8\] {
+    color: #e3e5e8;
+  }
+  .text-\[\#e5e7eb\] {
+    color: #e5e7eb;
+  }
+  .text-\[\#e6e6e6\] {
+    color: #e6e6e6;
+  }
+  .text-\[\#e6e7ef\] {
+    color: #e6e7ef;
   }
   .text-black {
     color: var(--color-black);

@@ -20,7 +20,7 @@
          - File Upload (for plagiarism checking)
    ========================================================= -->
 
-<div class="instructor-dashboard-container h-full bg-amber-100 flex flex-col overflow-y-auto">
+<div class="instructor-dashboard-container h-full bg-[#faf9f7] text-black flex flex-col overflow-y-auto">
 
   <!-- =========================================
        HEADER SECTION
@@ -78,7 +78,7 @@
         {% csrf_token %}
 
         <!-- File Input -->
-        <input type="file" id="fileInput" class="file-input border-2 border-neutral-700 p-10" name="document" accept=".pdf">
+        <input type="file" id="fileInput" class="file-input border-2 border-neutral-700 px-5" name="document" accept=".pdf">
         {% comment %} <label for="fileInput" class="upload-btn">Choose File</label> {% endcomment %}
 
         <!-- Generate Button (revealed via JS) -->

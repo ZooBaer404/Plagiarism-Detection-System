@@ -75,6 +75,7 @@ urlpatterns = [
     path("instructor/check/<int:id>/report/content", instructor_views.instructor_report_view_content, name="instructor_report_view_content"),
     path("instructor/check/<int:id>/report/content/<int:sentence_id>", instructor_views.instructor_report_view_content_sentence, name="instructor_report_view_content_sentence"),
     path("instructor/document/<int:id>", default_views.view_document, name="view_document"),
+    path("instructor/document/report/<int:checking_document_id>/content/differences", instructor_views.instructor_report_view_content_differences, name="instructor_report_view_content_difference_sentence"),
     # path("test", views.test_template, name="test_template"),
 ]
 

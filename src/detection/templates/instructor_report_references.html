@@ -10,7 +10,7 @@
        statistics, matching sources, and text comparison.
    ========================================================= -->
 
-<div class="report-container h-full bg-amber-100 flex flex-col gap-1">
+<div class="report-container h-full bg-[#faf9f7] text-black flex flex-col gap-1">
 
     <!-- =========================================
        HEADER SECTION
@@ -64,9 +64,10 @@
                 <p class="text-xs">
                 {% for sentence in rbefore %}
                     {% if forloop.first %}
+                    <a href="{% url 'university_repository_content_sentence' sentence.research_document_id.id rcurrent.id %}">
                     <span class="text-xs font-bold">
                         {{ sentence.research_document_id.research_document_file.name }} - Sentence #{{ sentence.sentence_index|add:1 }}
-                    </span><br />
+                    </span></a><br />
                     {% endif %}
                     {{ sentence.sentence_enhanced_text }}
                 {% endfor %}

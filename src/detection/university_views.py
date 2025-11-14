@@ -660,19 +660,29 @@ def university_repository_content_sentence(request, id, sentence_id):
     """
 
     user_type = request.session.get("type")
-    if user_type != "university":
-        messages.error(request, "You are not logged in as a university")
+    if user_type != "university" and user_type != "instructor":
+        messages.error(request, "You are not logged in as a university or instructor")
         redirect("dashboard")
     
-    university_id = request.session.get("university_id")
-    if not university_id:
-        messages.error(request, "Error: you are not authorized for this.")
-        redirect("dashboard")
     
-    university = University.objects.get(id=university_id)
-    if not university:
-        messages.error(request, "Error: you are not signed in as a university")
-        redirect("dashboard")
+    if user_type == "university":
+        university_id = request.session.get("university_id")
+        if not university_id:
+            messages.error(request, "Error: you are not authorized for this.")
+            redirect("dashboard")
+        
+        university = University.objects.get(id=university_id)
+        if not university:
+            messages.error(request, "Error: you are not signed in as a university")
+            redirect("dashboard")
+    elif user_type == "instructor":
+        instructor_id = request.session.get("instructor_id")
+        if not instructor_id:
+            messages.error(request, "Error: You are not authorized for this")
+            redirect("dashboard")
+        instructor = Instructor.objects.get(id=instructor_id)
+        if not instructor:
+            messages.error(request, "Error: you are not authorized for this")
 
     research_document = ResearchDocument.objects.get(id=id)
     research_document_sentences = ResearchDocumentEnhancedText.objects.filter(research_document_id=research_document).order_by("created_at")

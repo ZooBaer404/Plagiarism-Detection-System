@@ -10,7 +10,7 @@
        statistics, matching sources, and text comparison.
    ========================================================= -->
 
-<div class="report-container h-full bg-amber-100 flex flex-col gap-1">
+<div class="report-container h-full bg-[#faf9f7] text-black flex flex-col gap-1">
 
   <!-- =========================================
        HEADER SECTION
@@ -33,7 +33,10 @@
   <main class="upload-section flex flex-col flex-1 p-2 gap-2">
     <div
       class="basic_stats border-2 border-neutral-700 flex flex-col gap-2 p-3">
-      <p class="text-3xl">{{document.checking_document_name}} - <a href="{% url 'instructor_report_view_content' document.id %}" class="text-xl underline">View Content</a></p>
+      <p class="text-3xl">{{document.checking_document_name}} - 
+        <a href="{% url 'instructor_report_view_content' document.id %}" class="text-xl underline">View Content</a> - 
+        <a href="{% url 'instructor_report_view_content_difference_sentence' document.id %}" class="text-xl underline">View Difference</a>
+      </p>
       <div class="grid grid-flow-col gap-2">
         <p
           class="flex flex-col gap-2 items-center border-2 border-neutral-700 p-5">Plagiarized:

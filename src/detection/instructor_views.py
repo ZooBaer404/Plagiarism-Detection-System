@@ -19,6 +19,7 @@ import torch
 from sentence_transformers import util
 import os
 from django.core.files import File
+import random
 
 def instructor_account(request):
     """
@@ -337,6 +338,11 @@ def instructor_report(request, id):
         messages.error(request, "Checking document not found!")
         redirect("instructor_dashboard")
 
+    if checking_document.instructor_id.id != instructor.id:
+        messages.error(request, "Checking document instructor match!")
+        redirect("instructor_dashboard")
+
+
     sentences = CheckingDocumentEnhancedText.objects.filter(checking_document_id=checking_document)
     vectors = CheckingDocumentTextVector.objects.filter(checking_document_id=checking_document)
     stats = CheckingDocumentBasicStats.objects.get(checking_document_id=checking_document)
@@ -446,6 +452,10 @@ def instructor_report_references(request, id):
         messages.error(request, "Checking document not found!")
         redirect("instructor_dashboard")
 
+    if checking_document.instructor_id.id != instructor.id:
+        messages.error(request, "Checking document instructor match!")
+        redirect("instructor_dashboard")
+
     errors = CheckingDocumentParseError.objects.filter(checking_document_id=checking_document)
 
     research_references_before = list(list())
@@ -500,7 +510,8 @@ def instructor_report_references(request, id):
 
     return render(request, "instructor_report_references.html", {"document": checking_document, 
                                                   "paired_references": paired_references,
-                                                  "references": checking_process_references,})
+                                                  "references": checking_process_references,
+                                                  "checking_process": checking_process_references,})
 
 
 def instructor_report_view_content(request, id):
@@ -724,3 +735,217 @@ def instructor_repository(request):
     instructor = Instructor.objects.get(id=instructor_id)
 
     return render(request, "instructor_repository.html")
+
+def instructor_report_view_content_difference_sentence(request, id, difference_id):
+    user_type = request.session.get("type")
+    if user_type != "instructor":
+        messages.error(request, "You are not logged in as an instructor")
+        redirect("dashboard")
+    
+    instructor_id = request.session.get("instructor_id")
+    if not instructor_id:
+        messages.error(request, "Error: you are not logged it")
+        redirect("instructor_dashboard")
+
+    instructor = Instructor.objects.get(id=instructor_id)
+
+    checking_document_checking_process = CheckingDocumentCheckingProcess.objects.get(id=difference_id)
+    research_document = ResearchDocument.objects.get(id=checking_document_checking_process.research_document_text_vector_id.research_document_id)
+    checking_document = CheckingDocument.objects.get(id=checking_document_checking_process.checking_document_id)
+    
+    research_document_sentence = ResearchDocumentEnhancedText.objects.get(id=checking_document_checking_process.research_document_text_vector_id.research_document_enhanced_text_id)
+    checking_document_sentence = CheckingDocumentEnhancedText.objects.get(id=checking_document_checking_process.checking_document_text_vector_id.checking_document_enhanced_text_id)
+
+    checking_document_pdf_url = checking_document.checking_document_file.path
+    research_document_pdf_url = research_document.research_document_file.path
+
+    # checking document
+    doc = fitz.open(checking_document_pdf_url)
+    for page_num in range(doc.page_count):
+        page = doc.load_page(page_num)
+        text_instances = page.search_for(checking_document_sentence.sentence_enhanced_text)
+        for inst in text_instances:
+            page.add_highlight_annot(inst)
+    temp_path = f"media/checking/temp/temp_{checking_document_sentence.id}.pdf"
+    os.makedirs(os.path.dirname(temp_path), exist_ok=True)
+    doc.save(temp_path)
+    doc.close()
+    with open(temp_path, "rb") as f:
+        temp_file = CheckingDocumentTempFile.objects.create(
+            checking_document_id=checking_document,
+        )
+        temp_file.checking_document.save(f"highlighted_{checking_document_sentence.id}.pdf", File(f), save=True)
+
+    checking_document_pdf_url = temp_file.checking_document.url # important
+
+    # research document
+    doc = fitz.open(research_document_pdf_url)
+    for page_num in range(doc.page_count):
+        page = doc.load_page(page_num)
+        text_instances = page.search_for(research_document_sentence.sentence_enhanced_text)
+        for inst in text_instances:
+            page.add_highlight_annot(inst)
+    temp_path = f"media/research/temp/temp_{research_document_sentence.id}.pdf"
+    os.makedirs(os.path.dirname(temp_path), exist_ok=True)
+    doc.save(temp_path)
+    doc.close()
+    with open(temp_path, "rb") as f:
+        temp_file = ResearchDocumentTempFile.objects.create(
+            research_document_id=research_document,
+        )
+        temp_file.research_document.save(f"highlighted_{research_document_sentence.id}.pdf", File(f), save=True)
+
+    research_document_pdf_url = temp_file.research_document.url # important
+
+    return render(request, "instructor_report_view_difference.html", {
+        "checking_document_pdf_url": checking_document_pdf_url,
+        "research_document_pdf_url": research_document_pdf_url,
+        "checking_document_checking_process": checking_document_checking_process,
+    })
+
+
+
+def instructor_report_view_content_differences(request, checking_document_id):
+    # Validate instructor session
+    if request.session.get("type") != "instructor":
+        messages.error(request, "You are not logged in as an instructor")
+        return redirect("dashboard")
+
+    instructor_id = request.session.get("instructor_id")
+    if not instructor_id:
+        messages.error(request, "Error: you are not logged in")
+        return redirect("instructor_dashboard")
+
+    checking_document = CheckingDocument.objects.get(id=checking_document_id)
+
+    processes = (
+        CheckingDocumentCheckingProcess.objects
+        .filter(checking_document_id=checking_document)
+        .order_by("created_at")
+    )
+
+    # ============================================================
+    # OPEN CHECKING DOCUMENT ONCE
+    # ============================================================
+    checking_pdf = fitz.open(checking_document.checking_document_file.path)
+
+    # ============================================================
+    # DICTIONARIES FOR RESEARCH DOCUMENTS
+    # ============================================================
+    research_docs = {}                # {id : opened PDF}
+    research_output_urls = []         # final output list (ordered)
+    processed_research_ids = set()    # to maintain order but avoid duplicates
+
+    # ============================================================
+    # COLOR GENERATOR – unique color per matched pair
+    # ============================================================
+    def random_color():
+        # Generate pastel (light) colors
+        base = [random.random(), random.random(), random.random()]
+        pastel = [(c + 2) / 3 for c in base]  # shift toward white
+        return pastel
+
+    pair_colors = {}   # {checking_sentence_id : color}
+
+    # ============================================================
+    # MAIN LOOP — highlight only, no saving yet
+    # ============================================================
+    for process in processes:
+
+        checking_sentence = process.checking_document_text_vector_id.checking_document_enhanced_text_id
+        research_sentence = process.research_document_text_vector_id.research_document_enhanced_text_id
+        research_doc_obj = process.research_document_text_vector_id.research_document_id
+        research_doc_id = research_doc_obj.id
+
+        # --------------------------------------------------------
+        # ONE COLOR PER MATCHED PAIR (checking_sentence ID)
+        # --------------------------------------------------------
+        if checking_sentence.id not in pair_colors:
+            pair_colors[checking_sentence.id] = random_color()
+
+        pair_color = pair_colors[checking_sentence.id]
+
+        # --------------------------------------------------------
+        # HIGHLIGHT IN CHECKING DOCUMENT
+        # --------------------------------------------------------
+        for page_num in range(checking_pdf.page_count):
+            page = checking_pdf.load_page(page_num)
+            matches = page.search_for(checking_sentence.sentence_enhanced_text)
+            for inst in matches:
+                annot = page.add_highlight_annot(inst)
+                annot.set_colors({"stroke": pair_color})
+                annot.update()
+
+        # --------------------------------------------------------
+        # OPEN RESEARCH DOC ONCE
+        # --------------------------------------------------------
+        if research_doc_id not in research_docs:
+            pdf = fitz.open(research_doc_obj.research_document_file.path)
+            research_docs[research_doc_id] = pdf
+
+        pdf_doc = research_docs[research_doc_id]
+
+        # --------------------------------------------------------
+        # HIGHLIGHT IN RESEARCH DOCUMENT
+        # --------------------------------------------------------
+        for page_num in range(pdf_doc.page_count):
+            page = pdf_doc.load_page(page_num)
+            matches = page.search_for(research_sentence.sentence_enhanced_text)
+            for inst in matches:
+                annot = page.add_highlight_annot(inst)
+                annot.set_colors({"stroke": pair_color})
+                annot.update()
+
+        processed_research_ids.add(research_doc_id)
+
+    # ============================================================
+    # SAVE CHECKING DOCUMENT ONCE
+    # ============================================================
+    checking_temp_path = f"media/checking/temp/checking_highlight_{checking_document.id}.pdf"
+    os.makedirs(os.path.dirname(checking_temp_path), exist_ok=True)
+
+    checking_pdf.save(checking_temp_path)
+    checking_pdf.close()
+
+    with open(checking_temp_path, "rb") as f:
+        temp_file = CheckingDocumentTempFile.objects.create(
+            checking_document_id=checking_document
+        )
+        temp_file.checking_document.save(
+            f"highlighted_checking_{checking_document.id}.pdf", File(f), save=True
+        )
+
+    checking_output_url = temp_file.checking_document.url
+
+    # ============================================================
+    # SAVE EACH RESEARCH DOCUMENT ONCE
+    # ============================================================
+    for doc_id in processed_research_ids:
+
+        pdf_doc = research_docs[doc_id]
+        temp_path = f"media/research/temp/research_highlight_{doc_id}.pdf"
+        os.makedirs(os.path.dirname(temp_path), exist_ok=True)
+
+        # Save & close
+        pdf_doc.save(temp_path)
+        pdf_doc.close()
+
+        # Save in model for access
+        research_doc_obj = ResearchDocument.objects.get(id=doc_id)
+
+        with open(temp_path, "rb") as f:
+            temp_file = ResearchDocumentTempFile.objects.create(
+                research_document_id=research_doc_obj
+            )
+            temp_file.research_document.save(
+                f"highlighted_research_{doc_id}.pdf", File(f), save=True
+            )
+            research_output_urls.append(temp_file.research_document.url)
+
+    # ============================================================
+    # RENDER TEMPLATE
+    # ============================================================
+    return render(request, "instructor_report_view_difference.html", {
+        "checking_document_pdf_url": checking_output_url,
+        "research_documents_pdf_urls": research_output_urls,
+    })
