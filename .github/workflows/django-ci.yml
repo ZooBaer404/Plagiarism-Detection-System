@@ -16,7 +16,7 @@ jobs:
       DATABASE_NAME: ${{ vars.DATABASE_NAME }}
       DATABASE_USER: ${{ vars.DATABASE_USER }}
       DATABASE_PWD: ${{ vars.DATABASE_PWD }}
-      DATABASE_HOST: ${{ vars.DATABASE_HOST }}
+      DATABASE_HOST: db        # <— for Docker
       DATABASE_PORT: 5432
 
     steps:
@@ -36,21 +36,26 @@ jobs:
         run: |
           docker compose down -v || true
           docker compose build
-          docker compose up -d
+          docker compose up -d || true   # <— Never stop the workflow here
 
-      - name: Show Postgres logs (critical debug)
+      - name: Show Postgres logs
         run: |
           echo "--- POSTGRES LOGS ---"
           docker compose logs db || true
 
-      - name: Wait for Postgres to become ready
+      - name: Wait for Postgres to be ready
         run: |
           echo "Waiting for PostgreSQL..."
-          until docker compose exec db pg_isready -U "$DATABASE_USER" -d "$DATABASE_NAME"; do
+          for i in {1..10}; do
+            if docker compose exec db pg_isready -U "$DATABASE_USER" -d "$DATABASE_NAME"; then
+              echo "Postgres is ready."
+              exit 0
+            fi
             echo "Postgres not ready yet..."
             sleep 3
           done
-          echo "Postgres is ready."
+          echo "Postgres failed to start."
+          exit 1
 
       - name: Run Django tests
         run: docker compose exec web python manage.py test
