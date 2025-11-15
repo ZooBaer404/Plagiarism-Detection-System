@@ -31,12 +31,17 @@ jobs:
           echo "DATABASE_PWD=${DATABASE_PWD}" >> .env
           echo "DATABASE_HOST=${DATABASE_HOST}" >> .env
           echo "DATABASE_PORT=${DATABASE_PORT}" >> .env
-          echo "SECRET_KEY=${SECRET_KEY}" >> .env
 
       - name: Build and start containers
         run: |
+          docker compose down -v || true
           docker compose build
           docker compose up -d
+
+      - name: Show Postgres logs (critical debug)
+        run: |
+          echo "--- POSTGRES LOGS ---"
+          docker compose logs db || true
 
       - name: Wait for Postgres to become ready
         run: |
@@ -53,4 +58,3 @@ jobs:
       - name: Stop containers
         if: always()
         run: docker compose down -v
-        
