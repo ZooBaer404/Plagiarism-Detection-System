@@ -34,12 +34,22 @@ jobs:
           echo "DATABASE_PORT=${DATABASE_PORT}" >> .env
           echo "SECRET_KEY=${SECRET_KEY}" >> .env
 
-      - name: Build and run tests in Docker
+      - name: Build and start containers
         run: |
           docker compose build
-          docker compose up -d db
-          sleep 15  # wait for postgres to be ready
-          docker compose run web python manage.py test
+          docker compose up -d
+
+      - name: Wait for Postgres to become ready
+        run: |
+          echo "Waiting for PostgreSQL..."
+          until docker compose exec db pg_isready -U "$DATABASE_USER" -d "$DATABASE_NAME"; do
+            echo "Postgres not ready yet..."
+            sleep 3
+          done
+          echo "Postgres is ready."
+
+      - name: Run Django tests
+        run: docker compose exec web python manage.py test
 
       - name: Stop containers
         if: always()
