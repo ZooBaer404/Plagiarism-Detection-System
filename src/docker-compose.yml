@@ -23,6 +23,7 @@ services:
     container_name: django_app
     command: >
       sh -c "
+        cd src &&
         python manage.py migrate &&
         python manage.py collectstatic --noinput &&
         gunicorn plagiarism.wsgi:application --bind 0.0.0.0:8000
