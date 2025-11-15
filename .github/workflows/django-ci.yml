@@ -18,7 +18,6 @@ jobs:
       DATABASE_PWD: ${{ vars.DATABASE_PWD }}
       DATABASE_HOST: ${{ vars.DATABASE_HOST }}
       DATABASE_PORT: 5432
-      SECRET_KEY: ${{ vars.SECRET_KEY }}
 
     steps:
       - name: Checkout code
