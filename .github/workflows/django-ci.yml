@@ -1,4 +1,4 @@
-name: Django CI
+name: Django CI (Docker)
 
 on:
   push:
@@ -7,58 +7,40 @@ on:
     branches: ["main", "master", "dev"]
 
 jobs:
-  test:
+  docker-test:
     runs-on: ubuntu-latest
     environment: Database
 
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_DB: ${{ vars.DATABASE_NAME }}
-          POSTGRES_USER: ${{ vars.DATABASE_USER }}
-          POSTGRES_PASSWORD: ${{ vars.DATABASE_PWD }}
-        ports:
-          - "5432:5432"
-        options: >-
-          --health-cmd="pg_isready -U ${{ vars.DATABASE_USER }} -d ${{ vars.DATABASE_NAME }}"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
     env:
-      DJANGO_SETTINGS_MODULE: plagiarism.settings
-
       DATABASE_ENGINE: ${{ vars.DATABASE_ENGINE }}
       DATABASE_NAME: ${{ vars.DATABASE_NAME }}
       DATABASE_USER: ${{ vars.DATABASE_USER }}
-      DATABASE_PASSWORD: ${{ vars.DATABASE_PWD }}
-      DATABASE_HOST: localhost
+      DATABASE_PWD: ${{ vars.DATABASE_PWD }}
+      DATABASE_HOST: db
       DATABASE_PORT: 5432
-
       SECRET_KEY: ${{ vars.SECRET_KEY }}
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.11"
-
-      - name: Install System Dependencies
+      - name: Create .env file for Docker
         run: |
-          sudo apt-get update
-          sudo apt-get install -y mupdf-tools poppler-utils libmagic1
+          echo "DATABASE_ENGINE=${DATABASE_ENGINE}" >> .env
+          echo "DATABASE_NAME=${DATABASE_NAME}" >> .env
+          echo "DATABASE_USER=${DATABASE_USER}" >> .env
+          echo "DATABASE_PWD=${DATABASE_PWD}" >> .env
+          echo "DATABASE_HOST=${DATABASE_HOST}" >> .env
+          echo "DATABASE_PORT=${DATABASE_PORT}" >> .env
+          echo "SECRET_KEY=${SECRET_KEY}" >> .env
 
-      - name: Install Python Dependencies
+      - name: Build and run tests in Docker
         run: |
-          pip install -r requirements.txt
-          python -m nltk.downloader punkt
+          docker compose build
+          docker compose up -d db
+          sleep 15  # wait for postgres to be ready
+          docker compose run web python manage.py test
 
-      - name: Run Django Migrations
-        run: python manage.py migrate --noinput
-
-      - name: Run Tests
-        run: python manage.py test
+      - name: Stop containers
+        if: always()
+        run: docker compose down
