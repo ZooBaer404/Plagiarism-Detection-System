@@ -1,0 +1,64 @@
+name: Django CI
+
+on:
+  push:
+    branches: ["main", "master", "dev"]
+  pull_request:
+    branches: ["main", "master", "dev"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    environment: Database
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: ${{ vars.DATABASE_NAME }}
+          POSTGRES_USER: ${{ vars.DATABASE_USER }}
+          POSTGRES_PASSWORD: ${{ vars.DATABASE_PWD }}
+        ports:
+          - "5432:5432"
+        options: >-
+          --health-cmd="pg_isready -U ${{ vars.DATABASE_USER }} -d ${{ vars.DATABASE_NAME }}"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      DJANGO_SETTINGS_MODULE: plagiarism.settings
+
+      DATABASE_ENGINE: ${{ vars.DATABASE_ENGINE }}
+      DATABASE_NAME: ${{ vars.DATABASE_NAME }}
+      DATABASE_USER: ${{ vars.DATABASE_USER }}
+      DATABASE_PASSWORD: ${{ vars.DATABASE_PWD }}
+      DATABASE_HOST: localhost
+      DATABASE_PORT: 5432
+
+      SECRET_KEY: ${{ vars.SECRET_KEY }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mupdf-tools poppler-utils libmagic1
+
+      - name: Install Python Dependencies
+        run: |
+          pip install -r requirements.txt
+          python -m nltk.downloader punkt
+
+      - name: Run Django Migrations
+        run: python manage.py migrate --noinput
+
+      - name: Run Tests
+        run: python manage.py test

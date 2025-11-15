@@ -101,7 +101,7 @@ DATABASES = {
         'USER': os.getenv('DATABASE_USER'),
         'PASSWORD': os.getenv('DATABASE_PWD'),
         'HOST': os.getenv('DATABASE_HOST'),
-        'PORT': os.getenv('DATABASE_POST'),
+        'PORT': os.getenv('DATABASE_PORT'),
     },
     'backup': {
         'ENGINE': 'django.db.backends.sqlite3',
