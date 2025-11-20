@@ -2,73 +2,106 @@
 {% load static %}
 
 {% block content %}
-<!-- =========================================================
-     PAGE: Admin – Latest Activities
-     DESCRIPTION:
-       Displays a detailed list of recent system activities.
-       Includes timestamps, users, activity type, and status.
-       Backend will later dynamically load these logs.
-   ========================================================= -->
 
-<div class="activities-container h-full bg-slate-200 flex flex-col gap-2">
+<div class="activities-container bg-slate-100 min-h-full flex flex-col gap-3 flex-1">
 
-  <!-- =========================================
-       HEADER SECTION
-       ========================================= -->
-  <header class="admin-header flex justify-between p-1 flex-none">
-    <!-- Site Title / Home Link -->
-    <a href="{% url 'admin_dashboard' %}"
-      class="brand-title text-4xl">Plagiarism Detection</a>
+  <!-- Header -->
+  <header class="admin-header flex justify-between items-center p-3 bg-white border-b border-neutral-300">
+    <a href="{% url 'admin_dashboard' %}" class="brand-title text-3xl font-semibold">
+      Plagiarism Detection
+    </a>
 
-    <!-- Page Title -->
-    <h1 class="page-title text-2xl">Admin</h1>
+    <h1 class="page-title text-xl font-medium">Admin</h1>
 
-    <!-- Profile Icon Redirecting to Admin Account -->
-    <a href="{% url 'admin_account' %}" class="profile-icon border-2 p-2"
-      title="Account Info">
-      <span>A</span>
+    <a href="{% url 'admin_account' %}"
+       class="profile-icon w-10 h-10 flex items-center justify-center rounded-full border border-neutral-700 bg-white hover:bg-neutral-200 transition"
+       title="Account Info">
+      <span class="font-semibold">A</span>
     </a>
   </header>
 
-  <!-- =========================================
-       MAIN ACTIVITIES PANEL
-       ========================================= -->
-  <div class="activities-panel p-2 flex flex-col gap-2">
-    <h2 class="text-2xl">Activities</h2>
-    <!-- ====== COLUMN HEADERS ====== -->
-    <table class="w-full text-sm text-left rtl:text-right border-2 border-neutral-700">
-      <thead class="text-xs uppercase font-bold">
-        <tr class="">
-          <th scope="col" class="px-6 py-3">User</th>
-          <th scope="col" class="px-6 py-3">Action</th>
-          <th scope="col" class="px-6 py-3">Name</th>
-          <th scope="col" class="px-6 py-3">File Name</th>
-          <th scope="col" class="px-6 py-3">Timestamp</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for report in reports %}
-        <tr class="activity-row border-b">
-          <th scope="col" class="px-6 py-4 font-medium whitespace-nowrap">{{report.instructor_id.first_name}}
-            {{report.instructor_id.last_name}}</th>
-          <td class="px-6 py-4">Uploaded a checking document</td>
-          <td class="px-6 py-4">{{report.checking_document_name}}</td>
-          <td class="px-6 py-4">{{report.checking_document_file.name}}</td>
-          <td class="px-6 py-4">{{report.created_at}}</td>
-        </tr>
-        {% endfor %}
-        {% for report in university_reports %}
-        <tr class="activity-row border-b">
-          <th scope="col" class="px-6 py-4 font-medium whitespace-nowrap">{{report.university_id.university_name}}</th>
-          <td class="px-6 py-4">Uploaded a research document</td>
-          <td class="px-6 py-4">{{report.research_document_name}}</td>
-          <td class="px-6 py-4">{{report.research_document_file.name}}</td>
-          <td class="px-6 py-4">{{report.created_at}}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+
+  <!-- Activities Panel -->
+  <div class="activities-panel p-4 flex flex-col gap-4">
+
+    <h2 class="text-2xl font-semibold">Latest Activities</h2>
+
+    <div class="border border-neutral-400 rounded-xl bg-white shadow-sm overflow-hidden">
+
+      <table class="w-full table-auto text-left text-sm">
+        <thead class="bg-neutral-200 border-b border-neutral-400 text-xs uppercase font-semibold">
+          <tr>
+            <th class="px-4 py-3">User</th>
+            <th class="px-4 py-3">Action</th>
+            <th class="px-4 py-3">Document Name</th>
+            <th class="px-4 py-3">File</th>
+            <th class="px-4 py-3">Timestamp</th>
+          </tr>
+        </thead>
+
+        <tbody class="divide-y divide-neutral-300">
+
+          <!-- Instructor Reports -->
+          {% for report in reports %}
+          <tr class="hover:bg-neutral-100 transition">
+            <td class="px-4 py-3 font-medium whitespace-nowrap">
+              {{ report.instructor_id.first_name }} {{ report.instructor_id.last_name }}
+            </td>
+
+            <td class="px-4 py-3">
+              <span class="px-2 py-1 bg-blue-100 border border-blue-300 rounded text-xs">
+                Uploaded checking document
+              </span>
+            </td>
+
+            <td class="px-4 py-3">
+              {{ report.checking_document_name }}
+            </td>
+
+            <td class="px-4 py-3 max-w-[240px] truncate">
+              {{ report.checking_document_file.name }}
+            </td>
+
+            <td class="px-4 py-3">
+              {{ report.created_at }}
+            </td>
+          </tr>
+          {% endfor %}
+
+
+          <!-- University Research Reports -->
+          {% for report in university_reports %}
+          <tr class="hover:bg-neutral-100 transition">
+            <td class="px-4 py-3 font-medium whitespace-nowrap">
+              {{ report.university_id.university_name }}
+            </td>
+
+            <td class="px-4 py-3">
+              <span class="px-2 py-1 bg-green-100 border border-green-300 rounded text-xs">
+                Uploaded research document
+              </span>
+            </td>
+
+            <td class="px-4 py-3">
+              {{ report.research_document_name }}
+            </td>
+
+            <td class="px-4 py-3 max-w-[240px] truncate">
+              {{ report.research_document_file.name }}
+            </td>
+
+            <td class="px-4 py-3">
+              {{ report.created_at }}
+            </td>
+          </tr>
+          {% endfor %}
+
+        </tbody>
+      </table>
+
+    </div>
   </div>
+
 </div>
 
 {% endblock %}

@@ -1,40 +1,21 @@
 {% extends "base.html" %}
-{% load static %}
-
 {% block title %}Continue — Plagiarism Detection{% endblock %}
 
 {% block content %}
-<!-- =========================================================
-     PAGE: Continue Page
-     DESCRIPTION:
-       Simple role-selection screen that appears before
-       signup or login. Allows the user to continue as
-       either a University or Instructor.
-   ========================================================= -->
+<div class="min-h-screen flex flex-col items-center justify-center gap-10 bg-gray-50 px-6 py-16">
+  <h1 class="text-4xl font-bold">Continue as...</h1>
 
-<div class="continue-window bg-neutral-100 h-full flex flex-col justify-center items-center gap-10">
-
-  <!-- =========================================
-       TITLE SECTION
-       ========================================= -->
-  <h1 class="continue-title text-4xl">Continue as...</h1>
-
-  <!-- =========================================
-       ROLE SELECTION BUTTONS
-       ========================================= -->
-  <div class="role-choice flex gap-5">
-    <!-- Links to Signup Paths -->
-    <a href="{% url 'university_signup' %}" class="role-btn border-2 border-neutral-700 pl-10 pr-10">University</a>
-    <a href="{% url 'instructor_signup' %}" class="role-btn border-2 border-neutral-700 pl-10 pr-10">Instructor</a>
+  <div class="flex gap-5">
+    <a href="{% url 'university_signup' %}" class="px-6 py-3 rounded-lg border border-gray-700 hover:bg-gray-100 transition">
+      University
+    </a>
+    <a href="{% url 'instructor_signup' %}" class="px-6 py-3 rounded-lg border border-gray-700 hover:bg-gray-100 transition">
+      Instructor
+    </a>
   </div>
 
-  <!-- =========================================
-       LOGIN REDIRECT MESSAGE
-       ========================================= -->
-  <p class="continue-hint">
-    Already have an account?
-    <a href="/login/" class="login-link">Login!</a>
+  <p class="text-gray-500">
+    Already have an account? <a href="/login/" class="text-blue-600 hover:underline">Login!</a>
   </p>
 </div>
-
 {% endblock %}

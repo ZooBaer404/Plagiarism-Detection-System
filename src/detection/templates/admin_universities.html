@@ -1,73 +1,80 @@
 {% extends "base.html" %}
 {% load static %}
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/admin_universities.css' %}">
-{% endblock %}
 
 {% block content %}
-<div class="pending-container bg-slate-200 h-full flex flex-col gap-1">
-  
-  <!-- =========================================
-       HEADER SECTION
-       ========================================= -->
-  <header class="admin-header flex justify-between p-1 flex-none">
-    <!-- Site Title / Home Link -->
-    <a href="{% url 'admin_dashboard' %}" class="brand-title text-4xl">Plagiarism Detection</a>
 
-    <!-- Page Title -->
-    <h1 class="page-title text-2xl">Admin</h1>
+<div class="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
 
-    <!-- Profile Icon Redirecting to Admin Account -->
-    <a href="{% url 'admin_account' %}" class="profile-icon border-2 p-2" title="Account Info">
-      <span>A</span>
+  <!-- ================= HEADER ================= -->
+  <header class="flex justify-between items-center px-6 py-3 bg-white border-b shadow-sm">
+    <a href="{% url 'admin_dashboard' %}" class="text-xl font-semibold tracking-tight text-slate-900">
+      Plagiarism Detection
+    </a>
+
+    <h1 class="text-lg font-medium text-slate-700">Admin – Universities</h1>
+
+    <a href="{% url 'admin_account' %}"
+       class="flex items-center justify-center w-9 h-9 rounded-full bg-slate-200 text-slate-700 hover:bg-slate-300 transition font-semibold">
+       A
     </a>
   </header>
 
-  
-  <div class="pending-grid grid grid-cols-3 grid-rows-1 p-5 gap-5 border-2 border-neutral-700 flex-1">
-    <!-- PENDING UNIVERSITIES -->
-    <section class="column pending border-2 border-neutral-700 p-2">
-      <h2 class="text-2xl">Pending Universities</h2>
 
-      <div class="flex flex-col gap-5">
-          {% for pending_uni in pending_unis %}
+  <!-- ================= PAGE CONTENT ================= -->
+  <main class="p-6 flex-1">
 
-          <div class="uni-card flex justify-between">
-            <h3>{{ pending_uni.university_name }}</h3>
-            <div class="flex gap-5">
-              {% comment %} <form class="actions" action="post" action="{% url 'admin_universities' %}">
-                
-              {% for form in university_approval_form %}
-              {{ form }}
-              {% endfor %}
-              
-              </form> {% endcomment %}
-              
+    <section class="bg-white rounded-2xl border shadow-sm p-6">
+      <h2 class="text-xl font-semibold text-slate-900 mb-4">Pending Universities</h2>
+
+      <div class="space-y-4">
+
+        {% for pending_uni in pending_unis %}
+        <div class="flex justify-between items-center p-4 bg-slate-50 rounded-xl border shadow-sm hover:bg-slate-100 transition">
+
+          <!-- University Name -->
+          <h3 class="text-base font-medium text-slate-800">{{ pending_uni.university_name }}</h3>
+
+          <!-- Actions -->
+          <div class="flex gap-3">
+
+              <!-- APPROVE BUTTON -->
               <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="type" value="approve">
-                <input type="hidden" name="university_id" value={{pending_uni.id}}>
-                <button type="submit" class="border-2 border-neutral-700 pl-4 pr-4 hover:cursor-pointer">Approve</button>
+                  {% csrf_token %}
+                  <input type="hidden" name="type" value="approve">
+                  <input type="hidden" name="university_id" value="{{ pending_uni.id }}">
+                  <button
+                      type="submit"
+                      class="px-4 py-1.5 rounded-lg border border-green-600 text-green-700 hover:bg-green-50 transition text-sm font-medium">
+                      Approve
+                  </button>
               </form>
-              
-              
+
+              <!-- REJECT BUTTON -->
               <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="type" value="reject">
-                <input type="hidden" name="university_id" value={{pending_uni.id}}>
-                <button type="submit" class="border-2 border-neutral-700 pl-4 pr-4 hover:cursor-pointer">Reject</button>
+                  {% csrf_token %}
+                  <input type="hidden" name="type" value="reject">
+                  <input type="hidden" name="university_id" value="{{ pending_uni.id }}">
+                  <button
+                      type="submit"
+                      class="px-4 py-1.5 rounded-lg border border-red-600 text-red-700 hover:bg-red-50 transition text-sm font-medium">
+                      Reject
+                  </button>
               </form>
-                
+
           </div>
-       </div>
-       
-       {% endfor %}
-       
-      </div>
+        </div>
+        {% endfor %}
 
+        {% if pending_unis|length == 0 %}
+        <p class="text-slate-500 text-sm">No universities are awaiting approval.</p>
+        {% endif %}
+
+      </div>
 
     </section>
 
-  </div>
+  </main>
+
 </div>
+
 {% endblock %}

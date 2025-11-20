@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import JsonResponse
 from django.template import loader 
 from detection.models import Admin
 from django.contrib import messages
@@ -17,6 +17,8 @@ from .core.ProcessCheckingDocument import *
 from django.views.generic.edit import FormView
 import torch
 from sentence_transformers import util
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 def get_user_type(user):
     """
@@ -92,57 +94,41 @@ def dashboard(request):
 # ----------------------------------------
 # LOGIN PAGE (UNIFIED)
 # ----------------------------------------
+@csrf_exempt
 def login_page(request):
-    """
-    Handles unified login for Admin, University, and Instructor users.
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request required"}, status=400)
 
-    This shared authentication view verifies credentials against each user type
-    and redirects to their respective dashboard upon success.
+    try:
+        data = json.loads(request.body)
+        username = data.get("username")
+        password = data.get("password")
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
 
-    Args:
-        request (HttpRequest): The incoming HTTP request containing POST data.
+    # Check Admin
+    admin = Admin.objects.filter(username=username, password=password).first()
+    if admin:
+        request.session["type"] = "admin"
+        request.session["user_id"] = admin.id
+        return JsonResponse({"status": "success", "user_type": "admin", "user_id": admin.id})
 
-    Returns:
-        HttpResponse:
-            - Redirects to the appropriate dashboard upon successful authentication.
-            - Renders 'login.html' with an error message if authentication fails.
+    # Check University
+    uni = University.objects.filter(university_name=username, password=password).first()
+    if uni:
+        request.session["type"] = "university"
+        request.session["user_id"] = uni.id
+        return JsonResponse({"status": "success", "user_type": "university", "user_id": uni.id})
 
-    Notes:
-        - Checks three models in order: Admin → University → Instructor.
-        - Stores session keys ('type' and user ID) for role identification.
-        - Displays an error message if credentials are invalid.
-    """
+    # Check Instructor
+    inst = Instructor.objects.filter(email=username, password=password).first()
+    if inst:
+        request.session["type"] = "instructor"
+        request.session["user_id"] = inst.id
+        return JsonResponse({"status": "success", "user_type": "instructor", "user_id": inst.id})
 
-    if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-
-        # Check Admin
-        admin = Admin.objects.filter(username=username, password=password).first()
-        if admin:
-            request.session["type"] = "admin"
-            request.session["user_id"] = admin.id
-            return redirect("admin_dashboard")
-
-        # Check University
-        uni = University.objects.filter(university_name=username, password=password).first()
-        if uni:
-            request.session["type"] = "university"
-            request.session["university_id"] = uni.id
-            return redirect("university_dashboard")
-
-        # Check Instructor
-        inst = Instructor.objects.filter(email=username, password=password).first()
-        if inst:
-            request.session["type"] = "instructor"
-            request.session["instructor_id"] = inst.id
-            return redirect("instructor_dashboard")
-
-        # If nothing matched
-        messages.error(request, "Invalid username or password")
-
-    return render(request, "login.html")
-
+    # Invalid credentials
+    return JsonResponse({"status": "error", "message": "Invalid username or password"}, status=401)
 
 # ----------------------------------------
 # HELP PAGE

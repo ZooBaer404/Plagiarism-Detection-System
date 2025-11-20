@@ -30,12 +30,12 @@ urlpatterns = [
     path("", default_views.dashboard, name="dashboard"),
     path("help/", default_views.help_page, name="help"),
     path("login/", default_views.login_page, name="login_page"),  # unified login (optional)
-    path("signup/", default_views.signup_page, name="signup_page"),
+    # path("signup/", default_views.signup_page, name="signup_page"),
     path("continue/", default_views.continue_page, name="continue_page"),
 
     # Admin
     path("administrator/panel/", admin_views.admin_dashboard, name="admin_dashboard"),
-    path("administrator/login/", admin_views.login_admin, name="login_admin"),
+    # path("administrator/login/", admin_views.login_admin, name="login_admin"),    
     path("administrator/", admin_views.admin_dashboard, name="admin_dashboard"),
     path("administrator/account/", admin_views.admin_account, name="admin_account"),
     path("administrator/universities/", admin_views.admin_universities, name="admin_universities"),
@@ -70,12 +70,12 @@ urlpatterns = [
     path("instructor/report/<int:id>", instructor_views.instructor_report, name="instructor_report"),
     path("instructor/checks/", instructor_views.instructor_checks, name="instructor_checks"),
     path("instructor/submissions/", instructor_views.instructor_submissions, name="instructor_submissions"),
-    path("instructor/repository/", instructor_views.instructor_repository, name="instructor_repository"),
-    path("instructor/check/<int:id>/references", instructor_views.instructor_report_references, name="instructor_report_reference"),
-    path("instructor/check/<int:id>/report/content", instructor_views.instructor_report_view_content, name="instructor_report_view_content"),
-    path("instructor/check/<int:id>/report/content/<int:sentence_id>", instructor_views.instructor_report_view_content_sentence, name="instructor_report_view_content_sentence"),
-    path("instructor/document/<int:id>", default_views.view_document, name="view_document"),
-    path("instructor/document/report/<int:checking_document_id>/content/differences", instructor_views.instructor_report_view_content_differences, name="instructor_report_view_content_difference_sentence"),
+    # path("instructor/repository/", instructor_views.instructor_repository, name="instructor_repository"),
+    path("instructor/checks/<int:id>/references", instructor_views.instructor_report_references, name="instructor_report_reference"),
+    path("instructor/checks/<int:id>/report/content", instructor_views.instructor_report_view_content, name="instructor_report_view_content"),
+    path("instructor/checks/<int:id>/report/content/<int:sentence_id>", instructor_views.instructor_report_view_content_sentence, name="instructor_report_view_content_sentence"),
+    path("instructor/checks/<int:id>", default_views.view_document, name="view_document"),
+    path("instructor/checks/report/<int:checking_document_id>/content/differences", instructor_views.instructor_report_view_content_differences, name="instructor_report_view_content_difference_sentence"),
     # path("test", views.test_template, name="test_template"),
 ]
 

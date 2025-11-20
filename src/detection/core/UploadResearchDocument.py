@@ -6,6 +6,7 @@ from detection.views import *
 from sentence_transformers import SentenceTransformer
 
 
+# model = SentenceTransformer("distiluse-base-multilingual-cased-v2") # Multi-lingual support
 model = SentenceTransformer("all-MiniLM-L6-v2")
 # model = 0
 

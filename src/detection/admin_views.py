@@ -1,10 +1,9 @@
-from django.shortcuts import render, redirect
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect
+from django.http import JsonResponse
 from django.template import loader 
 from detection.models import Admin
 from django.contrib import messages
 from urllib import request
-from django.contrib import messages
 from django.utils.text import slugify
 from uuid import uuid4
 from django.core.files.storage import default_storage, FileSystemStorage
@@ -17,6 +16,7 @@ from detection.core.ProcessCheckingDocument import *
 from django.views.generic.edit import FormView
 import torch
 from sentence_transformers import util
+import json
 
 
 def admin_pending(request):
@@ -37,23 +37,29 @@ def admin_pending(request):
         - Redirects unauthorized users to the login page with an error message.
         - Relies on 'type' and 'user_id' stored in session for access control.
     """
-
     user_type = request.session.get("type")
     if user_type != "admin":
-        messages.error(request, "You are not logged in as an Admin")
-        redirect("login_page")
-    
+        return JsonResponse({"error": "You are not logged in as an Admin"}, status=403)
+
     admin_id = request.session.get("user_id")
     if not admin_id:
-        messages.error(request, "Error: you are not authorized for this.")
-        redirect("login_page")
-    
+        return JsonResponse({"error": "Not authorized"}, status=401)
+
     admin = Admin.objects.filter(id=admin_id).first()
     if not admin:
-        messages.error(request, "Error: you are not signed in as a admin")
-        redirect("login_page")
+        return JsonResponse({"error": "Admin not found"}, status=404)
 
-    return render(request, "admin_pending.html")
+    # Example: Get pending universities/instructors
+    pending_universities = list(University.objects.filter(status="pending").values())
+
+    return JsonResponse({
+        "status": "ok",
+        "admin": {
+            "id": admin.id,
+            "username": admin.username,
+        },
+        "pending_universities": pending_universities
+    })
 
 
 def admin_reports(request):
@@ -75,25 +81,69 @@ def admin_reports(request):
         - Shows combined insights from both report sources for administrative review.
     """
 
+    # user_type = request.session.get("type")
+    # if user_type != "admin":
+    #     messages.error(request, "You are not logged in as an Admin")
+    #     return redirect("login_page")
+    
+    # admin_id = request.session.get("user_id")
+    # if not admin_id:
+    #     messages.error(request, "Error: you are not authorized for this.")
+    #     return redirect("login_page")
+    
+    # admin = Admin.objects.filter(id=admin_id).first()
+    # if not admin:
+    #     messages.error(request, "Error: you are not signed in as a admin")
+    #     return redirect("login_page")
+
+    # reports = CheckingDocument.objects.all()
+    # university_reports = ResearchDocument.objects.all()
+
+    # return render(request, "admin_reports.html", {"reports": reports, "university_reports": university_reports,})
+
     user_type = request.session.get("type")
     if user_type != "admin":
-        messages.error(request, "You are not logged in as an Admin")
-        redirect("login_page")
+        return JsonResponse({"error": "You are not logged in as an Admin"}, status=403)
     
     admin_id = request.session.get("user_id")
     if not admin_id:
-        messages.error(request, "Error: you are not authorized for this.")
-        redirect("login_page")
-    
+        return JsonResponse({"error": "Not authorized"}, status=401)
+
     admin = Admin.objects.filter(id=admin_id).first()
     if not admin:
-        messages.error(request, "Error: you are not signed in as a admin")
-        redirect("login_page")
+        return JsonResponse({"error": "Admin not found"}, status=404)
 
-    reports = CheckingDocument.objects.all()
-    university_reports = ResearchDocument.objects.all()
+    # --- Fetch Reports ---
+    reports = list(
+        CheckingDocument.objects.all().values(
+            "id",
+            "research_document_name",
+            "uploaded_by_id",
+            "created_at",
+            "status"
+        )
+    )
 
-    return render(request, "admin_reports.html", {"reports": reports, "university_reports": university_reports,})
+    university_reports = list(
+        ResearchDocument.objects.all().values(
+            "id",
+            "research_document_name",
+            "university_id",
+            "uploaded_at",
+            "status"
+        )
+    )
+
+    # --- JSON Response ---
+    return JsonResponse({
+        "status": "ok",
+        "admin": {
+            "id": admin.id,
+            "username": admin.username,
+        },
+        "instructor_reports": reports,
+        "university_reports": university_reports,
+    })
 
 
 def admin_activities(request):
@@ -115,26 +165,80 @@ def admin_activities(request):
         - Combines instructor and university activities for unified visibility.
     """
 
+    # user_type = request.session.get("type")
+    # if user_type != "admin":
+    #     messages.error(request, "You are not logged in as an Admin")
+    #     return redirect("login_page")
+    
+    # admin_id = request.session.get("user_id")
+    # if not admin_id:
+    #     messages.error(request, "Error: you are not authorized for this.")
+    #     return redirect("login_page")
+    
+    # admin = Admin.objects.filter(id=admin_id).first()
+    # if not admin:
+    #     messages.error(request, "Error: you are not signed in as a admin")
+    #     return redirect("login_page")
+
+    # university_reports = ResearchDocument.objects.all()
+    # reports = CheckingDocument.objects.all()
+
+    # return render(request, "admin_activities.html", {
+    #     "reports": reports,
+    #     "university_reports": university_reports,
+    # })
+
     user_type = request.session.get("type")
     if user_type != "admin":
-        messages.error(request, "You are not logged in as an Admin")
-        redirect("login_page")
+        return JsonResponse(
+            {"error": "You are not logged in as an Admin"},
+            status=403
+        )
     
     admin_id = request.session.get("user_id")
     if not admin_id:
-        messages.error(request, "Error: you are not authorized for this.")
-        redirect("login_page")
-    
+        return JsonResponse(
+            {"error": "You are not authorized for this"},
+            status=401
+        )
+
     admin = Admin.objects.filter(id=admin_id).first()
     if not admin:
-        messages.error(request, "Error: you are not signed in as a admin")
-        redirect("login_page")
+        return JsonResponse(
+            {"error": "Admin account not found"},
+            status=404
+        )
 
-    university_reports = ResearchDocument.objects.all()
-    reports = CheckingDocument.objects.all()
+    # --- Data Retrieval ---
+    instructor_reports = list(
+        CheckingDocument.objects.all().values(
+            "id",
+            "instructor_id__first_name",
+            "instructor_id__last_name",
+            "checking_document_name",
+            "checking_document_file",
+            "created_at"
+        )
+    )
 
-    return render(request, "admin_activities.html", {
-        "reports": reports,
+    university_reports = list(
+        ResearchDocument.objects.all().values(
+            "id",
+            "university_id__university_name",
+            "research_document_name",
+            "research_document_file",
+            "created_at"
+        )
+    )
+
+    # --- JSON Response ---
+    return JsonResponse({
+        "status": "ok",
+        "admin": {
+            "id": admin.id,
+            "username": admin.username
+        },
+        "instructor_reports": instructor_reports,
         "university_reports": university_reports,
     })
 
@@ -159,21 +263,31 @@ def login_admin(request):
         - Session key used: 'admin' for storing admin ID.
     """
 
+    if request.method != "POST":
+        return JsonResponse({"error": "POST required"}, status=400)
 
     if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-
-        admin = Admin.objects.get(username=username, password=password)
-
-        if admin:
-            request.session["admin"] = admin.id
-            messages.success(request, "Login successful!")
-            return redirect("admin_dashboard")
-
-
-    return render(request, "login_admin.html")
-
+        try:
+            data = json.loads(request.body)
+            username = data.get("username")
+            password = data.get("password")
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON"}, status=400)
+        
+        try:
+            admin = Admin.objects.get(username=username, password=password)
+        except Admin.DoesNotExist:
+            return JsonResponse(
+                {"error": "Invalid username or password"},
+                status=401
+            )    
+    
+        request.session["admin"] = admin.id
+        messages.success(request, "Login successful!")
+        return JsonResponse(
+            {"message": "Login successful"},
+            status=200
+        )
 
 
 # ----------------------------------------
@@ -200,79 +314,120 @@ def admin_dashboard(request):
         - Displays a summary of key metrics and recent activity logs for admins.
     """
 
-    user_type = request.session.get("type")
-    if user_type != "admin":
-        messages.error(request, "You are not logged in as an Admin")
-        redirect("login_page")
+    # user_type = request.session.get("type")
+    # if user_type != "admin":
+    #     messages.error(request, "You are not logged in as an Admin")
+    #     return redirect("login_page")
     
-    admin_id = request.session.get("user_id")
-    if not admin_id:
-        messages.error(request, "Error: you are not authorized for this.")
-        redirect("login_page")
+    # admin_id = request.session.get("user_id")
+    # if not admin_id:
+    #     messages.error(request, "Error: you are not authorized for this.")
+    #     return redirect("login_page")
     
-    admin = Admin.objects.filter(id=admin_id).first()
-    if not admin:
-        messages.error(request, "Error: you are not signed in as a admin")
-        redirect("login_page")
+    # admin = Admin.objects.filter(id=admin_id).first()
+    # if not admin:
+    #     messages.error(request, "Error: you are not signed in as a admin")
+    #     return redirect("login_page")
 
-    # ✅ get only universities that have NO approval yet
-    # approved_uni_ids = University.objects.filter(is_approved=True)
-    # all_uni_ids_with_records = University.objects.all()
-    pending_unis = University.objects.filter(is_approved=False)
-    approved_unis = University.objects.filter(is_approved=True)
-    latest_reports = CheckingDocumentReport.objects.all().order_by("created_at")
-    latest_instructor_activities = CheckingDocument.objects.all().order_by("created_at")
-    latest_university_activities = ResearchDocument.objects.all().order_by("created_at")
+    # # ✅ get only universities that have NO approval yet
+    # # approved_uni_ids = University.objects.filter(is_approved=True)
+    # # all_uni_ids_with_records = University.objects.all()
+    # pending_unis = University.objects.filter(is_approved=False)
+    # approved_unis = University.objects.filter(is_approved=True)
+    # latest_reports = CheckingDocumentReport.objects.all().order_by("created_at")
+    # latest_instructor_activities = CheckingDocument.objects.all().order_by("created_at")
+    # latest_university_activities = ResearchDocument.objects.all().order_by("created_at")
+    # total_universities = University.objects.count()
+    # total_instructors = Instructor.objects.count()
+    # total_documents_processed = CheckingDocument.objects.count()
+
+    # print("there are", len(pending_unis), " pending universities")
+    # print("there are", len(approved_unis), " approved universities")
+
+
+    # # if request.method == "POST":
+    # #     approve_id = request.POST.get("approve_uni")
+    # #     reject_id = request.POST.get("reject_uni")
+    # #     admin_id = request.session.get("user_id")
+    # #     admin = Admin.objects.get(id=admin_id)
+
+    # #     if approve_id:
+    # #         uni = University.objects.get(id=approve_id)
+    # #         UniversityApproval.objects.update_or_create(
+    # #             university=uni,
+    # #             defaults={
+    # #                 "admin_id": admin,
+    # #                 "is_approved": True,
+    # #                 "message": f"{uni.university_name} approved",
+    # #             },
+    # #         )
+    # #         messages.success(request, f"{uni.university_name} approved successfully!")
+    # #         return redirect("admin_dashboard")
+
+    # #     if reject_id:
+    # #         uni = University.objects.get(id=reject_id)
+    # #         UniversityApproval.objects.update_or_create(
+    # #             university=uni,
+    # #             defaults={
+    # #                 "admin_id": admin,
+    # #                 "is_approved": False,
+    # #                 "message": f"{uni.university_name} rejected",
+    # #             },
+    # #         )
+    # #         messages.warning(request, f"{uni.university_name} rejected.")
+    # #         return redirect("admin_dashboard")
+
+    # return render(
+    #     request,
+    #     "admin_dashboard.html",
+    #     {"pending_unis": pending_unis, "approved_unis": approved_unis, 
+    #      "latest_reports": latest_reports, "latest_instructor_activities": latest_instructor_activities, 
+    #      "latest_university_activities": latest_university_activities,
+    #      "total_universities": total_universities,
+    #      "total_instructors": total_instructors,
+    #      "total_documents_processed": total_documents_processed,},
+    # )
+    
+    user_type = request.session.get("type")
+    print("user type is ", user_type)
+
+    if user_type != "admin":
+        return JsonResponse({"error": "Unauthorized"}, status=401)
+
     total_universities = University.objects.count()
     total_instructors = Instructor.objects.count()
     total_documents_processed = CheckingDocument.objects.count()
 
-    print("there are", len(pending_unis), " pending universities")
-    print("there are", len(approved_unis), " approved universities")
+    latest_reports = list(CheckingDocumentReport.objects.all().order_by("-created_at").values(
+        "id",
+        "checking_document_id__checking_document_name",
+        "report_result",
+        "created_at"
+    ))
 
+    latest_instructor_activities = list(CheckingDocument.objects.all().order_by("-created_at").values(
+        "id",
+        "checking_document_name",
+        "instructor_id__first_name",
+        "instructor_id__last_name",
+        "created_at"
+    ))
 
-    # if request.method == "POST":
-    #     approve_id = request.POST.get("approve_uni")
-    #     reject_id = request.POST.get("reject_uni")
-    #     admin_id = request.session.get("user_id")
-    #     admin = Admin.objects.get(id=admin_id)
+    latest_university_activities = list(ResearchDocument.objects.all().order_by("-created_at").values(
+        "id",
+        "research_document_name",
+        "university_id__university_name",
+        "created_at"
+    ))
 
-    #     if approve_id:
-    #         uni = University.objects.get(id=approve_id)
-    #         UniversityApproval.objects.update_or_create(
-    #             university=uni,
-    #             defaults={
-    #                 "admin_id": admin,
-    #                 "is_approved": True,
-    #                 "message": f"{uni.university_name} approved",
-    #             },
-    #         )
-    #         messages.success(request, f"{uni.university_name} approved successfully!")
-    #         return redirect("admin_dashboard")
-
-    #     if reject_id:
-    #         uni = University.objects.get(id=reject_id)
-    #         UniversityApproval.objects.update_or_create(
-    #             university=uni,
-    #             defaults={
-    #                 "admin_id": admin,
-    #                 "is_approved": False,
-    #                 "message": f"{uni.university_name} rejected",
-    #             },
-    #         )
-    #         messages.warning(request, f"{uni.university_name} rejected.")
-    #         return redirect("admin_dashboard")
-
-    return render(
-        request,
-        "admin_dashboard.html",
-        {"pending_unis": pending_unis, "approved_unis": approved_unis, 
-         "latest_reports": latest_reports, "latest_instructor_activities": latest_instructor_activities, 
-         "latest_university_activities": latest_university_activities,
-         "total_universities": total_universities,
-         "total_instructors": total_instructors,
-         "total_documents_processed": total_documents_processed,},
-    )
+    return JsonResponse({
+        "total_universities": total_universities,
+        "total_instructors": total_instructors,
+        "total_documents_processed": total_documents_processed,
+        "latest_reports": latest_reports,
+        "latest_instructor_activities": latest_instructor_activities,
+        "latest_university_activities": latest_university_activities,
+    })
 
 
 def admin_account(request):
@@ -293,23 +448,44 @@ def admin_account(request):
         - Unauthorized users are redirected to the login page.
     """
 
+    # user_type = request.session.get("type")
+    # if user_type != "admin":
+    #     messages.error(request, "You are not logged in as an Admin")
+    #     return redirect("login_page")
+    
+    # admin_id = request.session.get("user_id")
+    # if not admin_id:
+    #     messages.error(request, "Error: you are not authorized for this.")
+    #     return redirect("login_page")
+    
+    # admin = Admin.objects.filter(id=admin_id).first()
+    # if not admin:
+    #     messages.error(request, "Error: you are not signed in as a admin")
+    #     return redirect("login_page")
+
+
+    # return render(request, "admin_account.html")
     user_type = request.session.get("type")
     if user_type != "admin":
-        messages.error(request, "You are not logged in as an Admin")
-        redirect("login_page")
-    
+        return JsonResponse({"error": "Unauthorized: Not an admin"}, status=401)
+
     admin_id = request.session.get("user_id")
     if not admin_id:
-        messages.error(request, "Error: you are not authorized for this.")
-        redirect("login_page")
-    
+        return JsonResponse({"error": "Unauthorized: Missing session"}, status=401)
+
     admin = Admin.objects.filter(id=admin_id).first()
     if not admin:
-        messages.error(request, "Error: you are not signed in as a admin")
-        redirect("login_page")
+        return JsonResponse({"error": "Admin record not found"}, status=401)
 
-
-    return render(request, "admin_account.html")
+    # --- Send Admin Details to React ---
+    return JsonResponse({
+        "id": admin.id,
+        "username": admin.username,
+        "first_name": admin.first_name,
+        "last_name": admin.last_name,
+        "email": admin.email,
+        "created_at": admin.created_at,
+    })
 
 
 
@@ -333,46 +509,83 @@ def admin_universities(request):
     """
 
 
+    # user_type = request.session.get("type")
+    # if user_type != "admin":
+    #     messages.error(request, "You are not logged in as an Admin")
+    #     return redirect("login_page")
+    
+    # admin_id = request.session.get("user_id")
+    # if not admin_id:
+    #     messages.error(request, "Error: you are not authorized for this.")
+    #     return redirect("login_page")
+    
+    # admin = Admin.objects.filter(id=admin_id).first()
+    # if not admin:
+    #     messages.error(request, "Error: you are not signed in as a admin")
+    #     return redirect("login_page")
+
+    # approved_unis_ids = University.objects.filter(is_approved=True)
+    # all_uni_ids_with_records = University.objects.all()
+    # pending_unis = University.objects.filter(is_approved=False)
+    # approved_unis = University.objects.filter(is_approved=True)
+
+    # if request.method == "POST":
+    #     type = request.POST.get("type")
+    #     university_id = request.POST.get("university_id")
+    #     university = University.objects.get(id=university_id)
+
+    #     if type == "approve":
+    #         if university:
+    #             university.is_approved = True
+    #             university.save()
+    #         else:
+    #             messages.error(request, "University not found")
+    #     elif type == "reject":
+    #         if university:
+    #             university.is_approved = False
+    #             university.save()
+
+    # return render(request, "admin_universities.html",
+    #             {"pending_unis": pending_unis,
+    #             "approved_unis": approved_unis,
+    #             })
+
     user_type = request.session.get("type")
     if user_type != "admin":
-        messages.error(request, "You are not logged in as an Admin")
-        redirect("login_page")
-    
+        return JsonResponse({"error": "Unauthorized"}, status=401)
+
     admin_id = request.session.get("user_id")
     if not admin_id:
-        messages.error(request, "Error: you are not authorized for this.")
-        redirect("login_page")
-    
-    admin = Admin.objects.filter(id=admin_id).first()
-    if not admin:
-        messages.error(request, "Error: you are not signed in as a admin")
-        redirect("login_page")
-
-    approved_unis_ids = University.objects.filter(is_approved=True)
-    all_uni_ids_with_records = University.objects.all()
-    pending_unis = University.objects.filter(is_approved=False)
-    approved_unis = University.objects.filter(is_approved=True)
+        return JsonResponse({"error": "Unauthorized"}, status=401)
 
     if request.method == "POST":
-        type = request.POST.get("type")
-        university_id = request.POST.get("university_id")
-        university = University.objects.get(id=university_id)
+        try:
+            data = json.loads(request.body)
+            university_id = data.get("university_id")
+            action_type = data.get("type")
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON"}, status=400)
 
-        if type == "approve":
-            if university:
-                university.is_approved = True
-                university.save()
-            else:
-                messages.error(request, "University not found")
-        elif type == "reject":
-            if university:
-                university.is_approved = False
-                university.save()
+        university = University.objects.filter(id=university_id).first()
+        if not university:
+            return JsonResponse({"error": "University not found"}, status=404)
 
-    return render(request, "admin_universities.html",
-                {"pending_unis": pending_unis,
-                "approved_unis": approved_unis,
-                })
+        if action_type == "approve":
+            university.is_approved = True
+            university.save()
+            return JsonResponse({"message": f"{university.university_name} approved"}, status=200)
+        elif action_type == "reject":
+            university.is_approved = False
+            university.save()
+            return JsonResponse({"message": f"{university.university_name} rejected"}, status=200)
+        else:
+            return JsonResponse({"error": "Invalid action type"}, status=400)
 
+    # GET request: return pending and approved universities
+    pending_unis = list(University.objects.filter(is_approved=False).values("id", "university_name"))
+    approved_unis = list(University.objects.filter(is_approved=True).values("id", "university_name"))
 
-
+    return JsonResponse({
+        "pending_universities": pending_unis,
+        "approved_universities": approved_unis,
+    })

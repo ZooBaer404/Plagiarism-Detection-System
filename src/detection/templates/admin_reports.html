@@ -2,62 +2,78 @@
 {% load static %}
 
 {% block content %}
-<!-- =========================================================
-     PAGE: Admin – Latest Reports
-     DESCRIPTION:
-       Displays recent plagiarism check reports from universities.
-       Each report includes document info, similarity percentage,
-       date, and action buttons (View / Delete).
-   ========================================================= -->
 
-<div class="reports-container bg-slate-100 h-full flex flex-col gap-2">
+<div class="reports-container bg-slate-100 min-h-full flex flex-col gap-2 flex-1">
 
-  <!-- =========================================
-       HEADER SECTION
-       ========================================= -->
-  <header class="admin-header flex justify-between p-1 flex-none">
-    <!-- Site Title / Home Link -->
-    <a href="{% url 'admin_dashboard' %}" class="brand-title text-4xl">Plagiarism Detection</a>
+  <!-- Header -->
+  <header class="admin-header flex justify-between items-center p-3 bg-white border-b border-neutral-300 flex-none">
+    <a href="{% url 'admin_dashboard' %}" class="brand-title text-3xl font-semibold">
+      Plagiarism Detection
+    </a>
 
-    <!-- Page Title -->
-    <h1 class="page-title text-2xl">Admin</h1>
+    <h1 class="page-title text-xl font-medium">Admin</h1>
 
-    <!-- Profile Icon Redirecting to Admin Account -->
-    <a href="{% url 'admin_account' %}" class="profile-icon border-2 p-2" title="Account Info">
-      <span>A</span>
+    <a href="{% url 'admin_account' %}" 
+       class="profile-icon w-10 h-10 flex items-center justify-center rounded-full border border-neutral-700 bg-white hover:bg-neutral-200 transition">
+      <span class="font-semibold">A</span>
     </a>
   </header>
 
-  <!-- =========================================
-       MAIN CONTENT GRID – REPORT CARDS
-       ========================================= -->
-  <div class="reports-grid p-2 flex flex-col gap-2">
-    <h2 class="text-2xl flex-none">Reports</h2>
-    <div class="border-2 border-neutral-700 grow p-2">
+
+  <!-- Content -->
+  <div class="reports-grid p-4 flex flex-col gap-4">
+
+    <h2 class="text-2xl font-semibold">Reports</h2>
+
+    <div class="border border-neutral-400 rounded-xl bg-white shadow-sm overflow-hidden">
+
       <table class="table-auto w-full text-left">
-        <thead>
-          <tr class="">
-            <th scope="col" class="p-2 w-2/6">Document</th>
-            <th scope="col" class="p-2 w-1/6">Similarity</th>
-            <th scope="col" class="p-2 w-1/6">Instructor</th>
-            <th scope="col" class="p-2 w-1/6">University</th>            
-            <th scope="col" class="p-2 w-1/6">Date</th>
+        <thead class="bg-neutral-200 border-b border-neutral-400">
+          <tr>
+            <th class="p-3 w-2/6 font-semibold">Document</th>
+            <th class="p-3 w-1/6 font-semibold">Similarity</th>
+            <th class="p-3 w-1/6 font-semibold">Instructor</th>
+            <th class="p-3 w-1/6 font-semibold">University</th>
+            <th class="p-3 w-1/6 font-semibold">Date</th>
           </tr>
         </thead>
-        <tbody class="">
-          {% for report in reports %}
-            <tr class="border-b-2 border-b-neutral-400">
-              <th scope="row" class="text-xs">{{report.checking_document_file.name}}</th>
-              <td>{{report.report_result}}%</td>
-              <td>{{report.instructor_id.first_name }} {{report.instructor_id.last_name}}</td>
-              <td>{{report.instructor_id.university_id.university_name}}</td>
-              <td>{{report.last_modified_at}}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-      </table>
-    </div>
 
+        <tbody>
+          {% for report in reports %}
+            <tr class="border-b border-neutral-300 hover:bg-neutral-100 transition text-sm">
+              <td class="p-3 truncate">{{ report.checking_document_file.name }}</td>
+
+              <td class="p-3 font-medium">
+                <span class="px-2 py-1 rounded bg-blue-100 border border-blue-300">
+                  {{ report.report_result }}%
+                </span>
+              </td>
+
+              <td class="p-3">
+                {{ report.instructor_id.first_name }} {{ report.instructor_id.last_name }}
+              </td>
+
+              <td class="p-3">
+                {{ report.instructor_id.university_id.university_name }}
+              </td>
+
+              <td class="p-3">
+                {{ report.last_modified_at }}
+              </td>
+            </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="p-5 text-center text-neutral-500">
+              No reports available.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+
+      </table>
+
+    </div>
   </div>
 </div>
+
 {% endblock %}

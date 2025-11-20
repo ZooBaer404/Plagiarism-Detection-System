@@ -2,120 +2,130 @@
 {% load static %}
 
 {% block content %}
-<!-- =========================================================
-     PAGE: University Dashboard
-     DESCRIPTION:
-       Main interface for university accounts.
-       Displays instructors, pending approvals,
-       repositories, error reports, and upload section.
-   ========================================================= -->
 
-<div class="university-dashboard-container h-full bg-neutral-800 text-white flex flex-col min-h-0 min-w-0 overflow-y-auto">
+<div class="university-dashboard-container bg-linear-to-b from-neutral-900 to-neutral-800 text-neutral-100 flex flex-col w-full overflow-y-auto flex-1">
 
   <!-- =========================================
-       HEADER SECTION
-       ========================================= -->
-  <header class="uni-header flex justify-between p-1">
-    <!-- Brand Title -->
-    <a href="{% url 'university_dashboard' %}" class="brand-title text-4xl">Plagiarism Detection</a>
+       HEADER
+     ========================================= -->
+  <header class="flex justify-between items-center p-4 bg-neutral-900/60 backdrop-blur border-b border-neutral-700 shadow-sm">
+    <a href="{% url 'university_dashboard' %}" class="text-3xl font-semibold tracking-tight">
+      Plagiarism Detection
+    </a>
 
-    <!-- Page Title -->
-    <h1 class="page-title text-2xl">University Account</h1>
+    <h1 class="text-xl font-medium opacity-90">University Account</h1>
 
-    <!-- Profile Icon -->
-    <a href="{% url 'university_account' %}" class="profile-icon border-2 p-2" title="Account Information">
-      <span>U</span>
+    <a href="{% url 'university_account' %}"
+       class="w-10 h-10 rounded-full border border-neutral-600 flex items-center justify-center hover:bg-neutral-700 transition"
+       title="Account Information">
+      <span class="font-semibold">U</span>
     </a>
   </header>
 
+
   <!-- =========================================
-       MAIN DASHBOARD GRID
-       ========================================= -->
-  <main class="dashboard-grid grid grid-cols-3 grid-rows-8 flex-1 p-2 gap-2">
+       MAIN GRID
+     ========================================= -->
+  <main class="grid grid-cols-3 gap-4 flex-1 p-4">
 
     <!-- =========================================
          LEFT COLUMN
-         (Instructor Management + Pending Approvals)
        ========================================= -->
-    <section class="left-col row-span-8 grid grid-rows-2 gap-2">
+    <section class="grid grid-rows-2">
 
-      <!-- Instructors Section -->
-      <div class="dashboard-box border-2 border-neutral-700 flex flex-col gap-2 p-2">
-        <h2 class="text-2xl"><a href="{% url 'university_instructors' %}">Instructor</a></h2>
+      <!-- Approved Instructors -->
+      <div class="border border-neutral-700/70 bg-neutral-800/40 backdrop-blur-xl rounded-xl p-4 flex flex-col gap-3 shadow-lg shadow-black/10 h-[500px]">
+        <h2 class="text-xl font-semibold tracking-wide text-neutral-200">
+          <a href="{% url 'university_instructors' %}" class="hover:text-blue-300 transition">Instructors</a>
+        </h2>
 
-        <div class="overflow-y-auto">
+        <div class="overflow-y-auto space-y-2 pr-1">
           {% for approved_instructor in approved_instructors %}
-          <div class="item-box border-2 border-neutral-700">{{ approved_instructor.first_name }} {{ approved_instructor.last_name }}</div>  
+          <div class="px-3 py-2 rounded-lg bg-neutral-700/50 border border-neutral-600 hover:bg-neutral-700 transition">
+            {{ approved_instructor.first_name }} {{ approved_instructor.last_name }}
+          </div>
           {% endfor %}
         </div>
       </div>
 
-      <!-- Pending Instructor Approvals -->
-      <div class="dashboard-box border-2 border-neutral-700 flex flex-col gap-2 p-2">
-        <h2 class="text-2xl"><a href="{% url 'university_pending' %}">Pending Approval</a></h2>
 
-        <div class="overflow-y-auto">
+      <!-- Pending Approval -->
+      <div class="border border-neutral-700/70 bg-neutral-800/40 backdrop-blur-xl rounded-xl p-4 flex flex-col gap-3 shadow-lg shadow-black/10 h-[500px]">
+        <h2 class="text-xl font-semibold tracking-wide text-neutral-200">
+          <a href="{% url 'university_pending' %}" class="hover:text-blue-300 transition">
+            Pending Approval
+          </a>
+        </h2>
+
+        <div class="overflow-y-auto space-y-2 pr-1">
           {% for pending_instructor in pending_instructors %}
-          <div class="item-box border-2 border-neutral-700">{{ pending_instructor.first_name }} {{ pending_instructor.last_name }}</div>
+          <div class="px-3 py-2 rounded-lg bg-yellow-700/30 border border-yellow-500/40 hover:bg-yellow-700/40 transition">
+            {{ pending_instructor.first_name }} {{ pending_instructor.last_name }}
+          </div>
           {% endfor %}
         </div>
-        
       </div>
+
     </section>
 
+
     <!-- =========================================
-         MIDDLE COLUMN
-         (Repositories Overview)
+         MIDDLE & RIGHT SECTIONS
        ========================================= -->
-    <div class="row-span-8 grid col-span-2 gap-2">
-    
-      <section class="repo-box dashboard-box border-2 border-neutral-700 p-2 flex flex-col gap-2">
-        <h2 class="text-2xl"><a href="{% url 'university_repositories' %}">Repositories</a></h2>
-        
-        <div class="repo-header overflow-y-auto">
-          <!-- Example Repository Items -->
+    <section class="col-span-2 grid gap-4 grid-rows-4">
+
+      <!-- Repositories -->
+      <div class="border border-neutral-700/70 bg-neutral-800/40 backdrop-blur-xl rounded-xl p-4 flex flex-col gap-3 shadow-xl shadow-black/10 row-span-2">
+        <h2 class="text-xl font-semibold tracking-wide text-neutral-200">
+          <a href="{% url 'university_repositories' %}" class="hover:text-blue-300 transition">Repositories</a>
+        </h2>
+
+        <div class="overflow-y-auto space-y-2 pr-1">
           {% for document in documents %}
-          <div class="repo-item">Document #{{ document.research_document_name }}</div>
+          <div class="px-3 py-2 rounded-lg bg-neutral-700/50 border border-neutral-600 hover:bg-neutral-700 transition">
+            {{ document.research_document_name }}
+          </div>
           {% endfor %}
         </div>
-      </section>
-      
-      <!-- =========================================
-      RIGHT COLUMN
-      (Error & Upload Info)
-      ========================================= -->
-      <section class="errors-box dashboard-box border-2 border-neutral-700 flex flex-col gap-2 p-2">
-        <h2 class="text-2xl"><a href="{% url 'university_errors' %}">Errors</a></h2>
-        
-        <div class="overflow-y-auto">
+      </div>
+
+
+      <!-- Errors -->
+      <div class="border border-red-700/50 bg-red-900/20 backdrop-blur-xl rounded-xl p-4 flex flex-col gap-3 shadow-lg shadow-black/20">
+        <h2 class="text-xl font-semibold tracking-wide text-red-300">
+          <a href="{% url 'university_errors' %}" class="hover:text-red-400 transition">Errors</a>
+        </h2>
+
+        <div class="overflow-y-auto space-y-2 pr-1">
           {% for documents_error in documents_errors %}
-          <div class="item-box border-2 border-neutral-700 p-1">{{ documents_error.research_document_id.research_document_name }} — {{ documents_error.error_message }} </div>
+          <div class="px-3 py-2 rounded-lg bg-red-800/40 border border-red-700/60 text-red-200 hover:bg-red-800/60 transition">
+            {{ documents_error.research_document_id.research_document_name }} —
+            {{ documents_error.error_message }}
+          </div>
           {% endfor %}
         </div>
-        
-      </section>
-      
-      <!-- =========================================
-      BOTTOM SECTION
-      (Repository Upload Area)
-      ========================================= -->
-      <section class="dashboard-box upload-box border-2 border-neutral-700 flex flex-col gap-2 p-2">
-        <h2 class="text-2xl">Upload Repository</h2>
-        
-        <!-- Upload Button -->
-        <div class="upload-btn-wrapper flex flex-col justify-center items-center flex-1 gap-3">
-          <a href="{% url 'university_upload' %}" class="upload-area text-3xl border-2 border-neutral-700 pl-20 pr-20 pt-3 pb-3">
+      </div>
+
+
+      <!-- Upload Section -->
+      <div class="border border-neutral-700/70 bg-neutral-800/40 backdrop-blur-xl rounded-xl p-4 flex flex-col gap-4 shadow-xl shadow-black/10">
+        <h2 class="text-xl font-semibold tracking-wide">Upload Repository</h2>
+        <div class="flex flex-col items-center justify-center flex-1 gap-4 py-8">
+          <a href="{% url 'university_upload' %}"
+             class="px-10 py-4 text-lg font-medium rounded-lg border border-blue-500/60 bg-blue-600/20 hover:bg-blue-600/30 hover:border-blue-400 transition shadow-md shadow-black/20">
             + Upload Files
           </a>
-          
-          <!-- Description Note -->
-          <p class="upload-note">
-            These files will be used as references for plagiarism detection.
+          <p class="text-sm text-neutral-400 text-center max-w-md">
+            Upload research documents that will be used as reference sources
+            for plagiarism detection.
           </p>
         </div>
-      </section>
-    </div>
+      </div>
+
+    </section>
 
   </main>
+
 </div>
+
 {% endblock %}

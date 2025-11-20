@@ -4,81 +4,71 @@
 {% block title %}Instructor Signup — Plagiarism Detection{% endblock %}
 
 {% block content %}
-<!-- =========================================================
-     PAGE: Instructor Signup
-     DESCRIPTION:
-       Signup form for new instructors to register into
-       the plagiarism detection platform.
-       Allows name, email, password, and university selection.
-   ========================================================= -->
+<div class="min-h-screen flex items-center justify-center bg-gray-50 px-6 py-16">
+  <div class="w-full max-w-md bg-white shadow-lg rounded-xl p-8">
+    <h1 class="text-3xl md:text-4xl font-extrabold text-blue-600 text-center mb-6">
+      Instructor Signup
+    </h1>
 
-<div class="login-window h-full w-full bg-sky-400 flex flex-col justify-center items-center gap-5">
-     
-     <div class="flex flex-col gap-5">
-          <!-- =========================================
-               PAGE TITLE
-               ========================================= -->
-          <h1 class="login-title text-6xl">Instructor Signup</h1>
-          
-          <!-- =========================================
-               SIGNUP FORM
-               ========================================= -->
-          <form method="POST" enctype="multipart/form-data" class="login-form" action="">
-               {% csrf_token %}
+    <form method="POST" enctype="multipart/form-data" class="flex flex-col gap-4">
+      {% csrf_token %}
 
-               <div class="flex flex-col gap-2">
-                    <div class="flex flex-col">
-                         <label for="first_name">First Name</label>
-                         <input type="text" name="first_name" class="border-2 border-neutral-700" required>
-                    </div>
-                    
-                    <div class="flex flex-col">
-                         <label for="last_name">Last Name</label>
-                         <input type="text" name="last_name" class="border-2 border-neutral-700" required>
-                    </div>
-                    
-                    <div class="flex flex-col">
-                         <label for="email">Email</label>
-                         <input type="email" name="email" class="border-2 border-neutral-700" required>
-                    </div>
-                    
-                    <div class="flex flex-col">
-                         <label for="password">Password</label>
-                         <input type="password" name="password" class="border-2 border-neutral-700" required>
-                    </div>
-                    
-                    <div class="flex flex-col">
-                         <label for="university">University</label>
-                         <select name="university_id" id="university" class="border-2 border-neutral-700">
-                              {% for university in universities %}
-                              <option value="{{university.id}}">{{university.university_name}}</option>
-                              {% endfor %}
-                         </select>
-                    </div>
-                    
-                    <div class="flex flex-col">
-                         <label for="certificate">Certificate</label>
-                         <input type="file" name="certificate" accept=".pdf,.png" class="border-2 border-neutral-700" required>
-                    </div>
-                    
-                    <div class="flex flex-col">
-                         <label for="field">Field</label>
-                         <input type="text" name="field" class="border-2 border-neutral-700" required>
-                    </div>
-                    
-                    <!-- Submit Button -->
-                    <input type="submit" class="login-btn border-2 border-neutral-700">
-               </div>
-          </form>
+      <!-- First Name -->
+      <div class="flex flex-col">
+        <label class="font-semibold mb-1" for="first_name">First Name</label>
+        <input class="ant-input border border-gray-300 rounded-md p-2 w-full" type="text" name="first_name" id="first_name" required />
+      </div>
 
-               <!-- =========================================
-               LOGIN LINK
-               Redirects users who already have an account
-               ========================================= -->
-          <p class="login-footer">
-          Already have an account?
-          <a href="/login/" class="create-link">Login here</a>
-          </p>
-     </div>
+      <!-- Last Name -->
+      <div class="flex flex-col">
+        <label class="font-semibold mb-1" for="last_name">Last Name</label>
+        <input class="ant-input border border-gray-300 rounded-md p-2 w-full" type="text" name="last_name" id="last_name" required />
+      </div>
+
+      <!-- Email -->
+      <div class="flex flex-col">
+        <label class="font-semibold mb-1" for="email">Email</label>
+        <input class="ant-input border border-gray-300 rounded-md p-2 w-full" type="email" name="email" id="email" required />
+      </div>
+
+      <!-- Password -->
+      <div class="flex flex-col">
+        <label class="font-semibold mb-1" for="password">Password</label>
+        <input class="ant-input border border-gray-300 rounded-md p-2 w-full" type="password" name="password" id="password" required />
+      </div>
+
+      <!-- University Select -->
+      <div class="flex flex-col">
+        <label class="font-semibold mb-1" for="university">University</label>
+        <select class="ant-select border border-gray-300 rounded-md p-2 w-full" name="university_id" id="university" required>
+          {% for university in universities %}
+          <option value="{{ university.id }}">{{ university.university_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Certificate Upload -->
+      <div class="flex flex-col">
+        <label class="font-semibold mb-1" for="certificate">Certificate</label>
+        <input class="ant-input-file border border-gray-300 rounded-md p-2 w-full" type="file" name="certificate" id="certificate" accept=".pdf,.png" required />
+      </div>
+
+      <!-- Field -->
+      <div class="flex flex-col">
+        <label class="font-semibold mb-1" for="field">Field</label>
+        <input class="ant-input border border-gray-300 rounded-md p-2 w-full" type="text" name="field" id="field" required />
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="ant-btn bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition-all">
+        Signup
+      </button>
+    </form>
+
+    <p class="text-center text-gray-500 mt-4">
+      Already have an account? 
+      <a href="/login/" class="text-blue-600 hover:underline">Login here</a>
+    </p>
+  </div>
 </div>
 {% endblock %}

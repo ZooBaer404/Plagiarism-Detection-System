@@ -11,3 +11,5 @@ nltk
 numpy
 celery
 huggingface_hub[hf_xet]
+reportlab
+django-cors-headers

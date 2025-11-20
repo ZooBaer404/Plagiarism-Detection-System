@@ -1,35 +1,24 @@
 {% extends "base.html" %}
-{% load static %}
-
 {% block title %}Login — Plagiarism Detection{% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/login.css' %}">
-{% endblock %}
-
 {% block content %}
-<div class="login-window bg-amber-500 h-full flex flex-col justify-center items-center gap-10">
-  
-  <div class="flex flex-col gap-10">  
-    <h1 class="login-title text-6xl">Login</h1>
+<div class="min-h-screen flex items-center justify-center bg-gray-50 px-6 py-16">
+  <div class="w-full max-w-md bg-white p-8 rounded-xl shadow-lg">
+    <h1 class="text-4xl font-extrabold text-center text-blue-600 mb-6">Login</h1>
 
-    <form method="post" class="login-form flex flex-col gap-5">
+    <form method="POST" class="flex flex-col gap-4">
       {% csrf_token %}
-      <div>
-        <input type="text" name="username" placeholder="Username / Email" class="pl-10 border-2 border-neutral-700" required>
-        <input type="password" name="password" placeholder="Password" class="pl-10 border-2 border-neutral-700" required>
-      </div>
-      <!-- Forgot password link -->
-      {% comment %} <a href="#" class="forgot-link">Forgot password?</a> {% endcomment %}
+      <input type="text" name="username" placeholder="Username / Email" class="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500" required>
+      <input type="password" name="password" placeholder="Password" class="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500" required>
 
-      <button type="submit" class="login-btn pl-20 pr-20 border-2 border-neutral-700">Login</button>
+      <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg shadow-md transition-colors">
+        Login
+      </button>
     </form>
 
-    <p class="login-footer">
-      Don’t have an account? <a href="{% url 'continue_page' %}" class="create-link text-cyan-950 underline underline-offset-4">Create one</a>
+    <p class="text-center text-gray-500 mt-4">
+      Don’t have an account? <a href="{% url 'continue_page' %}" class="text-blue-600 hover:underline">Create one</a>
     </p>
-
   </div>
-
 </div>
 {% endblock %}
